@@ -1,0 +1,38 @@
+package app.tabletracker.feature_menu.data.local
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Upsert
+import app.tabletracker.feature_menu.data.entity.Category
+import app.tabletracker.feature_menu.data.entity.CategoryWithMenuItems
+import app.tabletracker.feature_menu.data.entity.MenuItem
+import kotlinx.coroutines.flow.Flow
+
+
+@Dao
+interface MenuDao {
+    @Query("SELECT * FROM menuitem")
+    fun readAllMenuItems(): Flow<List<MenuItem>>
+
+    @Transaction
+    @Query("SELECT * FROM category WHERE id = :categoryId")
+    fun readAllMenuItemsOnCategory(categoryId: Int): Flow<CategoryWithMenuItems>
+
+    @Query("SELECT * FROM category")
+    fun readAllCategory(): Flow<List<Category>>
+
+    @Transaction
+    @Query("SELECT * FROM category")
+    fun readAllCategoriesWithMenuItems(): Flow<List<CategoryWithMenuItems>>
+
+    @Upsert
+    suspend fun writeMenuItem(menuItem: MenuItem)
+    @Upsert
+    suspend fun writeCategory(category: Category)
+    @Delete
+    suspend fun deleteMenuItem(menuItem: MenuItem)
+    @Delete
+    suspend fun deleteCategory(category: Category)
+}
