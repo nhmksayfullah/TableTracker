@@ -11,7 +11,6 @@ import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.Parcelable
 import android.util.Log
-import androidx.activity.ComponentActivity
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.usb.UsbConnection
 import com.dantsu.escposprinter.connection.usb.UsbPrintersConnections
@@ -63,7 +62,7 @@ class PrinterManager(private val activity: Activity) {
 
     private fun printUsb(usbReceiver: BroadcastReceiver) {
         val usbConnection: UsbConnection? = UsbPrintersConnections.selectFirstConnected(activity)
-        val usbManager: UsbManager? = activity.getSystemService(ComponentActivity.USB_SERVICE) as UsbManager?
+        val usbManager: UsbManager? = activity.getSystemService(Context.USB_SERVICE) as UsbManager?
         if (usbConnection != null && usbManager != null) {
             val permissionIntent = PendingIntent.getBroadcast(
                 activity,
@@ -71,37 +70,9 @@ class PrinterManager(private val activity: Activity) {
                 Intent(ACTION_USB_PERMISSION),
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0
             )
-            val filter: IntentFilter = IntentFilter(ACTION_USB_PERMISSION)
+            val filter = IntentFilter(ACTION_USB_PERMISSION)
             activity.registerReceiver(usbReceiver, filter)
             usbManager.requestPermission(usbConnection.device, permissionIntent)
         }
     }
 }
-
-
-val dummyReceipt = """
-        [C]<u><font size='big'>ORDER N°045</font></u>
-        [L]
-        [C]================================
-        [L]
-        [L]<b>BEAUTIFUL SHIRT</b>[R]9.99e
-        [L]  + Size : S
-        [L]
-        [L]<b>AWESOME HAT</b>[R]24.99e
-        [L]  + Size : 57/58
-        [L]
-        [C]--------------------------------
-        [R]TOTAL PRICE :[R]34.98e
-        [R]TAX :[R]4.23e
-        [L]
-        [C]================================
-        [L]
-        [L]<font size='tall'>Customer :</font>
-        [L]Raymond DUPONT
-        [L]5 rue des girafes
-        [L]31547 PERPETES
-        [L]Tel : +33801201456
-        [L]
-        [C]<barcode type='ean13' height='10'>831254784551</barcode>
-        [C]<qrcode size='20'>https://dantsu.com/</qrcode>
-        """.trimIndent()
