@@ -120,7 +120,7 @@ class ReceiptGenerator(
         orderItems.forEach {
             if (it.orderItemStatus == OrderItemStatus.Added) {
                 kitchenCopy += """
-                [L]<font size='big'>${it.menuItem.abbreviation} x ${it.quantity}</font>${'\n'}
+                [L]<font size='big-2'>${it.quantity}. ${it.menuItem.abbreviation}</font>${'\n'}
             """.trimIndent()
                 if (it.addedNote.isNotEmpty()) {
                     kitchenCopy += """
