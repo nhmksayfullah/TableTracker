@@ -150,30 +150,6 @@ fun EditDetailsSection(
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done)
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
-        Column {
-            Text(
-                text = "Print to Kitchen Copy?",
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Text(text = "No")
-                Spacer(modifier = Modifier.width(8.dp))
-                Switch(
-                    checked = menuItem.isKitchenCategory,
-                    onCheckedChange = {
-//                        onCategoryChange(category.copy(isKitchenCategory = it))
-                    }
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Yes")
-            }
-        }
     }
 }
 
