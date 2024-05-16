@@ -108,7 +108,10 @@ class ReceiptGenerator(
 
 
     fun generateKitchenCopy(): String {
-        val orderItems = orderWithOrderItems.orderItems
+        val orderItems = orderWithOrderItems.orderItems.filter {
+            it.menuItem.isKitchenCategory
+        }
+
         kitchenCopy += """
             [C]<font size='big-3'>${orderWithOrderItems.order.orderNumber}</font>${'\n'}${'\n'}
         """.trimIndent()

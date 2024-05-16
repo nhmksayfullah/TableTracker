@@ -1,5 +1,6 @@
 package app.tabletracker.feature_menu.data.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import app.tabletracker.feature_order.data.entity.OrderType
@@ -17,6 +18,8 @@ data class MenuItem(
     val description: String = "",
     val prices: Map<OrderType, Float>,
     val categoryId: Int,
+    @ColumnInfo(name = "isKitchenCategory", defaultValue = "true")
+    val isKitchenCategory: Boolean = true,
     val creationTime: Long = generateInstantTime()
 )
 

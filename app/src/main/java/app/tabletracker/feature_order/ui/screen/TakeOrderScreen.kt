@@ -1,7 +1,10 @@
 package app.tabletracker.feature_order.ui.screen
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -11,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import app.tabletracker.core.ui.SplitScreen
 import app.tabletracker.feature_order.data.entity.OrderStatus
@@ -46,6 +50,9 @@ fun TakeOrderScreen(
 
     var selectedCategoryIndex by rememberSaveable {
         if (orderUiState.menus.isEmpty()) mutableIntStateOf(0) else mutableIntStateOf((orderUiState.menus[0].category.id - 1))
+    }
+    var selectedCategoryId by rememberSaveable {
+        mutableIntStateOf(-1)
     }
 
     SplitScreen(
@@ -94,15 +101,30 @@ fun TakeOrderScreen(
                         onCategoryClicked = {
                             isCategoryVisible = false
                             selectedCategoryIndex = it.id - 1
+                            selectedCategoryId = it.id
                         }
                     )
                 } else {
-                    SelectMenuItemRightSection(
-                        menus = orderUiState.menus[selectedCategoryIndex].menuItems,
-                        onMenuItemClicked = {
-                            orderViewModel.onEvent(OrderUiEvent.AddItemToOrder(it, orderUiState.currentOrder!!.order.id))
+                    orderUiState.menus.find {
+                        it.category.id == selectedCategoryId
+                    }?.let {
+                        if (it.menuItems.isNotEmpty()) {
+                            SelectMenuItemRightSection(
+                                menus = it.menuItems,
+                                onMenuItemClicked = {
+                                    orderViewModel.onEvent(OrderUiEvent.AddItemToOrder(it, orderUiState.currentOrder!!.order.id))
+                                }
+                            )
+                        } else {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(text = "No Menu Items Available")
+                            }
                         }
-                    )
+                    }
+
                 }
             }
         },

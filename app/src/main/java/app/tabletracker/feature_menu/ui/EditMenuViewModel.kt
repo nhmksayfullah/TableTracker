@@ -1,7 +1,9 @@
 package app.tabletracker.feature_menu.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import app.tabletracker.feature_menu.data.entity.Category
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_menu.domain.repository.EditMenuRepository
@@ -16,7 +18,6 @@ import kotlinx.coroutines.launch
 class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel() {
     var uiState = MutableStateFlow(EditMenuUiState())
         private set
-
     private var job: Job? = null
 
     init {
@@ -61,6 +62,7 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
                             abbreviation = "",
                             description = "",
                             prices = mapOf(),
+                            isKitchenCategory = uiState.value.selectedCategory.isKitchenCategory,
                             categoryId = uiState.value.selectedCategory.id
                         )
                     )
@@ -70,7 +72,9 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
             is EditMenuUiEvent.UpsertCategory -> {
                 viewModelScope.launch {
                     repository.writeCategory(uiState.value.selectedCategory)
+                    updateKitchenCopyStatusOfMenuItemsOnCategory(uiState.value.selectedCategory)
                 }
+
             }
             is EditMenuUiEvent.UpsertMenuItem -> {
                 viewModelScope.launch {
@@ -93,6 +97,24 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
     }
 
 
+    private fun updateKitchenCopyStatusOfMenuItemsOnCategory(category: Category){
+        Log.d("status: ", "category: ${category.isKitchenCategory}")
+        uiState.value.menus.forEach {
+            if (it.category.id == category.id) {
+                Log.d("status: ", "database category: ${it.category.isKitchenCategory}")
+                val menuItems = it.menuItems
+                menuItems.forEach { menuItem ->
+                    Log.d("status: ", "menuItem: ${menuItem.isKitchenCategory}")
+                    if (menuItem.isKitchenCategory != it.category.isKitchenCategory || menuItem.isKitchenCategory != category.isKitchenCategory) {
+                        Log.d("status: ", "gets inside")
+                        viewModelScope.launch {
+                            repository.writeMenuItem(menuItem.copy(isKitchenCategory = category.isKitchenCategory))
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
     private fun populateCategoriesWithMenuItems() {

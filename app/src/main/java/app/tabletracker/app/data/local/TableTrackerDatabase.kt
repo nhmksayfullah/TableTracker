@@ -1,6 +1,7 @@
 package app.tabletracker.app.data.local
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -30,8 +31,11 @@ import app.tabletracker.settings.data.local.SettingsDao
         RestaurantExtra::class,
         Customer::class
     ],
-    version = 1,
-    exportSchema = false
+    version = 3,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2),
+        AutoMigration(from = 2, to = 3)
+    ]
 )
 @TypeConverters(
     ItemPriceTypeConverter::class,

@@ -3,10 +3,13 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.devtools.ksp)
 }
-
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
 android {
     namespace = "app.tabletracker"
     compileSdk = 34
+
 
     defaultConfig {
         applicationId = "app.tabletracker"
@@ -49,6 +52,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
