@@ -226,7 +226,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
                 totalPrice += it.menuItem.prices[orderWithOrderItems.order.orderType]?.times(it.quantity) ?: 0.0f
             }
         }
-        return totalPrice
+        return "%.2f".format(totalPrice).toFloat()
     }
 
     private fun populateRestaurantInfo() {
