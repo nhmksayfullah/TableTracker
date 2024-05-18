@@ -13,6 +13,7 @@ import app.tabletracker.feature_customer.data.model.Customer
 import app.tabletracker.feature_customer.data.model.CustomerTypeConverter
 import app.tabletracker.feature_menu.data.entity.Category
 import app.tabletracker.feature_menu.data.entity.ItemPriceTypeConverter
+import app.tabletracker.feature_menu.data.entity.MealTypeConverter
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_menu.data.local.MenuDao
 import app.tabletracker.feature_order.data.entity.MenuItemTypeConverter
@@ -31,16 +32,18 @@ import app.tabletracker.settings.data.local.SettingsDao
         RestaurantExtra::class,
         Customer::class
     ],
-    version = 3,
+    version = 4,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
-        AutoMigration(from = 2, to = 3)
+        AutoMigration(from = 2, to = 3),
+        AutoMigration(from = 3, to = 4)
     ]
 )
 @TypeConverters(
     ItemPriceTypeConverter::class,
     MenuItemTypeConverter::class,
-    CustomerTypeConverter::class
+    CustomerTypeConverter::class,
+    MealTypeConverter::class
 )
 abstract class TableTrackerDatabase : RoomDatabase() {
 
