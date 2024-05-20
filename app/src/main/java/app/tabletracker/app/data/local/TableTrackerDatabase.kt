@@ -3,9 +3,11 @@ package app.tabletracker.app.data.local
 import android.content.Context
 import androidx.room.AutoMigration
 import androidx.room.Database
+import androidx.room.DeleteColumn
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.AutoMigrationSpec
 import app.tabletracker.auth.data.local.AuthDao
 import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.common.data.RestaurantExtra
@@ -32,11 +34,13 @@ import app.tabletracker.settings.data.local.SettingsDao
         RestaurantExtra::class,
         Customer::class
     ],
-    version = 4,
+    version = 6,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
-        AutoMigration(from = 3, to = 4)
+        AutoMigration(from = 3, to = 4),
+        AutoMigration(from = 4, to = 5, spec = Migration4To5::class),
+        AutoMigration(from = 5, to = 6)
     ]
 )
 @TypeConverters(
@@ -70,3 +74,6 @@ abstract class TableTrackerDatabase : RoomDatabase() {
     }
 
 }
+
+@DeleteColumn(tableName = "MenuItem", columnName = "meal")
+class Migration4To5: AutoMigrationSpec
