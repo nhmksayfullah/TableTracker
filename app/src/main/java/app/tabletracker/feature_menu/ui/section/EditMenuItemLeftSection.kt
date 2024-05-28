@@ -107,7 +107,7 @@ fun EditMenuItemLeftSection(
                             menus = menus,
                             menuItem = menuItem
                         ) {
-
+                            onMenuItemDetailsChange(it)
                         }
                     }
 
