@@ -55,7 +55,7 @@ fun MenuItem.addItemsToMealCourse(mealCourse: MealCourse, items: List<MenuItem>)
     if (newMealCourse != null) {
         val newAvailableItems = newMealCourse.availableItems.toMutableList()
         val itemsToAdd = items.filter {
-            id != it.id
+            id != it.id && !newAvailableItems.contains(it)
         }
         newAvailableItems.addAll(itemsToAdd)
         newMealCourse = newMealCourse.copy(availableItems = newAvailableItems)

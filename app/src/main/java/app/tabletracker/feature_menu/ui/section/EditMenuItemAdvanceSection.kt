@@ -317,13 +317,17 @@ fun EditMealSection(
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Button(onClick = {
-                    if (courseName.isNotEmpty()) {
-                        val newMealCourse = mealCourse.copy(name = courseName)
-                        val newMenuItem = menuItem.addNewMealCourse(newMealCourse)
-                        onMenuItemChange(
-                            newMenuItem.addItemsToMealCourse(newMealCourse, menus[selectedCategoryIndex].menuItems)
-                        )
-                        onChangeSelectedCourseId(mealCourse.id)
+                    if (menuItem.contains(mealCourse)) {
+                        onMenuItemChange(menuItem.addItemsToMealCourse(mealCourse, menus[selectedCategoryIndex].menuItems))
+                    } else {
+                        if (courseName.isNotEmpty()) {
+                            val newMealCourse = mealCourse.copy(name = courseName)
+                            val newMenuItem = menuItem.addNewMealCourse(newMealCourse)
+                            onMenuItemChange(
+                                newMenuItem.addItemsToMealCourse(newMealCourse, menus[selectedCategoryIndex].menuItems)
+                            )
+                            onChangeSelectedCourseId(mealCourse.id)
+                        }
                     }
                 }) {
                     Text(text = "Select All")
