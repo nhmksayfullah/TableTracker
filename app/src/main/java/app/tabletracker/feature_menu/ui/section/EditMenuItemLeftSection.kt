@@ -27,12 +27,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.TabbedScreen
+import app.tabletracker.feature_menu.data.entity.CategoryWithMenuItems
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_menu.util.EditMenuTabOption
 import app.tabletracker.feature_order.data.entity.OrderType
 
 @Composable
 fun EditMenuItemLeftSection(
+    menus: List<CategoryWithMenuItems>,
     menuItem: MenuItem,
     update: Boolean = false,
     onMenuItemDetailsChange: (MenuItem) -> Unit,
@@ -40,7 +42,6 @@ fun EditMenuItemLeftSection(
     onUpsertClick: (MenuItem) -> Unit,
     onDeleteClick: (MenuItem) -> Unit
 ) {
-    Log.d("menuItem: ", menuItem.toString())
     Scaffold(
         bottomBar = {
             Row(modifier = Modifier.padding(4.dp)) {
@@ -57,7 +58,9 @@ fun EditMenuItemLeftSection(
                 if (update) {
                     Button(
                         onClick = { onDeleteClick(menuItem) },
-                        modifier = Modifier.weight(.2f).padding(2.dp),
+                        modifier = Modifier
+                            .weight(.2f)
+                            .padding(2.dp),
                         colors = ButtonDefaults.buttonColors().copy(containerColor = MaterialTheme.colorScheme.error)
                     ) {
                         Icon(
@@ -83,7 +86,8 @@ fun EditMenuItemLeftSection(
             TabbedScreen(
                 titles = listOf(
                     EditMenuTabOption.Details.name,
-                    EditMenuTabOption.Prices.name
+                    EditMenuTabOption.Prices.name,
+                    EditMenuTabOption.Advance.name
                 )
             ) { state ->
                 when (state) {
@@ -98,6 +102,15 @@ fun EditMenuItemLeftSection(
                             onMenuItemPricesChange(orderTypeFloatPair)
                         }
                     }
+                    EditMenuTabOption.Advance.state -> {
+                        EditMenuItemAdvanceSection(
+                            menus = menus,
+                            menuItem = menuItem
+                        ) {
+
+                        }
+                    }
+
                 }
 
             }

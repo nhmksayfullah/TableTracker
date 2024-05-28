@@ -37,7 +37,6 @@ fun EditMenuRightSection(
     var selectedCategoryIndex by rememberSaveable {
         if (menus.isEmpty()) mutableStateOf(0) else mutableStateOf((menus[0].category.id))
     }
-    Log.d("selected category: ", selectedCategoryIndex.toString())
 
     var firstLaunch by rememberSaveable {
         mutableStateOf(true)

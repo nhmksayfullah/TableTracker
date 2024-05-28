@@ -27,4 +27,3 @@ data class MenuItem(
     @ColumnInfo(name = "mealCourses", defaultValue = "[]")
     val mealCourses: List<MealCourse> = emptyList()
 )
-

@@ -70,6 +70,7 @@ fun EditMenuScreen(
                 LeftSectionState.AddNewMenuItem -> {
                     EditMenuItemLeftSection(
                         update = false,
+                        menus = uiState.menus,
                         menuItem = uiState.selectedMenuItem,
                         onMenuItemDetailsChange = {
                             editMenuViewModel.onEvent(EditMenuUiEvent.ChangeDetailsOfMenuItem(it))
@@ -91,6 +92,7 @@ fun EditMenuScreen(
                 LeftSectionState.EditMenuItem -> {
                     EditMenuItemLeftSection(
                         update = true,
+                        menus = uiState.menus,
                         menuItem = uiState.selectedMenuItem,
                         onMenuItemDetailsChange = {
                             editMenuViewModel.onEvent(EditMenuUiEvent.ChangeDetailsOfMenuItem(it))
