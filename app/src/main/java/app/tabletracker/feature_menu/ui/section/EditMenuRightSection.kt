@@ -82,7 +82,6 @@ fun EditMenuRightSection(
                         Box(modifier = Modifier.padding(4.dp)) {
                             FoodBlockComponent(text = it.name) {
                                 onMenuItemClicked(it)
-                                Log.d("selected category: h", it.toString())
                             }
                         }
                     }
@@ -90,7 +89,6 @@ fun EditMenuRightSection(
                         Box(modifier = Modifier.padding(4.dp)) {
                             FoodBlockComponent(text = "+") {
                                 onAddNewMenuItem()
-                                Log.d("selected category: h", it.toString())
                             }
                         }
                     }

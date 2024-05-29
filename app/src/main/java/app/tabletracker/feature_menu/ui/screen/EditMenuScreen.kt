@@ -1,5 +1,6 @@
 package app.tabletracker.feature_menu.ui.screen
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -130,6 +131,7 @@ fun EditMenuScreen(
                 onAddNewMenuItem = {
                     editMenuViewModel.onEvent(EditMenuUiEvent.AddNewMenuItem)
                     leftSectionState = LeftSectionState.AddNewMenuItem
+
                 }
             )
         }
