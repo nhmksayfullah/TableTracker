@@ -156,7 +156,6 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO){
             repository.writeOrderItem(orderItem)
 
-
         }
     }
 

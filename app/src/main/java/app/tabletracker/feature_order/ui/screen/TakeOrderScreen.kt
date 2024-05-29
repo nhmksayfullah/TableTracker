@@ -35,7 +35,6 @@ fun TakeOrderScreen(
     onOrderDismiss: () -> Unit
 ) {
 
-
     var isCategoryVisible by rememberSaveable {
         mutableStateOf(true)
     }

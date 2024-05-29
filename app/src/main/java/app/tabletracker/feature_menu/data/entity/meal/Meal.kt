@@ -9,5 +9,6 @@ import com.squareup.moshi.JsonClass
 data class MealCourse(
     val id: String = generateUniqueId(),
     val name: String = "",
-    val availableItems: List<MenuItem> = emptyList()
+    val availableItems: List<MenuItem> = emptyList(),
+    val selectedItem: MenuItem? = null
 )

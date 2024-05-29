@@ -30,9 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.TabbedScreen
 import app.tabletracker.feature_customer.data.model.Customer
+import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_order.data.entity.OrderItem
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
 import app.tabletracker.feature_order.ui.OrderUiEvent
+import app.tabletracker.feature_order.ui.component.MealItemComponent
 import app.tabletracker.feature_order.ui.component.OrderItemComponent
 
 
@@ -130,17 +132,32 @@ fun ShowOrderLeftSection(
                         ) {
                             LazyColumn {
                                 items(order.orderItems) {orderItem ->
-                                    OrderItemComponent(
-                                        orderItem = orderItem,
-                                        readOnly = readOnly,
-                                        orderType = order.order.orderType,
-                                        onItemRemoveClick = {
-                                            onItemRemoveClick(orderItem)
-                                        },
-                                        onItemChange = { updatedItem ->
-                                            onItemChange(updatedItem)
-                                        }
-                                    )
+                                    if (orderItem.menuItem.isMeal) {
+                                        MealItemComponent(
+                                            orderId = order.order.id,
+                                            orderItem = orderItem,
+                                            readOnly = readOnly,
+                                            orderType = order.order.orderType,
+                                            onItemRemoveClick = {
+                                                onItemRemoveClick(orderItem)
+                                            },
+                                            onItemChange = { updatedItem ->
+                                                onItemChange(updatedItem)
+                                            }
+                                        )
+                                    } else {
+                                        OrderItemComponent(
+                                            orderItem = orderItem,
+                                            readOnly = readOnly,
+                                            orderType = order.order.orderType,
+                                            onItemRemoveClick = {
+                                                onItemRemoveClick(orderItem)
+                                            },
+                                            onItemChange = { updatedItem ->
+                                                onItemChange(updatedItem)
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -154,7 +171,6 @@ fun ShowOrderLeftSection(
                                 onOrderUiEvent(OrderUiEvent.UpdateCurrentOrder(order.order.copy(customer = it)))
                             }
                         )
-                        Log.d("current order: customer", order.order.toString())
                     }
                 }
             }
