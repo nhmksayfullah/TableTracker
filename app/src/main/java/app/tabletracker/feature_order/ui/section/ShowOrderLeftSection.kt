@@ -122,9 +122,7 @@ fun ShowOrderLeftSection(
                     Row {
                         Button(
                             onClick = {
-                                if (orderUiState.currentOrder?.orderItems?.find {
-                                        it.orderItemStatus == OrderItemStatus.Added
-                                    } != null) {
+                                if (orderUiState.currentOrder != null) {
                                     val printerManager = PrinterManager(context as Activity)
                                     val receiptGenerator =
                                         ReceiptGenerator(orderUiState.restaurantInfo, orderUiState.currentOrder)
@@ -139,9 +137,7 @@ fun ShowOrderLeftSection(
                         Spacer(modifier = Modifier.padding(4.dp))
                         Button(
                             onClick = {
-                                if (orderUiState.currentOrder?.orderItems?.find {
-                                        it.orderItemStatus == OrderItemStatus.Added
-                                    } != null) {
+                                if (orderUiState.currentOrder != null) {
                                     val printerManager = PrinterManager(context as Activity)
                                     val receiptGenerator =
                                         ReceiptGenerator(orderUiState.restaurantInfo, orderUiState.currentOrder)
