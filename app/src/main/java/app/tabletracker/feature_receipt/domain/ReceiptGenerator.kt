@@ -94,7 +94,7 @@ class ReceiptGenerator(
     }
 
     private fun populateDeliveryAddress() {
-        if (orderWithOrderItems.order.orderType == OrderType.Delivery) {
+        if (orderWithOrderItems.order.orderType != OrderType.DineIn) {
             receipt += """
                 [L]<b>Delivery Address</b>
                 [R]<b>Name: ${orderWithOrderItems.order.customer?.name}</b>${'\n'}
@@ -113,22 +113,34 @@ class ReceiptGenerator(
         }
 
         kitchenCopy += """
-            [C]<font size='big-3'>${orderWithOrderItems.order.orderNumber}</font>${'\n'}${'\n'}
+            [C]${orderWithOrderItems.order.creationTime.toLocalDateTime()}${'\n'}
+        """.trimIndent()
+
+        kitchenCopy += """
+            [C]<font size='big'>${orderWithOrderItems.order.orderType}</font>${'\n'}
+        """.trimIndent()
+
+        kitchenCopy += """
+            [C]<font size='big'>${orderWithOrderItems.order.orderNumber}</font>${'\n'}${'\n'}
         """.trimIndent()
         if (orderWithOrderItems.order.orderType == OrderType.DineIn) {
             kitchenCopy += """
-                [C]<font size='bog'>Table number: ${orderWithOrderItems.order.tableNumber ?: "Unknown Table"}</font>${'\n'}
+                [C]<font size='big-2'>Table number: ${orderWithOrderItems.order.tableNumber ?: "Unknown Table"}</font>${'\n'}${'\n'}
             """.trimIndent()
         }
         orderItems.forEach {
             if (it.orderItemStatus == OrderItemStatus.Added) {
                 kitchenCopy += """
-                [L]<font size='big-2'>${it.quantity}. ${it.menuItem.abbreviation}</font>${'\n'}
+                [L]<font size='big'>${it.quantity}. ${it.menuItem.abbreviation}</font>${'\n'}
             """.trimIndent()
                 if (it.addedNote.isNotEmpty()) {
                     kitchenCopy += """
-                [L]    <b>${it.addedNote}</b>${'\n'}
+                [L]<font size='big'>N: ${it.addedNote}</font>${'\n'}${'\n'}
             """.trimIndent()
+                } else {
+                    kitchenCopy += """
+                        [L]${'\n'}
+                    """.trimIndent()
                 }
             }
 
