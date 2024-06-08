@@ -15,7 +15,7 @@ data class Order(
     val orderNumber: Int,
     val orderType: OrderType,
     val tableNumber: Int? = null,
-    val paymentMethod: PaymentMethod = PaymentMethod.Cash,
+    val paymentMethod: PaymentMethod = PaymentMethod.None,
     val orderStatus: OrderStatus = OrderStatus.Created,
     val totalPrice: Float = 0.0f,
     val creationTime: Long = generateInstantTime(),

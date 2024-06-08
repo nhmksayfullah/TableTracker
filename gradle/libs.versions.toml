@@ -1,5 +1,5 @@
 [versions]
-agp = "8.4.0"
+agp = "8.4.1"
 coreSplashscreen = "1.0.1"
 desugar_jdk_libs = "2.0.4"
 escposThermalprinterAndroid = "3.3.0"
