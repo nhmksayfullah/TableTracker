@@ -38,7 +38,7 @@ fun StartOrderScreen(
             .then(modifier)
     ) {
         TextBoxComponent(
-            text = OrderType.DineIn.name,
+            text = OrderType.DineIn.label,
             modifier = Modifier.padding(8.dp),
             textModifier = Modifier.padding(36.dp),
             textStyle = MaterialTheme.typography.displaySmall
@@ -47,7 +47,7 @@ fun StartOrderScreen(
             onClick(TableTrackerDefault.noOrderId)
         }
         TextBoxComponent(
-            text = OrderType.TakeOut.name,
+            text = OrderType.TakeOut.label,
             modifier = Modifier.padding(8.dp),
             textModifier = Modifier.padding(36.dp),
             textStyle = MaterialTheme.typography.displaySmall
@@ -56,7 +56,7 @@ fun StartOrderScreen(
             onClick(TableTrackerDefault.noOrderId)
         }
         TextBoxComponent(
-            text = OrderType.Delivery.name,
+            text = OrderType.Delivery.label,
             modifier = Modifier.padding(8.dp),
             textModifier = Modifier.padding(36.dp),
             textStyle = MaterialTheme.typography.displaySmall

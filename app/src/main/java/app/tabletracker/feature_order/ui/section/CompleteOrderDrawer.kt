@@ -39,7 +39,7 @@ import app.tabletracker.util.TableTrackerDefault
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CompleteOrderRightDrawer(
+fun CompleteOrderDrawer(
     orderUiState: OrderUiState,
     orderUiEvent: (OrderUiEvent) -> Unit,
     printKitchenCopy: Boolean = true,
@@ -149,7 +149,7 @@ fun CompleteOrderRightDrawer(
                                 count = orderTypes.size
                             )
                         ) {
-                            Text(text = orderType.name)
+                            Text(text = orderType.label)
                         }
                     }
                 }

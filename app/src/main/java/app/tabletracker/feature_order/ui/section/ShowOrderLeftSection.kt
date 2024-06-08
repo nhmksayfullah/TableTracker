@@ -1,5 +1,6 @@
 package app.tabletracker.feature_order.ui.section
 
+import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,19 +28,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.TabbedScreen
 import app.tabletracker.feature_customer.data.model.Customer
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_order.data.entity.OrderItem
+import app.tabletracker.feature_order.data.entity.OrderItemStatus
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
 import app.tabletracker.feature_order.ui.OrderUiEvent
+import app.tabletracker.feature_order.ui.OrderUiState
 import app.tabletracker.feature_order.ui.component.MealItemComponent
 import app.tabletracker.feature_order.ui.component.OrderItemComponent
+import app.tabletracker.feature_printing.domain.PrinterManager
+import app.tabletracker.feature_receipt.domain.ReceiptGenerator
 
 
 @Composable
 fun ShowOrderLeftSection(
+    orderUiState: OrderUiState,
     order: OrderWithOrderItems,
     readOnly: Boolean = false,
     onItemRemoveClick: (OrderItem) -> Unit,
@@ -55,6 +62,7 @@ fun ShowOrderLeftSection(
     var addOrderToItemDialogState by rememberSaveable {
         mutableStateOf(false)
     }
+    val context = LocalContext.current
 
     Scaffold(
         bottomBar = {
@@ -107,6 +115,43 @@ fun ShowOrderLeftSection(
                             }
                         ) {
                             Icon(imageVector = Icons.Default.Clear, contentDescription = "cancel order")
+                        }
+                    }
+                }
+                if (readOnly) {
+                    Row {
+                        Button(
+                            onClick = {
+                                if (orderUiState.currentOrder?.orderItems?.find {
+                                        it.orderItemStatus == OrderItemStatus.Added
+                                    } != null) {
+                                    val printerManager = PrinterManager(context as Activity)
+                                    val receiptGenerator =
+                                        ReceiptGenerator(orderUiState.restaurantInfo, orderUiState.currentOrder)
+                                    printerManager.print(receiptGenerator.generateReceipt())
+                                }
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                        ) {
+                            Text(text = "Print Receipt")
+                        }
+                        Spacer(modifier = Modifier.padding(4.dp))
+                        Button(
+                            onClick = {
+                                if (orderUiState.currentOrder?.orderItems?.find {
+                                        it.orderItemStatus == OrderItemStatus.Added
+                                    } != null) {
+                                    val printerManager = PrinterManager(context as Activity)
+                                    val receiptGenerator =
+                                        ReceiptGenerator(orderUiState.restaurantInfo, orderUiState.currentOrder)
+                                    printerManager.print(receiptGenerator.generateKitchenCopy())
+                                }
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                        ) {
+                            Text(text = "Print Kitchen Copy")
                         }
                     }
                 }

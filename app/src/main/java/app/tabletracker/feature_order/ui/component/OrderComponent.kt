@@ -97,7 +97,7 @@ fun OrderComponent(
                 Text(text = order.orderNumber.toString())
             }
             TableCell {
-                Text(text = order.orderType.name)
+                Text(text = order.orderType.label)
             }
             TableCell {
                 Text(text = "${order.tableNumber ?: "N/A"}")

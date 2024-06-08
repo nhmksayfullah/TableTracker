@@ -20,7 +20,7 @@ import app.tabletracker.core.ui.SplitScreen
 import app.tabletracker.feature_order.data.entity.OrderStatus
 import app.tabletracker.feature_order.ui.OrderUiEvent
 import app.tabletracker.feature_order.ui.OrderViewModel
-import app.tabletracker.feature_order.ui.section.CompleteOrderRightDrawer
+import app.tabletracker.feature_order.ui.section.CompleteOrderDrawer
 import app.tabletracker.feature_order.ui.section.SelectCategoryRightSection
 import app.tabletracker.feature_order.ui.section.SelectMenuItemRightSection
 import app.tabletracker.feature_order.ui.section.ShowOrderLeftSection
@@ -58,6 +58,7 @@ fun TakeOrderScreen(
         leftContent = {
             if (orderUiState.currentOrder != null) {
                 ShowOrderLeftSection(
+                    orderUiState = orderUiState,
                     order = orderUiState.currentOrder!!,
                     readOnly = false,
                     onItemChange = {
@@ -129,7 +130,7 @@ fun TakeOrderScreen(
         },
         drawerState = drawerState,
         drawerContent = {
-            CompleteOrderRightDrawer(
+            CompleteOrderDrawer(
                 orderUiState = orderUiState,
                 onOrderDismiss = {
                     if (it != null) orderViewModel.onEvent(it)

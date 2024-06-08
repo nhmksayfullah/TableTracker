@@ -51,6 +51,7 @@ fun RunningOrderScreen(
             if (selectedOrderId != -1) {
                 if (orderUiState.currentOrder != null) {
                     ShowOrderLeftSection(
+                        orderUiState = orderUiState,
                         order = orderUiState.currentOrder!!,
                         readOnly = true,
                         onItemChange = {},
@@ -61,8 +62,12 @@ fun RunningOrderScreen(
                                     onCustomizeOrderClick(it)
 //                                selectedOrderId = -1
                                 }
+                            } else {
+                                orderUiState.currentOrder?.order?.id?.let {
+                                    onCustomizeOrderClick(it)
+//                                selectedOrderId = -1
+                                }
                             }
-
 
                         },
                         onCancelOrderClick = {},

@@ -32,7 +32,7 @@ class ReceiptGenerator(
         populateOrderDetails()
         populateOrderItems()
         populateTotalPrice()
-        populatePaymentInfo()
+//        populatePaymentInfo()
         populateDeliveryAddress()
         receipt += """
             [L]${'\n'}
@@ -98,9 +98,9 @@ class ReceiptGenerator(
             receipt += """
                 [L]<b>Delivery Address</b>
                 [R]<b>Name: ${orderWithOrderItems.order.customer?.name}</b>${'\n'}
-                [R]<b>${orderWithOrderItems.order.customer?.postCode}</b>${'\n'}
-                [R]<b>${orderWithOrderItems.order.customer?.houseNumber}</b>${'\n'}
-                [R]<b>${orderWithOrderItems.order.customer?.street}</b>${'\n'}
+                [R]<b>Post Code: ${orderWithOrderItems.order.customer?.postCode}</b>${'\n'}
+                [R]<b>House Number: ${orderWithOrderItems.order.customer?.houseNumber}</b>${'\n'}
+                [R]<b>Road: ${orderWithOrderItems.order.customer?.street}</b>${'\n'}
                 [R]<b>Contact: ${orderWithOrderItems.order.customer?.contact}</b>${'\n'}
             """.trimIndent()
         }
