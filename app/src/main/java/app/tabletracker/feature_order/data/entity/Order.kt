@@ -1,5 +1,6 @@
 package app.tabletracker.feature_order.data.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import app.tabletracker.feature_customer.data.model.Customer
@@ -19,5 +20,7 @@ data class Order(
     val orderStatus: OrderStatus = OrderStatus.Created,
     val totalPrice: Float = 0.0f,
     val creationTime: Long = generateInstantTime(),
-    val customer: Customer? = null
+    val customer: Customer? = null,
+    @ColumnInfo(name = "discount", defaultValue = "null")
+    val discount: Discount? = null
 )

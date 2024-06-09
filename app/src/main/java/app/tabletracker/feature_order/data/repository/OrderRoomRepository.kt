@@ -3,6 +3,7 @@ package app.tabletracker.feature_order.data.repository
 import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.common.data.RestaurantExtra
 import app.tabletracker.feature_menu.data.entity.CategoryWithMenuItems
+import app.tabletracker.feature_order.data.entity.Discount
 import app.tabletracker.feature_order.data.entity.Order
 import app.tabletracker.feature_order.data.entity.OrderItem
 import app.tabletracker.feature_order.data.entity.OrderStatus
@@ -67,4 +68,17 @@ class OrderRoomRepository(private val orderDao: OrderDao): OrderRepository {
     override fun readRestaurantExtra(restaurantId: String): Flow<RestaurantExtra> {
         return orderDao.readRestaurantExtra(restaurantId)
     }
+
+    override fun writeDiscount(discount: Discount) {
+        orderDao.writeDiscount(discount)
+    }
+
+    override fun deleteDiscount(discount: Discount) {
+        orderDao.deleteDiscount(discount)
+    }
+
+    override fun readDiscounts(): Flow<List<Discount>> {
+        return orderDao.readDiscounts()
+    }
+
 }

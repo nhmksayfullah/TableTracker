@@ -8,6 +8,7 @@ import androidx.room.Upsert
 import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.common.data.RestaurantExtra
 import app.tabletracker.feature_menu.data.entity.CategoryWithMenuItems
+import app.tabletracker.feature_order.data.entity.Discount
 import app.tabletracker.feature_order.data.entity.Order
 import app.tabletracker.feature_order.data.entity.OrderItem
 import app.tabletracker.feature_order.data.entity.OrderStatus
@@ -59,5 +60,16 @@ interface OrderDao {
 
     @Query("SELECT * FROM restaurantextra WHERE restaurantId = :restaurantId LIMIT 1")
     fun readRestaurantExtra(restaurantId: String): Flow<RestaurantExtra>
+
+
+    @Upsert
+    fun writeDiscount(discount: Discount)
+
+    @Delete
+    fun deleteDiscount(discount: Discount)
+
+    @Query("SELECT * FROM discount")
+    fun readDiscounts(): Flow<List<Discount>>
+
 
 }

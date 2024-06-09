@@ -3,6 +3,7 @@ package app.tabletracker.feature_order.domain.repository
 import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.common.data.RestaurantExtra
 import app.tabletracker.feature_menu.data.entity.CategoryWithMenuItems
+import app.tabletracker.feature_order.data.entity.Discount
 import app.tabletracker.feature_order.data.entity.Order
 import app.tabletracker.feature_order.data.entity.OrderItem
 import app.tabletracker.feature_order.data.entity.OrderStatus
@@ -25,5 +26,9 @@ interface OrderRepository {
 
     fun readRestaurantInfo(): Flow<Restaurant>
     fun readRestaurantExtra(restaurantId: String): Flow<RestaurantExtra>
+
+    fun writeDiscount(discount: Discount)
+    fun deleteDiscount(discount: Discount)
+    fun readDiscounts(): Flow<List<Discount>>
 
 }
