@@ -82,7 +82,21 @@ class ReceiptGenerator(
         receipt += """
             [L]${'\n'}
             [L]Sub Total: [R]£${orderWithOrderItems.order.totalPrice}${'\n'}
-            [L]<b>Total:</b> [R]<b>£${orderWithOrderItems.order.totalPrice}</b>${'\n'}
+        """.trimIndent()
+        if (orderWithOrderItems.order.discount != null) {
+            val discount = orderWithOrderItems.order.discount.value.let {
+                try {
+                    it.toFloat() * orderWithOrderItems.order.totalPrice / 100
+                } catch (e: Exception) {
+                    0.0f
+                }
+            }
+            receipt += """
+                [L]Discount: [R]-£<b>$discount</b>${'\n'}
+                [L]<b>Total:</b> [R]<b>£${orderWithOrderItems.order.totalPrice - discount}</b>${'\n'}
+            """.trimIndent()
+        }
+        receipt += """
             [L]${'\n'}${'\n'}
         """.trimIndent()
     }

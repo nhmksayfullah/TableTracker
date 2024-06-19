@@ -28,6 +28,7 @@ import app.tabletracker.common.data.RestaurantExtra
 import app.tabletracker.core.ui.TabbedScreen
 import app.tabletracker.settings.ui.SettingsUiEvent
 import app.tabletracker.settings.ui.SettingsViewModel
+import app.tabletracker.settings.ui.section.GeneralSettingsSection
 
 @Composable
 fun SettingsScreen(
@@ -37,69 +38,21 @@ fun SettingsScreen(
     BackHandler(true) {}
 
     val settingsUiState by settingsViewModel.uiState.collectAsState()
-    var totalTable by rememberSaveable {
-        mutableStateOf("")
-    }
-    var firstTime by rememberSaveable {
-        mutableStateOf(true)
-    }
 
-    Log.d("settings: ", settingsUiState.restaurantInfo.toString())
-    Log.d("settings: ", settingsUiState.restaurantExtra.toString())
 
-    val settingsTitle = listOf("General", "Printer", "Receipt")
+
+    val settingsTitle = listOf("General", "Printer", "Receipt", "Discounts")
     TabbedScreen(titles = settingsTitle) {
         when (it) {
             0 -> {
-                Scaffold(
-                    floatingActionButton = {
-                        ExtendedFloatingActionButton(onClick = {
-                            if (settingsUiState.restaurantExtra != null) {
-                                val total = totalTable.toIntOrNull() ?: 0
-                                settingsViewModel.onEvent(SettingsUiEvent.UpdateRestaurantExtra(
-                                    settingsUiState.restaurantExtra!!.copy(totalTable = total)))
-                            } else {
-                                if (settingsUiState.restaurantInfo != null) {
-                                    val total = totalTable.toIntOrNull() ?: 0
-                                    settingsViewModel.onEvent(
-                                        SettingsUiEvent.UpdateRestaurantExtra(
-                                            RestaurantExtra(
-                                                restaurantId = settingsUiState.restaurantInfo!!.id,
-                                                totalTable = total
-                                            )
-                                        )
-                                    )
-                                }
-                            }
-                            Log.d("settings: ", settingsUiState.restaurantExtra.toString())
-                        }) {
-                            Text(text = "Update")
-                        }
-                    }
+                GeneralSettingsSection(
+                    settingsUiState = settingsUiState
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(it)
-                            .padding(16.dp)
-                    ) {
-                        TextField(
-                            value = if (firstTime) settingsUiState.restaurantExtra?.totalTable?.toString() ?: totalTable else totalTable,
-                            onValueChange = {
-                                firstTime = false
-                                totalTable = it
-                            },
-                            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                            placeholder = {
-                                Text(text = "13")
-                            },
-                            label = {
-                                Text(text = "Total DineIn table")
-                            },
-                            singleLine = true
-                        )
-                    }
+                    settingsViewModel.onEvent(it)
                 }
+            }
+            3 -> {
+
             }
         }
     }

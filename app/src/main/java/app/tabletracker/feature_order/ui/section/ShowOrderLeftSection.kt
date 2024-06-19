@@ -1,7 +1,9 @@
 package app.tabletracker.feature_order.ui.section
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,28 +13,35 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.TabbedScreen
 import app.tabletracker.feature_customer.data.model.Customer
 import app.tabletracker.feature_menu.data.entity.MenuItem
+import app.tabletracker.feature_order.data.entity.Discount
 import app.tabletracker.feature_order.data.entity.OrderItem
 import app.tabletracker.feature_order.data.entity.OrderItemStatus
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
@@ -62,6 +71,10 @@ fun ShowOrderLeftSection(
     var addOrderToItemDialogState by rememberSaveable {
         mutableStateOf(false)
     }
+
+    var addDiscountDialogState by rememberSaveable {
+        mutableStateOf(false)
+    }
     val context = LocalContext.current
 
     Scaffold(
@@ -82,6 +95,49 @@ fun ShowOrderLeftSection(
                             Spacer(modifier = Modifier.weight(1f))
                             Text(text = "£${order.order.totalPrice}")
                         }
+                        if(order.order.discount != null) {
+                            val discount = order.order.discount.value.let {
+                                try {
+                                    it.toFloat() * order.order.totalPrice / 100
+                                } catch (e: Exception) {
+                                    0.0f
+                                }
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(text = "Discount:")
+                                Spacer(modifier = Modifier.weight(1f))
+                                if (!readOnly) {
+                                    IconButton(onClick = {
+                                        addDiscountDialogState = true
+                                    }) {
+                                        Icon(imageVector = Icons.Default.Edit, contentDescription =null)
+                                    }
+                                }
+                                Text(text = "-£$discount")
+                            }
+                            Row {
+                                Text(text = "Total:")
+                                Spacer(modifier = Modifier.weight(1f))
+                                Text(text = "£${order.order.totalPrice - discount}")
+                            }
+                        } else {
+                            if (!readOnly) {
+                                Box(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    contentAlignment = Alignment.CenterEnd
+                                ) {
+                                    TextButton(onClick = {
+                                        addDiscountDialogState = true
+                                    }) {
+                                        Text(text = "Add Discount")
+                                    }
+                                }
+                            }
+                        }
+
                     }
                 }
                 Spacer(modifier = Modifier.height(4.dp))
@@ -251,6 +307,46 @@ fun ShowOrderLeftSection(
             },
             title = {
                 Text(text = "Please add item to order")
+            }
+        )
+    }
+
+    if (addDiscountDialogState) {
+        var discount by rememberSaveable {
+            mutableStateOf(order.order.discount?.value ?: "")
+        }
+        AlertDialog(
+            onDismissRequest = { addOrderToItemDialogState = false},
+            confirmButton = {
+                Button(onClick = {
+                    if (discount.isNotEmpty()) {
+                        onOrderUiEvent(OrderUiEvent.UpdateCurrentOrder(order.order.copy(discount = Discount(title = "", value = discount))))
+                        addDiscountDialogState = false
+                    }
+                }) {
+                    Text(text = "Add Discount")
+                }
+            },
+            title = {
+
+                TextField(
+                    value = discount,
+                    onValueChange = {
+                        discount = it
+                    },
+                    label = {
+                        Text(text = "Discount (%)")
+                    },
+                    placeholder = {
+                        Text(text = "15")
+                    },
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                )
+            },
+            dismissButton = {
+                Button(onClick = { addDiscountDialogState = false }) {
+                    Text(text = "Dismiss")
+                }
             }
         )
     }
