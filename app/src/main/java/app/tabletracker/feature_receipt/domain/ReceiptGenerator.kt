@@ -70,7 +70,7 @@ class ReceiptGenerator(
                     it.menuItem.prices[orderWithOrderItems.order.orderType]?.times(it.quantity)
                         ?: 0.0f
                 orderItemsString += """
-                    [L]${it.quantity}x ${it.menuItem.name}[R]£${price}${'\n'}
+                    [L]<font size='big'>${it.quantity}x ${it.menuItem.name}</font>[R]<font size='big'>£${price}${'\n'}</font>
                 """.trimIndent()
             }
         }
