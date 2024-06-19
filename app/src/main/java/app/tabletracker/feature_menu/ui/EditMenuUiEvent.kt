@@ -11,6 +11,7 @@ sealed class EditMenuUiEvent {
     data object AddNewCategory: EditMenuUiEvent()
     data object AddNewMenuItem: EditMenuUiEvent()
     data class UpsertCategory(val category: Category): EditMenuUiEvent()
+    data class UpsertCategories(val categories: List<Category>): EditMenuUiEvent()
     data class UpsertMenuItem(val menuItem: MenuItem): EditMenuUiEvent()
 
     data class DeleteCategory(val category: Category): EditMenuUiEvent()

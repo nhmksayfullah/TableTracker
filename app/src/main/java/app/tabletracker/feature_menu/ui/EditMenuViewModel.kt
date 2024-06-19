@@ -11,6 +11,7 @@ import app.tabletracker.feature_order.data.entity.OrderType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -93,6 +94,12 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
                     repository.deleteMenuItem(event.menuItem)
                 }
             }
+
+            is EditMenuUiEvent.UpsertCategories -> {
+                viewModelScope.launch {
+                    repository.updateCategories(event.categories)
+                }
+            }
         }
     }
 
@@ -136,6 +143,8 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
                     categories = it
                 )
             }
+        }.onCompletion {
+            updateCategoryIndex()
         }.launchIn(viewModelScope)
     }
 
@@ -149,6 +158,16 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
                     prices = updatedPrices
                 )
             )
+        }
+    }
+
+    private fun updateCategoryIndex() {
+        if (uiState.value.categories.any { it.index == -1 }) {
+            uiState.value.categories.forEachIndexed { index, category ->
+                viewModelScope.launch {
+                    repository.writeCategory(category.copy(index = index))
+                }
+            }
         }
     }
 }

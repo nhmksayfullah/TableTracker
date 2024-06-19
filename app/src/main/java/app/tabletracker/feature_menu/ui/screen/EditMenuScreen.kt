@@ -132,6 +132,9 @@ fun EditMenuScreen(
                     editMenuViewModel.onEvent(EditMenuUiEvent.AddNewMenuItem)
                     leftSectionState = LeftSectionState.AddNewMenuItem
 
+                },
+                onUpdateCategories = {
+                    editMenuViewModel.onEvent(EditMenuUiEvent.UpsertCategories(it))
                 }
             )
         }

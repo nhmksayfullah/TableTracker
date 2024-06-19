@@ -39,4 +39,8 @@ class EditMenuRoomRepository(private val menuDao: MenuDao): EditMenuRepository {
     override suspend fun deleteCategory(category: Category) {
         menuDao.deleteCategory(category)
     }
+
+    override suspend fun updateCategories(categories: List<Category>) {
+        menuDao.updateCategories(categories)
+    }
 }

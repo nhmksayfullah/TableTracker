@@ -15,4 +15,5 @@ interface EditMenuRepository {
     suspend fun writeCategory(category: Category)
     suspend fun deleteMenuItem(menuItem: MenuItem)
     suspend fun deleteCategory(category: Category)
+    suspend fun updateCategories(categories: List<Category>)
 }

@@ -100,4 +100,6 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
+    implementation(libs.reorderable)
+
 }

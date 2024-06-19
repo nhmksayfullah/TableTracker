@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import androidx.room.Upsert
 import app.tabletracker.feature_menu.data.entity.Category
 import app.tabletracker.feature_menu.data.entity.CategoryWithMenuItems
@@ -35,4 +36,7 @@ interface MenuDao {
     suspend fun deleteMenuItem(menuItem: MenuItem)
     @Delete
     suspend fun deleteCategory(category: Category)
+
+    @Update
+    suspend fun updateCategories(categories: List<Category>)
 }

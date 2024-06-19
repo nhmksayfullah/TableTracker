@@ -97,7 +97,7 @@ fun TakeOrderScreen(
 //                )
                 if (isCategoryVisible) {
                     SelectCategoryRightSection(
-                        menus = orderUiState.menus,
+                        menus = orderUiState.menus.sortedBy { it.category.index },
                         onCategoryClicked = {
                             isCategoryVisible = false
                             selectedCategoryIndex = it.id - 1

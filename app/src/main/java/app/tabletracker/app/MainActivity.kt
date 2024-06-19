@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.lazy.grid.LazyGridItemInfo
 import app.tabletracker.theme.TableTrackerTheme
 
 

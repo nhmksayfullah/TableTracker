@@ -12,5 +12,7 @@ data class Category(
     val name: String,
     @ColumnInfo(name = "isKitchenCategory", defaultValue = "true")
     val isKitchenCategory: Boolean = true,
-    val creationTime: Long = generateInstantTime()
+    val creationTime: Long = generateInstantTime(),
+    @ColumnInfo(name = "index", defaultValue = "-1")
+    val index: Int = -1
 )
