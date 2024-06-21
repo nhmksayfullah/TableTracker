@@ -70,7 +70,7 @@ class ReceiptGenerator(
                     it.menuItem.prices[orderWithOrderItems.order.orderType]?.times(it.quantity)
                         ?: 0.0f
                 orderItemsString += """
-                    [L]<font size='big'>${it.quantity}x ${it.menuItem.name}</font>[R]<font size='big'>£${price}${'\n'}</font>
+                    [L]<b>${it.quantity}x ${it.menuItem.name}</b><b>£${price}${'\n'}</b>
                 """.trimIndent()
             }
         }
@@ -81,7 +81,7 @@ class ReceiptGenerator(
     private fun populateTotalPrice() {
         receipt += """
             [L]${'\n'}
-            [L]Sub Total: [R]£${orderWithOrderItems.order.totalPrice}${'\n'}
+            [L]<b>Sub Total:</b> [R]<b>£${orderWithOrderItems.order.totalPrice}</b>${'\n'}
         """.trimIndent()
         if (orderWithOrderItems.order.discount != null) {
             val discount = orderWithOrderItems.order.discount.value.let {
@@ -92,7 +92,7 @@ class ReceiptGenerator(
                 }
             }
             receipt += """
-                [L]Discount: [R]-£<b>$discount</b>${'\n'}
+                [L]<b>Discount:</b> [R]-£<b>$discount</b>${'\n'}
                 [L]<b>Total:</b> [R]<b>£${orderWithOrderItems.order.totalPrice - discount}</b>${'\n'}
             """.trimIndent()
         }
