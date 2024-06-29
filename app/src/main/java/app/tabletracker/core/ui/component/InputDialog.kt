@@ -29,7 +29,7 @@ import androidx.compose.ui.window.Dialog
 fun KeyboardDialog(
     modifier: Modifier = Modifier,
     dialogState: Boolean = false,
-    keyboardType: KeyboardType = KeyboardType.Alphabetic,
+    keyboardType: DialogKeyboardType = DialogKeyboardType.Alphabetic,
     value: String = "",
     onDismissRequest: () -> Unit,
     onCompleted: (String) -> Unit
@@ -53,7 +53,7 @@ fun KeyboardDialog(
             )
             Spacer(modifier = Modifier.height(20.dp))
             when(keyboardType) {
-                KeyboardType.Alphabetic -> {
+                DialogKeyboardType.Alphabetic -> {
                     CoreAlphabeticKeyboard(
                         onKeyPressed = {
                             _value += it
@@ -69,7 +69,7 @@ fun KeyboardDialog(
                         }
                     )
                 }
-                KeyboardType.Numeric -> {
+                DialogKeyboardType.Numeric -> {
                     CoreNumericKeyboard(
                         onKeyPressed = {
                             if (it == '.') {
@@ -326,6 +326,6 @@ object Keys {
 
 }
 
-enum class KeyboardType {
+enum class DialogKeyboardType {
     Alphabetic, Numeric
 }

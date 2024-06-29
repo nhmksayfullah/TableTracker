@@ -7,14 +7,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import app.tabletracker.core.ui.TabbedScreen
-import app.tabletracker.core.ui.component.CoreAlphabeticKeyboard
 import app.tabletracker.core.ui.component.KeyboardDialog
-import app.tabletracker.core.ui.component.KeyboardType
+import app.tabletracker.core.ui.component.DialogKeyboardType
 import app.tabletracker.settings.ui.SettingsViewModel
 import app.tabletracker.settings.ui.section.GeneralSettingsSection
 
@@ -55,7 +53,7 @@ fun SettingsScreen(
                         KeyboardDialog(
                             onDismissRequest = { dialogState = false },
                             value = buttonText,
-                            keyboardType = KeyboardType.Numeric
+                            keyboardType = DialogKeyboardType.Numeric
                         ) {
                             buttonText = it
                             dialogState = false

@@ -21,12 +21,19 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.TabbedScreen
+import app.tabletracker.core.ui.component.DialogKeyboardType
+import app.tabletracker.core.ui.component.DisabledTextField
+import app.tabletracker.core.ui.component.KeyboardDialog
 import app.tabletracker.feature_menu.data.entity.CategoryWithMenuItems
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_menu.util.EditMenuTabOption
@@ -171,59 +178,56 @@ fun EditPricesSection(
     menuItem: MenuItem,
     onMenuItemPricesChange: (Pair<OrderType, Float>) -> Unit
 ) {
+    var keyboardState by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var orderType by rememberSaveable {
+        mutableStateOf(OrderType.DineIn)
+    }
+    if (keyboardState) {
+        KeyboardDialog(
+            onDismissRequest = { keyboardState = false },
+            value = menuItem.prices[orderType]?.takeIf { it != 0.0f }?.toString() ?: "",
+            keyboardType = DialogKeyboardType.Numeric
+        ) {
+            try {
+                onMenuItemPricesChange(Pair(orderType, it.toFloat()))
+            } catch (_: Exception) {}
+            keyboardState = false
+        }
+    }
     Column {
         Spacer(modifier = Modifier.height(8.dp))
-        TextField(
+        DisabledTextField(
             value = menuItem.prices[OrderType.DineIn]?.takeIf { it != 0.0f }?.toString() ?: "",
-            onValueChange = { value ->
-                try {
-                    onMenuItemPricesChange(Pair(OrderType.DineIn, value.toFloat()))
-                } catch (_: Exception) {}
-            },
-            label = {
-                Text(text = "${OrderType.DineIn.name} price")
-            },
+            label = "${OrderType.DineIn.name} price",
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Decimal
-            )
+            onClink = {
+                orderType = OrderType.DineIn
+                keyboardState = true
+            }
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        TextField(
+        DisabledTextField(
             value = menuItem.prices[OrderType.TakeOut]?.takeIf { it != 0.0f }?.toString() ?: "",
-            onValueChange = { value ->
-                try {
-                    onMenuItemPricesChange(Pair(OrderType.TakeOut, value.toFloat()))
-                } catch (_: Exception) {}
-            },
-            label = {
-                Text(text = "${OrderType.TakeOut.name} price")
-            },
+            label = "${OrderType.TakeOut.name} price",
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Next,
-                keyboardType = KeyboardType.Decimal
-            )
+            onClink = {
+                orderType = OrderType.TakeOut
+                keyboardState = true
+            }
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        TextField(
+        DisabledTextField(
             value = menuItem.prices[OrderType.Delivery]?.takeIf { it != 0.0f }?.toString() ?: "",
-            onValueChange = { value ->
-                try {
-                    onMenuItemPricesChange(Pair(OrderType.Delivery, value.toFloat()))
-                } catch (_: Exception) {}
-            },
-            label = {
-                Text(text = "${OrderType.Delivery.name} price")
-            },
+            label = "${OrderType.Delivery.name} price",
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Number
-            )
+            onClink = {
+                orderType = OrderType.Delivery
+                keyboardState = true
+            }
         )
 
     }
