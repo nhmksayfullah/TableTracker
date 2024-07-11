@@ -198,6 +198,9 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
                     },
                     completedOrders = it.filter { orderWithOrderItems ->
                         orderWithOrderItems.order.orderStatus == OrderStatus.Completed
+                    },
+                    cancelledOrders = it.filter { orderWithOrderItems ->
+                        orderWithOrderItems.order.orderStatus == OrderStatus.Cancelled
                     }
                 )
             }

@@ -84,7 +84,7 @@ fun RunningOrderScreen(
             }
         },
         rightContent = {
-            val orderStatusList = listOf(OrderStatus.Running.name, OrderStatus.Completed.name)
+            val orderStatusList = listOf(OrderStatus.Running.name, OrderStatus.Completed.name, OrderStatus.Cancelled.name)
             TabbedScreen(
                 titles = orderStatusList,
                 onClick = {selectedOrderId = -1}
@@ -114,6 +114,13 @@ fun RunningOrderScreen(
                                 orderViewModel.onEvent(OrderUiEvent.UpdateCurrentOrderWithOrderItems(orderUiState.completedOrders[it].order.id))
                             }
                         }
+                        OrderStatus.Cancelled -> {
+                            ShowOrderListRightSection(orders = orderUiState.cancelledOrders) {
+                                selectedOrderId = it
+                                orderViewModel.onEvent(OrderUiEvent.UpdateCurrentOrderWithOrderItems(orderUiState.cancelledOrders[it].order.id))
+                            }
+                        }
+
                         else -> {
 
                         }

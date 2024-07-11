@@ -17,6 +17,9 @@ data class OrderUiState(
     val completedOrders: List<OrderWithOrderItems> = todayOrders.filter {
         it.order.orderStatus == OrderStatus.Completed
     },
+    val cancelledOrders: List<OrderWithOrderItems> = todayOrders.filter {
+        it.order.orderStatus == OrderStatus.Cancelled
+    },
     val restaurantInfo: Restaurant? = null,
     val restaurantExtra: RestaurantExtra? = null
 )

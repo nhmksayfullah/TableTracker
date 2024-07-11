@@ -31,6 +31,8 @@ fun KeyboardDialog(
     dialogState: Boolean = false,
     keyboardType: DialogKeyboardType = DialogKeyboardType.Alphabetic,
     value: String = "",
+    placeholder: String = "Enter value",
+    label: String = "Enter value",
     onDismissRequest: () -> Unit,
     onCompleted: (String) -> Unit
 ) {
@@ -49,7 +51,13 @@ fun KeyboardDialog(
                 value = _value,
                 onValueChange = { _value = it },
                 readOnly = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(text = placeholder)
+                },
+                label = {
+                    Text(text = label)
+                }
             )
             Spacer(modifier = Modifier.height(20.dp))
             when(keyboardType) {

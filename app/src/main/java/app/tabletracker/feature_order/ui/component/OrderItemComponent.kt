@@ -11,11 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -31,6 +29,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.tabletracker.R
+import app.tabletracker.core.ui.component.KeyboardDialog
 import app.tabletracker.feature_menu.data.DummyData
 import app.tabletracker.feature_order.data.entity.OrderItem
 import app.tabletracker.feature_order.data.entity.OrderItemStatus
@@ -48,7 +47,7 @@ fun OrderItemComponent(
     onItemRemoveClick: () -> Unit,
     onItemChange: (OrderItem) -> Unit
 ) {
-    var dropDownState by rememberSaveable {
+    var keyboardState by rememberSaveable {
         mutableStateOf(false)
     }
     var addedNote by rememberSaveable {
@@ -71,7 +70,7 @@ fun OrderItemComponent(
                     if (!readOnly) {
                         onItemRemoveClick()
                         addedNote = ""
-                        dropDownState = false
+                        keyboardState = false
                     }
                 }
             ) {
@@ -108,7 +107,7 @@ fun OrderItemComponent(
                             if (orderItem.quantity == 1) {
                                 onItemRemoveClick()
                                 addedNote = ""
-                                dropDownState = false
+                                keyboardState = false
                             } else {
                                 onItemChange(orderItem.copy(quantity = orderItem.quantity - 1))
                             }
@@ -151,10 +150,10 @@ fun OrderItemComponent(
 
                 // DropDown:: click to expend the order item to customize the order.
                 IconButton(
-                    onClick = { dropDownState = !dropDownState }
+                    onClick = { keyboardState = !keyboardState }
                 ) {
                     Icon(
-                        imageVector = if (dropDownState) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                        imageVector = Icons.Default.Edit,
                         contentDescription = "Customize the item"
                     )
                 }
@@ -162,16 +161,19 @@ fun OrderItemComponent(
         }
 
         // this section will only appear if user click the drop down arrow.
-        if (dropDownState) {
-            OrderItemCustomizeSection(
-                addedNote = if (readOnly) orderItem.addedNote else addedNote,
-                readOnly = readOnly
+        if (keyboardState) {
+            KeyboardDialog(
+                onDismissRequest = {
+                    keyboardState = false
+                },
+                value = orderItem.addedNote,
+                label = "Note"
             ) {
-                if (!readOnly) {
-                    addedNote = it
-                    onItemChange(orderItem.copy(addedNote = addedNote))
-                }
+                addedNote = it
+                onItemChange(orderItem.copy(addedNote = it))
+                keyboardState = false
             }
+
         }
 
         // It draws a horizontal line on the bottom of the item to separate it from the next item.
