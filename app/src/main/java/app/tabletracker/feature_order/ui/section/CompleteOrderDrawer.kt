@@ -57,16 +57,22 @@ fun CompleteOrderDrawer(
                 Column(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-                    if (orderUiState.currentOrder?.order?.orderType == OrderType.DineIn) {
-                        Button(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = {
+//                    if (orderUiState.currentOrder?.order?.orderType == OrderType.DineIn) {
+//
+//                    }
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            if (orderUiState.currentOrder != null) {
                                 if (orderUiState.currentOrder.orderItems.find {
-                                    it.orderItemStatus == OrderItemStatus.Added
+                                        it.orderItemStatus == OrderItemStatus.Added
                                     } != null) {
                                     val printerManager = PrinterManager(context as Activity)
                                     val receiptGenerator =
-                                        ReceiptGenerator(orderUiState.restaurantInfo, orderUiState.currentOrder)
+                                        ReceiptGenerator(
+                                            orderUiState.restaurantInfo,
+                                            orderUiState.currentOrder
+                                        )
                                     printerManager.print(receiptGenerator.generateKitchenCopy())
                                 }
 
@@ -85,18 +91,20 @@ fun CompleteOrderDrawer(
                                 )
                                 orderUiEvent(OrderUiEvent.UpdateCurrentOrderWithOrderItems(null))
                             }
-                        ) {
-                            Text(text = "Save Order")
                         }
+                    ) {
+                        Text(text = "Save Order")
                     }
-
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
                             if (orderUiState.currentOrder != null) {
                                 val printerManager = PrinterManager(context as Activity)
                                 val receiptGenerator =
-                                    ReceiptGenerator(orderUiState.restaurantInfo, orderUiState.currentOrder)
+                                    ReceiptGenerator(
+                                        orderUiState.restaurantInfo,
+                                        orderUiState.currentOrder
+                                    )
                                 if (orderUiState.currentOrder.orderItems.find {
                                         it.orderItemStatus == OrderItemStatus.Added
                                     } != null) {
@@ -186,7 +194,8 @@ fun CompleteOrderDrawer(
                     val tableNumbers = mutableListOf<Int>()
                     if (orderUiState.restaurantExtra?.totalTable != 0) {
                         for (i in 1..orderUiState.restaurantExtra!!.totalTable) {
-                            val availableTables = orderUiState.runningOrders.map { it.order.tableNumber }
+                            val availableTables =
+                                orderUiState.runningOrders.map { it.order.tableNumber }
                             if (i !in availableTables) {
                                 tableNumbers.add(i)
                             }
@@ -208,9 +217,10 @@ fun CompleteOrderDrawer(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        val fieldValue: String = if (orderUiState.currentOrder.order.tableNumber != null) {
-                            "Table ${orderUiState.currentOrder.order.tableNumber}"
-                        } else selectedTable
+                        val fieldValue: String =
+                            if (orderUiState.currentOrder.order.tableNumber != null) {
+                                "Table ${orderUiState.currentOrder.order.tableNumber}"
+                            } else selectedTable
                         TextField(
                             value = fieldValue,
                             onValueChange = {
@@ -241,11 +251,13 @@ fun CompleteOrderDrawer(
                                     onClick = {
                                         selectedTable = tableNumber.toString()
                                         expendedState = false
-                                        orderUiEvent(OrderUiEvent.UpdateCurrentOrder(
-                                            orderUiState.currentOrder.order.copy(
-                                                tableNumber = tableNumber
+                                        orderUiEvent(
+                                            OrderUiEvent.UpdateCurrentOrder(
+                                                orderUiState.currentOrder.order.copy(
+                                                    tableNumber = tableNumber
+                                                )
                                             )
-                                        ))
+                                        )
                                     },
                                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                                 )

@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.tabletracker.feature_order.data.entity.OrderStatus
+import app.tabletracker.feature_order.data.entity.OrderType
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
 import app.tabletracker.feature_order.ui.component.OrderComponent
 
@@ -25,7 +26,7 @@ fun ShowOrderListRightSection(
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(orders) {
+            items(orders.filter { it.order.orderType != OrderType.DineIn }) {
                 OrderComponent(order = it.order) {order ->
                     onOrderItemClick(orders.indexOf(it))
                 }
