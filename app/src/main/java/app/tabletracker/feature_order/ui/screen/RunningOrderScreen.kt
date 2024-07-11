@@ -8,14 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -25,13 +23,13 @@ import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.SplitScreen
 import app.tabletracker.core.ui.TabbedScreen
 import app.tabletracker.feature_order.data.entity.OrderStatus
+import app.tabletracker.feature_order.data.entity.OrderType
 import app.tabletracker.feature_order.ui.OrderUiEvent
 import app.tabletracker.feature_order.ui.OrderViewModel
 import app.tabletracker.feature_order.ui.component.ShowOrderColumnNamesOnRightSection
+import app.tabletracker.feature_order.ui.section.ShowDineInOrderListRightSection
 import app.tabletracker.feature_order.ui.section.ShowOrderLeftSection
 import app.tabletracker.feature_order.ui.section.ShowOrderListRightSection
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun RunningOrderScreen(
@@ -84,40 +82,95 @@ fun RunningOrderScreen(
             }
         },
         rightContent = {
-            val orderStatusList = listOf(OrderStatus.Running.name, OrderStatus.Completed.name, OrderStatus.Cancelled.name)
+            val orderStatusList = listOf(
+                OrderStatus.Running.name,
+                OrderStatus.Completed.name,
+                OrderStatus.Cancelled.name
+            )
             TabbedScreen(
                 titles = orderStatusList,
-                onClick = {selectedOrderId = -1}
+                onClick = { selectedOrderId = -1 }
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Column {
-                    ShowOrderColumnNamesOnRightSection()
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Spacer(modifier = Modifier
-                        .height(1.dp)
-                        .padding(end = 16.dp)
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.primary)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
 
-                    when(OrderStatus.valueOf(orderStatusList[it])) {
+                    when (OrderStatus.valueOf(orderStatusList[it])) {
                         OrderStatus.Running -> {
-                            ShowOrderListRightSection(orders = orderUiState.runningOrders) {
-                                selectedOrderId = it
-                                orderViewModel.onEvent(OrderUiEvent.UpdateCurrentOrderWithOrderItems(orderUiState.runningOrders[it].order.id))
+                            Column {
+
+                                ShowDineInOrderListRightSection(
+                                    totalTable = orderUiState.restaurantExtra?.totalTable ?: 0,
+                                    orders = orderUiState.runningOrders
+                                ) {
+                                    selectedOrderId = it
+                                    orderViewModel.onEvent(
+                                        OrderUiEvent.UpdateCurrentOrderWithOrderItems(
+                                            orderUiState.runningOrders[it].order.id
+                                        )
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(16.dp))
+                                ShowOrderColumnNamesOnRightSection()
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(
+                                    modifier = Modifier
+                                        .height(1.dp)
+                                        .padding(end = 16.dp)
+                                        .fillMaxWidth()
+                                        .background(MaterialTheme.colorScheme.primary)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                ShowOrderListRightSection(orders = orderUiState.runningOrders.filter { it.order.orderType != OrderType.DineIn }) {
+                                    selectedOrderId = it
+                                    orderViewModel.onEvent(
+                                        OrderUiEvent.UpdateCurrentOrderWithOrderItems(
+                                            orderUiState.runningOrders[it].order.id
+                                        )
+                                    )
+                                }
                             }
                         }
+
                         OrderStatus.Completed -> {
+                            ShowOrderColumnNamesOnRightSection()
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(
+                                modifier = Modifier
+                                    .height(1.dp)
+                                    .padding(end = 16.dp)
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.primary)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
                             ShowOrderListRightSection(orders = orderUiState.completedOrders) {
                                 selectedOrderId = it
-                                orderViewModel.onEvent(OrderUiEvent.UpdateCurrentOrderWithOrderItems(orderUiState.completedOrders[it].order.id))
+                                orderViewModel.onEvent(
+                                    OrderUiEvent.UpdateCurrentOrderWithOrderItems(
+                                        orderUiState.completedOrders[it].order.id
+                                    )
+                                )
                             }
                         }
+
                         OrderStatus.Cancelled -> {
+                            ShowOrderColumnNamesOnRightSection()
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(
+                                modifier = Modifier
+                                    .height(1.dp)
+                                    .padding(end = 16.dp)
+                                    .fillMaxWidth()
+                                    .background(MaterialTheme.colorScheme.primary)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
                             ShowOrderListRightSection(orders = orderUiState.cancelledOrders) {
                                 selectedOrderId = it
-                                orderViewModel.onEvent(OrderUiEvent.UpdateCurrentOrderWithOrderItems(orderUiState.cancelledOrders[it].order.id))
+                                orderViewModel.onEvent(
+                                    OrderUiEvent.UpdateCurrentOrderWithOrderItems(
+                                        orderUiState.cancelledOrders[it].order.id
+                                    )
+                                )
                             }
                         }
 

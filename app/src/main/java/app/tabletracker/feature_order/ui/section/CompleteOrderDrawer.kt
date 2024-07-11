@@ -186,7 +186,11 @@ fun CompleteOrderDrawer(
                     val tableNumbers = mutableListOf<Int>()
                     if (orderUiState.restaurantExtra?.totalTable != 0) {
                         for (i in 1..orderUiState.restaurantExtra!!.totalTable) {
-                            tableNumbers.add(i)
+                            val availableTables = orderUiState.runningOrders.map { it.order.tableNumber }
+                            if (i !in availableTables) {
+                                tableNumbers.add(i)
+                            }
+
                         }
                     }
 
