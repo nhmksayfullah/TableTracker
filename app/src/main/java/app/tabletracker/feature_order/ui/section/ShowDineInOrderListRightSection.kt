@@ -43,6 +43,8 @@ fun ShowDineInOrderListRightSection(
                             }.let {
                                 onOrderItemClick(orders.indexOf(it))
                             }
+                        } else {
+                            onOrderItemClick(-1)
                         }
                     }
                 }

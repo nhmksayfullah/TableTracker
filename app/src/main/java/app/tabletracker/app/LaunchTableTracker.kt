@@ -1,9 +1,6 @@
 package app.tabletracker.app
 
 import android.app.Activity
-import android.content.pm.ActivityInfo
-import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -34,11 +31,11 @@ fun LaunchTableTracker(
 ) {
 
 
-    val act = LocalContext.current
+    val context = LocalContext.current
     val appViewModel: AppViewModel = viewModel(factory = AccessViewModelProvider.Factory)
     val appUiState by appViewModel.uiState.collectAsState()
     // calculates the windowSize and launch.
-    val windowSize = calculateWindowSizeClass(activity = act as Activity).widthSizeClass
+    val windowSize = calculateWindowSizeClass(activity = context as Activity).widthSizeClass
 
 
 

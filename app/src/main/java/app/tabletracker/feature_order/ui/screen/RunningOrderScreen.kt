@@ -103,11 +103,13 @@ fun RunningOrderScreen(
                                     orders = orderUiState.runningOrders
                                 ) {
                                     selectedOrderId = it
-                                    orderViewModel.onEvent(
-                                        OrderUiEvent.UpdateCurrentOrderWithOrderItems(
-                                            orderUiState.runningOrders[it].order.id
+                                    if (selectedOrderId != -1) {
+                                        orderViewModel.onEvent(
+                                            OrderUiEvent.UpdateCurrentOrderWithOrderItems(
+                                                orderUiState.runningOrders[it].order.id
+                                            )
                                         )
-                                    )
+                                    }
                                 }
 
                                 Spacer(modifier = Modifier.height(16.dp))
