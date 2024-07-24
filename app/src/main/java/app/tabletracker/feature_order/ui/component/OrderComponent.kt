@@ -111,7 +111,7 @@ fun OrderComponent(
             TableCell(
                 contentAlignment = Alignment.CenterEnd
             ) {
-                Text(text = "£${order.totalPrice}")
+                Text(text = "£${String.format("%.2f", order.totalPrice)}")
             }
         }
     }

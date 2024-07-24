@@ -93,7 +93,7 @@ fun ShowOrderLeftSection(
                         Row {
                             Text(text = "Sub Total:")
                             Spacer(modifier = Modifier.weight(1f))
-                            Text(text = "£${order.order.totalPrice}")
+                            Text(text = "£${String.format("%.2f", order.order.totalPrice)}")
                         }
                         if(order.order.discount != null) {
                             val discount = order.order.discount.value.let {
@@ -116,12 +116,12 @@ fun ShowOrderLeftSection(
                                         Icon(imageVector = Icons.Default.Edit, contentDescription =null)
                                     }
                                 }
-                                Text(text = "-£$discount")
+                                Text(text = "-£${String.format("%.2f", discount)}")
                             }
                             Row {
                                 Text(text = "Total:")
                                 Spacer(modifier = Modifier.weight(1f))
-                                Text(text = "£${order.order.totalPrice - discount}")
+                                Text(text = "£${String.format("%.2f", order.order.totalPrice - discount)}")
                             }
                         } else {
                             if (!readOnly) {

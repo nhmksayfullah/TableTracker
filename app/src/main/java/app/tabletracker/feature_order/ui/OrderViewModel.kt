@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 
 class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
     private var _uiState = MutableStateFlow(OrderUiState())
@@ -97,7 +98,6 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
                     }
 
                 }
-                Log.d("current order: populating", uiState.value.currentOrder.toString())
             }.launchIn(viewModelScope)
         } else {
             populateLatestOrder()
@@ -112,7 +112,6 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
     }
 
     private fun updateCurrentOrderItemsStatus(orderItemStatus: OrderItemStatus) {
-        Log.d("Is problem here: ", "Maybe")
         viewModelScope.launch(Dispatchers.IO) {
             uiState.value.currentOrder?.orderItems?.forEach {
                 val orderItem = it.copy(orderItemStatus = orderItemStatus)
@@ -155,7 +154,6 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
     private fun updateOrderItem(orderItem: OrderItem) {
         viewModelScope.launch(Dispatchers.IO){
             repository.writeOrderItem(orderItem)
-
         }
     }
 
@@ -183,7 +181,6 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
                     currentOrder = it
                 )
             }
-            Log.d("current order: populating", uiState.value.currentOrder.toString())
         }.launchIn(viewModelScope)
     }
 
@@ -219,7 +216,6 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
     }
 
     private fun calculateTotalPrice(orderWithOrderItems: OrderWithOrderItems): Float {
-        Log.d("current order: calculating", uiState.value.currentOrder.toString())
         var totalPrice = 0.0f
 
         val orderItems = orderWithOrderItems.orderItems
@@ -228,7 +224,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
                 totalPrice += it.menuItem.prices[orderWithOrderItems.order.orderType]?.times(it.quantity) ?: 0.0f
             }
         }
-        return "%.2f".format(totalPrice).toFloat()
+        return totalPrice
     }
 
     private fun populateRestaurantInfo() {
