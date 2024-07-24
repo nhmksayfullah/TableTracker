@@ -1,14 +1,17 @@
 package app.tabletracker.core.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 
 
 @Composable
@@ -42,10 +46,17 @@ fun KeyboardDialog(
 
     Dialog(
         onDismissRequest = {
-        }
+        },
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Column(
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(horizontal = 200.dp, vertical = 100.dp)
+                .background(MaterialTheme.colorScheme.background, RoundedCornerShape(16.dp))
+                .padding(16.dp)
         ) {
             TextField(
                 value = _value,
@@ -200,7 +211,7 @@ fun CoreAlphabeticKeyboard(
         mutableStateOf(true)
     }
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -229,6 +240,19 @@ fun CoreAlphabeticKeyboard(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Keys.line3.forEach {
+                CoreKey(key = if (isCaps) it.uppercaseChar() else it) {
+                    onKeyPressed(it)
+                    isCaps = false
+                }
+            }
+            Spacer(modifier = Modifier.weight(1f))
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Spacer(modifier = Modifier.weight(1f))
+            Keys.line4.forEach {
                 CoreKey(key = if (isCaps) it.uppercaseChar() else it) {
                     onKeyPressed(it)
                     isCaps = false
@@ -319,7 +343,7 @@ fun RowScope.CoreKey(
             text = key.toString(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(16.dp),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleLarge
         )
@@ -328,9 +352,10 @@ fun RowScope.CoreKey(
 
 
 object Keys {
-    val line1 = listOf('q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p')
-    val line2 = listOf('a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l')
-    val line3 = listOf('z', 'x', 'c', 'v', 'b', 'n', 'm')
+    val line1 = listOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+    val line2 = listOf('q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p')
+    val line3 = listOf('a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l')
+    val line4 = listOf('z', 'x', 'c', 'v', 'b', 'n', 'm')
 
 }
 
