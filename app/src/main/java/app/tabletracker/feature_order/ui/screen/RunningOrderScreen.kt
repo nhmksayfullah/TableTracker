@@ -123,7 +123,7 @@ fun RunningOrderScreen(
                                         .background(MaterialTheme.colorScheme.primary)
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
-                                ShowOrderListRightSection(orders = orderUiState.runningOrders) {
+                                ShowOrderListRightSection(orders = orderUiState.runningOrders.filter { it.order.tableNumber == null}) {
                                     selectedOrderId = it
                                     orderViewModel.onEvent(
                                         OrderUiEvent.UpdateCurrentOrderWithOrderItems(

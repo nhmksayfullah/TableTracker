@@ -26,7 +26,7 @@ fun ShowOrderListRightSection(
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(orders.filter { it.order.orderType != OrderType.DineIn }) {
+            items(orders) {
                 OrderComponent(order = it.order) {order ->
                     onOrderItemClick(orders.indexOf(it))
                 }
