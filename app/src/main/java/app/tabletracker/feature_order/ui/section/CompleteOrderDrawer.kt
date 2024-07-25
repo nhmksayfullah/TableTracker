@@ -28,6 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import app.tabletracker.auth.data.model.Restaurant
+import app.tabletracker.core.ui.component.DialogKeyboardType
+import app.tabletracker.core.ui.component.DisabledTextField
+import app.tabletracker.core.ui.component.KeyboardDialog
 import app.tabletracker.feature_order.data.entity.OrderItemStatus
 import app.tabletracker.feature_order.data.entity.OrderStatus
 import app.tabletracker.feature_order.data.entity.OrderType
@@ -65,7 +68,8 @@ fun CompleteOrderDrawer(
                         onClick = {
                             if (orderUiState.currentOrder != null) {
                                 if (orderUiState.currentOrder.orderItems.find {
-                                        it.orderItemStatus == OrderItemStatus.Added
+                                        it.orderItemStatus == OrderItemStatus.Added &&
+                                                it.menuItem.isKitchenCategory
                                     } != null) {
                                     val printerManager = PrinterManager(context as Activity)
                                     val receiptGenerator =
@@ -106,7 +110,8 @@ fun CompleteOrderDrawer(
                                         orderUiState.currentOrder
                                     )
                                 if (orderUiState.currentOrder.orderItems.find {
-                                        it.orderItemStatus == OrderItemStatus.Added
+                                        it.orderItemStatus == OrderItemStatus.Added &&
+                                                it.menuItem.isKitchenCategory
                                     } != null) {
                                     printerManager.print(receiptGenerator.generateKitchenCopy())
                                 }
@@ -264,11 +269,46 @@ fun CompleteOrderDrawer(
                             }
                         }
                     }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    var drawerState by rememberSaveable {
+                        mutableStateOf(false)
+                    }
+                    DisabledTextField(
+                        value = "${orderUiState.currentOrder.order.totalPerson ?: 0}",
+                        label = "Total Person",
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        drawerState = true
+                    }
+
+                    if (drawerState) {
+                        KeyboardDialog(
+                            onDismissRequest = { /*TODO*/ },
+                            value = (orderUiState.currentOrder.order.totalPerson ?: "").toString(),
+                            label = "Total Person",
+                            keyboardType = DialogKeyboardType.Numeric,
+                            dialogState = drawerState
+                        ) {
+                            orderUiEvent(
+                                OrderUiEvent.UpdateCurrentOrder(
+                                    orderUiState.currentOrder.order.copy(
+                                        totalPerson = it.toIntOrNull()
+                                    )
+                                )
+                            )
+                            drawerState = false
+                        }
+                    }
+
+
                 }
 
             }
         }
     }
+
+
 }
 
 val dummyRestaurant = Restaurant(

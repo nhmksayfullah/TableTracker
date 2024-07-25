@@ -81,7 +81,7 @@ class ReceiptGenerator(
     private fun populateTotalPrice() {
         receipt += """
             [L]${'\n'}
-            [L]<b>Sub Total:</b> [R]<b>£${orderWithOrderItems.order.totalPrice}</b>${'\n'}
+            [L]<b>Sub Total:</b> [R]<b>£${String.format("%.2f", orderWithOrderItems.order.totalPrice)}</b>${'\n'}
         """.trimIndent()
         if (orderWithOrderItems.order.discount != null) {
             val discount = orderWithOrderItems.order.discount.value.let {
@@ -92,8 +92,8 @@ class ReceiptGenerator(
                 }
             }
             receipt += """
-                [L]<b>Discount:</b> [R]-£<b>$discount</b>${'\n'}
-                [L]<b>Total:</b> [R]<b>£${orderWithOrderItems.order.totalPrice - discount}</b>${'\n'}
+                [L]<b>Discount:</b> [R]-£<b>${String.format("%.2f", discount)}</b>${'\n'}
+                [L]<font size = 'big'>Total:</font> [R]<font size = 'big'>£${String.format("%.2f", orderWithOrderItems.order.totalPrice - discount)}")}</font>${'\n'}
             """.trimIndent()
         }
         receipt += """
@@ -140,6 +140,16 @@ class ReceiptGenerator(
         if (orderWithOrderItems.order.orderType == OrderType.DineIn) {
             kitchenCopy += """
                 [C]<font size='big-2'>Table number: ${orderWithOrderItems.order.tableNumber ?: "Unknown Table"}</font>${'\n'}${'\n'}
+            """.trimIndent()
+            if (orderWithOrderItems.order.totalPerson != null) {
+                kitchenCopy += """
+                [C]<font size='big'>Total Person: ${orderWithOrderItems.order.totalPerson} 
+            """.trimIndent()
+            }
+        }
+        if (orderWithOrderItems.order.orderType == OrderType.TakeOut) {
+            kitchenCopy += """
+                [C]<font size='big'>Customer: ${orderWithOrderItems.order.customer?.name}
             """.trimIndent()
         }
         orderItems.forEach {

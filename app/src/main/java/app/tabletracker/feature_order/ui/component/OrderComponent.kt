@@ -58,13 +58,13 @@ fun ShowOrderColumnNamesOnRightSection() {
                 fontWeight = FontWeight.Bold
             )
         }
-//        TableCell {
-//            Text(
-//                text = "Order Status",
-//                style = MaterialTheme.typography.bodyLarge,
-//                fontWeight = FontWeight.Bold
-//            )
-//        }
+        TableCell {
+            Text(
+                text = "Total Person",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
         TableCell {
             Text(
                 text = "Total Price",
@@ -105,9 +105,9 @@ fun OrderComponent(
             TableCell {
                 Text(text = order.paymentMethod.name)
             }
-//            TableCell {
-//                Text(text = order.orderStatus.name)
-//            }
+            TableCell {
+                Text(text = "${order.totalPerson ?: "N/A"}")
+            }
             TableCell(
                 contentAlignment = Alignment.CenterEnd
             ) {
