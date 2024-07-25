@@ -18,7 +18,10 @@ object AccessViewModelProvider {
             EditMenuViewModel(repository = accessTableTrackerApplication().container.editMenuRepository)
         }
         initializer {
-            OrderViewModel(repository = accessTableTrackerApplication().container.orderRepository)
+            OrderViewModel(
+                orderRepo = accessTableTrackerApplication().container.orderRepository,
+                customerRepo = accessTableTrackerApplication().container.customerRepository
+            )
         }
         initializer {
             AuthViewModel(repository = accessTableTrackerApplication().container.authRepository)

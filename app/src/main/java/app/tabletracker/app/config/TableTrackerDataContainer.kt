@@ -5,6 +5,8 @@ import app.tabletracker.app.data.repository.ApplicationRoomRepository
 import app.tabletracker.app.domain.repository.ApplicationRepository
 import app.tabletracker.auth.data.repository.AuthRoomRepository
 import app.tabletracker.auth.domain.repository.AuthRepository
+import app.tabletracker.feature_customer.data.repository.CustomerRoomRepository
+import app.tabletracker.feature_customer.domain.repository.CustomerRepository
 import app.tabletracker.feature_menu.data.repository.EditMenuRoomRepository
 import app.tabletracker.feature_menu.domain.repository.EditMenuRepository
 import app.tabletracker.feature_order.data.repository.OrderRoomRepository
@@ -18,6 +20,7 @@ interface TableTrackerContainer {
     val orderRepository: OrderRepository
     val authRepository: AuthRepository
     val settingsRepository: SettingsRepository
+    val customerRepository: CustomerRepository
 }
 
 class TableTrackerDataContainer(database: TableTrackerDatabase): TableTrackerContainer {
@@ -35,5 +38,8 @@ class TableTrackerDataContainer(database: TableTrackerDatabase): TableTrackerCon
     }
     override val settingsRepository: SettingsRepository by lazy {
         SettingsRoomRepository(database.settingsDao)
+    }
+    override val customerRepository: CustomerRepository by lazy {
+        CustomerRoomRepository(database.customerDao)
     }
 }

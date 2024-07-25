@@ -13,6 +13,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import app.tabletracker.auth.data.local.AuthDao
 import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.common.data.RestaurantExtra
+import app.tabletracker.feature_customer.data.local.CustomerDao
 import app.tabletracker.feature_customer.data.model.Customer
 import app.tabletracker.feature_customer.data.model.CustomerTypeConverter
 import app.tabletracker.feature_menu.data.entity.Category
@@ -65,6 +66,7 @@ abstract class TableTrackerDatabase : RoomDatabase() {
     abstract val orderDao: OrderDao
     abstract val authDao: AuthDao
     abstract val settingsDao: SettingsDao
+    abstract val customerDao: CustomerDao
 
     companion object {
         @Volatile

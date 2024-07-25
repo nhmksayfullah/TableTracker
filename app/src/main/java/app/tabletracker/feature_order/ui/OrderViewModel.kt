@@ -3,6 +3,7 @@ package app.tabletracker.feature_order.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.tabletracker.feature_customer.domain.repository.CustomerRepository
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_order.data.entity.Order
 import app.tabletracker.feature_order.data.entity.OrderItem
@@ -24,9 +25,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 
-class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
+class OrderViewModel(
+    private val orderRepo: OrderRepository,
+    private val customerRepo: CustomerRepository
+) : ViewModel() {
     private var _uiState = MutableStateFlow(OrderUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -73,7 +76,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
             orderType = orderType
         )
         viewModelScope.launch(Dispatchers.IO) {
-            repository.writeOrder(
+            orderRepo.writeOrder(
                 newOrder
             )
             populateCurrentOrder(newOrder.id)
@@ -82,7 +85,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
 
     private fun populateCurrentOrder(orderId: String?) {
         if (orderId != null) {
-            repository.readOrderWithOrderItems(orderId).onEach {
+            orderRepo.readOrderWithOrderItems(orderId).onEach {
                 _uiState.update { state ->
                     state.copy(
                         currentOrder = it
@@ -106,7 +109,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
 
     private fun updateCurrentOrder(order: Order) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.writeOrder(order)
+            orderRepo.writeOrder(order)
         }
 //        if (order.orderStatus == OrderStatus.Cancelled) updateCurrentOrderWithOrderItems(null)
     }
@@ -115,7 +118,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             uiState.value.currentOrder?.orderItems?.forEach {
                 val orderItem = it.copy(orderItemStatus = orderItemStatus)
-                repository.writeOrderItem(orderItem)
+                orderRepo.writeOrderItem(orderItem)
 
             }
         }
@@ -138,14 +141,14 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
     private fun addItemToOrder(menuItem: MenuItem, orderId: String) {
         val orderItem = menuItem.toOrderItem(orderId = orderId)
         viewModelScope.launch(Dispatchers.IO) {
-            repository.writeOrderItem(orderItem)
+            orderRepo.writeOrderItem(orderItem)
 
         }
     }
 
     private fun removeItemFromOrder(orderItem: OrderItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteOrderItem(orderItem)
+            orderRepo.deleteOrderItem(orderItem)
 
 
         }
@@ -153,7 +156,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
 
     private fun updateOrderItem(orderItem: OrderItem) {
         viewModelScope.launch(Dispatchers.IO){
-            repository.writeOrderItem(orderItem)
+            orderRepo.writeOrderItem(orderItem)
         }
     }
 
@@ -175,7 +178,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
 
 
     private fun populateLatestOrder() {
-        repository.readLastAddedOrder().onEach {
+        orderRepo.readLastAddedOrder().onEach {
             _uiState.update {state ->
                 state.copy(
                     currentOrder = it
@@ -186,7 +189,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
 
     private fun populateTodayOrders() {
         populateTodayOrdersJob?.cancel()
-        populateTodayOrdersJob = repository.readOrdersCreatedToday(getStartOfDay(), getEndOfDay()).onEach {
+        populateTodayOrdersJob = orderRepo.readOrdersCreatedToday(getStartOfDay(), getEndOfDay()).onEach {
             _uiState.update {currentState ->
                 currentState.copy(
                     todayOrders = it,
@@ -206,7 +209,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
 
     private fun populateMenus() {
         populateMenusJob?.cancel()
-        populateMenusJob = repository.readAllCategoriesWithMenuItems().onEach {
+        populateMenusJob = orderRepo.readAllCategoriesWithMenuItems().onEach {
             _uiState.update {state ->
                 state.copy(
                     menus = it
@@ -229,7 +232,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
 
     private fun populateRestaurantInfo() {
         populateRestaurantInfoJob?.cancel()
-        populateRestaurantInfoJob = repository.readRestaurantInfo().onEach {
+        populateRestaurantInfoJob = orderRepo.readRestaurantInfo().onEach {
             _uiState.update {currentState ->
                 currentState.copy(
                     restaurantInfo = it
@@ -243,7 +246,7 @@ class OrderViewModel(private val repository: OrderRepository) : ViewModel() {
         if (uiState.value.restaurantInfo != null) {
             if (uiState.value.restaurantInfo!!.id.isNotEmpty()) {
                 populateRestaurantExtraJob?.cancel()
-                populateRestaurantExtraJob = repository.readRestaurantExtra(restaurantId).onEach {
+                populateRestaurantExtraJob = orderRepo.readRestaurantExtra(restaurantId).onEach {
                     _uiState.update {state ->
                         state.copy(
                             restaurantExtra = it

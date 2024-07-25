@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import app.tabletracker.core.ui.TabbedScreen
 import app.tabletracker.core.ui.component.KeyboardDialog
 import app.tabletracker.core.ui.component.DialogKeyboardType
+import app.tabletracker.core.ui.component.SearchBarDialog
 import app.tabletracker.settings.ui.SettingsViewModel
 import app.tabletracker.settings.ui.section.GeneralSettingsSection
 
@@ -50,14 +51,7 @@ fun SettingsScreen(
                     }
 
                     if (dialogState) {
-                        KeyboardDialog(
-                            onDismissRequest = { dialogState = false },
-                            value = buttonText,
-                            keyboardType = DialogKeyboardType.Numeric
-                        ) {
-                            buttonText = it
-                            dialogState = false
-                        }
+                        SearchBarDialog()
                     }
                 }
             }
