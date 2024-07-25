@@ -22,5 +22,7 @@ data class Order(
     val creationTime: Long = generateInstantTime(),
     val customer: Customer? = null,
     @ColumnInfo(name = "discount", defaultValue = "null")
-    val discount: Discount? = null
+    val discount: Discount? = null,
+    @ColumnInfo(name = "totalPerson", defaultValue = "null")
+    val totalPerson: Int? = null
 )
