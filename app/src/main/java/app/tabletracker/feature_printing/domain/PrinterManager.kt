@@ -1,5 +1,6 @@
 package app.tabletracker.feature_printing.domain
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -19,7 +20,9 @@ import com.dantsu.escposprinter.connection.usb.UsbPrintersConnections
 
 
 class PrinterManager(private val activity: Activity) {
-    private val ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION"
+    companion object {
+        private const val ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION"
+    }
 
     fun print(formattedText: String) {
         val usbReceiver = createUsbReceiver(formattedText)
@@ -33,7 +36,7 @@ class PrinterManager(private val activity: Activity) {
             override fun onReceive(context: Context, intent: Intent) {
                 val action: String? = intent.action
                 Log.d("action: ", action.toString())
-                if (ACTION_USB_PERMISSION.equals(action)) {
+                if (ACTION_USB_PERMISSION == action) {
                     synchronized(this) {
                         val usbManager: UsbManager? =
                             activity.getSystemService(Context.USB_SERVICE) as UsbManager?
@@ -60,6 +63,7 @@ class PrinterManager(private val activity: Activity) {
         return usbReceiver
     }
 
+    @SuppressLint("NewApi")
     private fun printUsb(usbReceiver: BroadcastReceiver) {
         val usbConnection: UsbConnection? = UsbPrintersConnections.selectFirstConnected(activity)
         val usbManager: UsbManager? = activity.getSystemService(Context.USB_SERVICE) as UsbManager?
@@ -71,7 +75,7 @@ class PrinterManager(private val activity: Activity) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0
             )
             val filter = IntentFilter(ACTION_USB_PERMISSION)
-            activity.registerReceiver(usbReceiver, filter)
+            activity.registerReceiver(usbReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
             usbManager.requestPermission(usbConnection.device, permissionIntent)
         }
     }

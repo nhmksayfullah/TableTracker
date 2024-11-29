@@ -15,8 +15,8 @@ android {
         applicationId = "app.tabletracker"
         minSdk = 24
         targetSdk = 34
-        versionCode = 11
-        versionName = "1.1.0"
+        versionCode = 16
+        versionName = "1.1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

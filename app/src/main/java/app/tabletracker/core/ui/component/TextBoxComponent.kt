@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import app.tabletracker.theme.TableTrackerTheme
 
 // This component is made with card and text.
 // It should be used on the app whenever we need a block of text.
@@ -37,7 +39,9 @@ fun TextBoxComponent(
             )
     ) {
         Column(
-            modifier = Modifier.wrapContentSize().clickable { onClick() }
+            modifier = Modifier
+                .wrapContentSize()
+                .clickable { onClick() }
         ) {
             Text(
                 text = text,
@@ -48,5 +52,16 @@ fun TextBoxComponent(
 
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun TextBoxComponentPreview() {
+    TableTrackerTheme {
+        TextBoxComponent(
+            text = "This is a text box",
+            onClick = {}
+        )
     }
 }
