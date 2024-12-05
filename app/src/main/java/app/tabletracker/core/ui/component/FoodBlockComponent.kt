@@ -27,7 +27,7 @@ fun FoodBlockComponent(
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
-    containerColor: Color = textStyle.color,
+    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     onClick: () -> Unit
 ) {

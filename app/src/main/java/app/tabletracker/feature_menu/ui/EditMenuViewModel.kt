@@ -22,7 +22,7 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
     private var job: Job? = null
 
     init {
-        populateCategory()
+//        populateCategory()
         populateCategoriesWithMenuItems()
     }
 
@@ -143,8 +143,6 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
                     categories = it
                 )
             }
-        }.onCompletion {
-            updateCategoryIndex()
         }.launchIn(viewModelScope)
     }
 

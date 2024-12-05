@@ -126,7 +126,7 @@ class ReceiptGenerator(
     }
 
 
-    fun generateKitchenCopy(): String {
+    fun generateKitchenCopy(printFullKitchenCopy: Boolean = false): String {
         val orderItems = orderWithOrderItems.orderItems.filter {
             it.menuItem.isKitchenCategory
         }
@@ -158,7 +158,22 @@ class ReceiptGenerator(
             """.trimIndent()
         }
         orderItems.forEach {
-            if (it.orderItemStatus == OrderItemStatus.Added) {
+            if (!printFullKitchenCopy) {
+                if (it.orderItemStatus == OrderItemStatus.Added) {
+                    kitchenCopy += """
+                [L]<font size='big'>${it.quantity}. ${it.menuItem.abbreviation}</font>${'\n'}
+            """.trimIndent()
+                    if (it.addedNote.isNotEmpty()) {
+                        kitchenCopy += """
+                [L]<font size='big'>N: ${it.addedNote}</font>${'\n'}${'\n'}
+            """.trimIndent()
+                    } else {
+                        kitchenCopy += """
+                        [L]${'\n'}
+                    """.trimIndent()
+                    }
+                }
+            } else {
                 kitchenCopy += """
                 [L]<font size='big'>${it.quantity}. ${it.menuItem.abbreviation}</font>${'\n'}
             """.trimIndent()

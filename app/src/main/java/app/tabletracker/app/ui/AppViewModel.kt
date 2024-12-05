@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import app.tabletracker.app.domain.repository.ApplicationRepository
 import app.tabletracker.core.navigation.Applications
 import app.tabletracker.core.navigation.Screen
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class AppViewModel(private val repository: ApplicationRepository): ViewModel() {
 
@@ -20,6 +22,9 @@ class AppViewModel(private val repository: ApplicationRepository): ViewModel() {
 
     init {
         checkRegistrationState()
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateCategoryIndex()
+        }
     }
 
     fun onEvent(appUiEvent: AppUiEvent) {

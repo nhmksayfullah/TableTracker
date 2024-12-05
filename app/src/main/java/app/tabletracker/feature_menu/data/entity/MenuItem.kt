@@ -27,3 +27,13 @@ data class MenuItem(
     @ColumnInfo(name = "mealCourses", defaultValue = "[]")
     val mealCourses: List<MealCourse> = emptyList()
 )
+
+fun MenuItem.withUpdatedPrice(orderType: OrderType, newPrice: Float): MenuItem {
+    // Create a new map with the updated price for the specified order type
+    val updatedPrices = prices.toMutableMap().apply {
+        this[orderType] = newPrice
+    }
+
+    // Return a new instance of MenuItem with the updated prices
+    return this.copy(prices = updatedPrices)
+}

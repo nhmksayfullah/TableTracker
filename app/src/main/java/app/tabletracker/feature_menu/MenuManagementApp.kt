@@ -10,6 +10,7 @@ import app.tabletracker.core.navigation.Screen
 import app.tabletracker.core.navigation.Applications
 import app.tabletracker.feature_menu.ui.EditMenuViewModel
 import app.tabletracker.feature_menu.ui.screen.EditMenuScreen
+import app.tabletracker.feature_menu.ui.screen.InventoryScreen
 import app.tabletracker.util.accessSharedViewModel
 
 
@@ -28,9 +29,12 @@ fun NavGraphBuilder.menuManagementApp(
 
         composable(Screen.EditMenuScreen.route) {
             val editMenuViewModel = it.accessSharedViewModel<EditMenuViewModel>(navController)
-            EditMenuScreen(
-                appUiState = appUiState,
-                onAppUiEvent = onAppUiEvent,
+//            EditMenuScreen(
+//                appUiState = appUiState,
+//                onAppUiEvent = onAppUiEvent,
+//                editMenuViewModel = editMenuViewModel
+//            )
+            InventoryScreen(
                 editMenuViewModel = editMenuViewModel
             )
         }

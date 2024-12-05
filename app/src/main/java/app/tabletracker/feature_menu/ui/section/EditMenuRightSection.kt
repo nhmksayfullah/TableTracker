@@ -107,7 +107,11 @@ fun EditMenuRightSection(
                 } else {
                     selectedCategoryIndex = it
                     if (firstLaunch) {
-                        onCategoryClicked(menus[it].category)
+                        val selectedCategory = menus.find { it.category.index == selectedCategoryIndex }?.category
+                        if (selectedCategory != null) {
+                            onCategoryClicked(selectedCategory)
+                        }
+
                         firstLaunch = false
                     }
 

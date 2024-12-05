@@ -64,7 +64,6 @@ fun ShowOrderLeftSection(
     onCancelOrderClick: () -> Unit,
     onOrderUiEvent: (OrderUiEvent) -> Unit
 ) {
-
     var cancelOrderDialogState by rememberSaveable {
         mutableStateOf(false)
     }
@@ -197,7 +196,7 @@ fun ShowOrderLeftSection(
                                     val printerManager = PrinterManager(context as Activity)
                                     val receiptGenerator =
                                         ReceiptGenerator(orderUiState.restaurantInfo, orderUiState.currentOrder)
-                                    printerManager.print(receiptGenerator.generateKitchenCopy())
+                                    printerManager.print(receiptGenerator.generateKitchenCopy(printFullKitchenCopy = true))
                                 }
                             },
                             modifier = Modifier
