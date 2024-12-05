@@ -4,7 +4,9 @@ import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.feature_order.data.entity.OrderItemStatus
 import app.tabletracker.feature_order.data.entity.OrderType
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
+import app.tabletracker.feature_order.data.entity.PaymentMethod
 import app.tabletracker.util.toLocalDateTime
+import java.util.Locale
 
 class ReceiptGenerator(
     private val restaurant: Restaurant?,
@@ -30,9 +32,12 @@ class ReceiptGenerator(
         }
         populateOrderNumber()
         populateOrderDetails()
+        populateTableNumber()
         populateOrderItems()
         populateTotalPrice()
-//        populatePaymentInfo()
+        if (orderWithOrderItems.order.orderType != OrderType.DineIn) {
+            populatePaymentInfo()
+        }
         populateDeliveryAddress()
         receipt += """
             [L]${'\n'}
@@ -49,6 +54,15 @@ class ReceiptGenerator(
         if (orderWithOrderItems.order.tableNumber != null) {
             receipt += """
                 [C]<font size='big'>Total Person: ${orderWithOrderItems.order.totalPerson}</font>${'\n'}${'\n'}
+            """.trimIndent()
+        }
+    }
+
+    private fun populateTableNumber() {
+        if (orderWithOrderItems.order.orderType == OrderType.DineIn) {
+            receipt += """
+                [L]${'\n'}
+                [C]Table number: ${orderWithOrderItems.order.tableNumber ?: "Unknown Table"}${'\n'}
             """.trimIndent()
         }
     }
@@ -71,9 +85,13 @@ class ReceiptGenerator(
         """.trimIndent()
         if (orderWithOrderItems.orderItems.isNotEmpty()) {
             orderWithOrderItems.orderItems.forEach {
-                val price =
+                val price = String.format(
+                    Locale.UK,
+                    "%.2f",
                     it.menuItem.prices[orderWithOrderItems.order.orderType]?.times(it.quantity)
                         ?: 0.0f
+                )
+
                 orderItemsString += """
                     [L]<b>${it.quantity}x ${it.menuItem.name}</b>[R]<b>£${price}</b>${'\n'}
                 """.trimIndent()
@@ -86,7 +104,13 @@ class ReceiptGenerator(
     private fun populateTotalPrice() {
         receipt += """
             [L]${'\n'}
-            [L]<font size='big'>Sub Total:</font> [R]<font size='big'>£${String.format("%.2f", orderWithOrderItems.order.totalPrice)}</font>${'\n'}
+            [L]<font size='big'>Sub Total:</font> [R]<font size='big'>£${
+            String.format(
+                Locale.UK,
+                "%.2f",
+                orderWithOrderItems.order.totalPrice
+            )
+        }</font>${'\n'}
         """.trimIndent()
         if (orderWithOrderItems.order.discount != null) {
             val discount = orderWithOrderItems.order.discount.value.let {
@@ -98,7 +122,13 @@ class ReceiptGenerator(
             }
             receipt += """
                 [L]<b>Discount:</b> [R]-£<b>${String.format("%.2f", discount)}</b>${'\n'}
-                [L]<font size='big'>Total:</font> [R]<font size='big'>£${String.format("%.2f", orderWithOrderItems.order.totalPrice - discount)}</font>${'\n'}
+                [L]<font size='big'>Total:</font> [R]<font size='big'>£${
+                String.format(
+                    Locale.UK,
+                    "%.2f",
+                    orderWithOrderItems.order.totalPrice - discount
+                )
+            }</font>${'\n'}
             """.trimIndent()
         }
         receipt += """
@@ -107,9 +137,15 @@ class ReceiptGenerator(
     }
 
     private fun populatePaymentInfo() {
-        receipt += """
+        if (orderWithOrderItems.order.paymentMethod == PaymentMethod.None) {
+            receipt += """
+            [C]<font size='big'>Not Paid</font>${'\n'}${'\n'}
+        """.trimIndent()
+        } else {
+            receipt += """
             [C]<font size='big'>Paid by ${orderWithOrderItems.order.paymentMethod}</font>${'\n'}${'\n'}
         """.trimIndent()
+        }
     }
 
     private fun populateDeliveryAddress() {

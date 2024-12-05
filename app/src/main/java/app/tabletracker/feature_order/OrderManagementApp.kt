@@ -49,6 +49,7 @@ fun NavGraphBuilder.orderManagementApp(
                     orderId = orderId,
                     orderViewModel = orderViewModel,
                     onOrderDismiss = {
+                        orderViewModel.onEvent(OrderUiEvent.UpdateCurrentOrderWithNull)
                         onAppUiEvent(AppUiEvent.ChangeScreen(Screen.StartOrderScreen))
                         navController.navigate(Screen.StartOrderScreen.route)
                     }

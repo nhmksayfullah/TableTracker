@@ -64,6 +64,13 @@ class OrderViewModel(
             }
 
             is OrderUiEvent.UpdateCurrentOrderItemsStatus -> updateCurrentOrderItemsStatus(uiEvent.orderItemStatus)
+            OrderUiEvent.UpdateCurrentOrderWithNull -> {
+                _uiState.update {
+                    it.copy(
+                        currentOrder = null
+                    )
+                }
+            }
         }
     }
 
