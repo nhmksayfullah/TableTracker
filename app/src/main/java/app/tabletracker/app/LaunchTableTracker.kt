@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.tabletracker.app.ui.AppViewModel
 import app.tabletracker.app.version.LargeScreenApp
@@ -33,7 +34,7 @@ fun LaunchTableTracker(
 
     val context = LocalContext.current
     val appViewModel: AppViewModel = viewModel(factory = AccessViewModelProvider.Factory)
-    val appUiState by appViewModel.uiState.collectAsState()
+    val appUiState by appViewModel.uiState.collectAsStateWithLifecycle()
     // calculates the windowSize and launch.
     val windowSize = calculateWindowSizeClass(activity = context as Activity).widthSizeClass
 

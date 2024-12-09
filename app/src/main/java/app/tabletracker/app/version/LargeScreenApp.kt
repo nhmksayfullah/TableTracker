@@ -1,14 +1,17 @@
 package app.tabletracker.app.version
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -48,12 +51,6 @@ fun LargeScreenApp(
                         BottomNavigationOption.Order,
                         BottomNavigationOption.RunningOrder
                     ),
-                    extraNavOptions = if (appUiState.currentScreen == Screen.EditMenuScreen || appUiState.currentScreen == Screen.SettingsScreen)
-                        listOf(ExtraNavOption.Done)
-                    else listOf(
-                        ExtraNavOption.Edit,
-                        ExtraNavOption.Settings
-                    ),
                     onNavigationItemClick = {
                         // TODO("check the null safety again")
                         if (currentDestination?.route != Screen.TakeOrderScreen.route) {
@@ -68,6 +65,12 @@ fun LargeScreenApp(
 
                         }
                     },
+                    extraNavOptions = if (appUiState.currentScreen == Screen.EditMenuScreen || appUiState.currentScreen == Screen.SettingsScreen)
+                        listOf(ExtraNavOption.Done)
+                    else listOf(
+                        ExtraNavOption.Edit,
+                        ExtraNavOption.Settings
+                    ),
                     onExtraNavOptionClick = {
                         when (it) {
                             ExtraNavOption.Done -> {
@@ -90,6 +93,7 @@ fun LargeScreenApp(
 
                             ExtraNavOption.Settings -> {
                                 onAppUiEvent(AppUiEvent.ChangeScreen(Screen.SettingsScreen))
+                                onAppUiEvent(AppUiEvent.ChangeApplication(Applications.SettingsApp))
                                 navController.navigate(Applications.SettingsApp.route)
                             }
                         }
@@ -110,16 +114,20 @@ fun LargeScreenApp(
                 ) {
                     CircularProgressIndicator()
                 }
-                if (appUiState.currentApplication == Applications.OrderManagementApp) {
-                    navController.navigate(Applications.OrderManagementApp.route)
-                    onAppUiEvent(AppUiEvent.ChangeScreen(Screen.StartOrderScreen))
+                LaunchedEffect(
+                    appUiState.currentApplication
+                ) {
+                    if (appUiState.currentApplication == Applications.OrderManagementApp) {
+                        onAppUiEvent(AppUiEvent.ChangeScreen(Screen.StartOrderScreen))
+                        navController.navigate(Applications.OrderManagementApp.route)
 
-                } else if (appUiState.currentApplication == Applications.MenuManagementApp) {
-                    navController.navigate(Applications.MenuManagementApp.route)
-                    onAppUiEvent(AppUiEvent.ChangeScreen(Screen.EditMenuScreen))
-                } else if (appUiState.currentApplication == Applications.AuthenticationApp) {
-                    navController.navigate(Applications.AuthenticationApp.route)
-                    onAppUiEvent(AppUiEvent.ChangeScreen(Screen.RegisterRestaurantScreen))
+                    } else if (appUiState.currentApplication == Applications.MenuManagementApp) {
+                        onAppUiEvent(AppUiEvent.ChangeScreen(Screen.EditMenuScreen))
+                        navController.navigate(Applications.MenuManagementApp.route)
+                    } else if (appUiState.currentApplication == Applications.AuthenticationApp) {
+                        navController.navigate(Applications.AuthenticationApp.route)
+                        onAppUiEvent(AppUiEvent.ChangeScreen(Screen.RegisterRestaurantScreen))
+                    }
                 }
             }
 

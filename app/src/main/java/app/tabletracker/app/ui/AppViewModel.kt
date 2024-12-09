@@ -22,9 +22,9 @@ class AppViewModel(private val repository: ApplicationRepository): ViewModel() {
 
     init {
         checkRegistrationState()
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.updateCategoryIndex()
-        }
+//        viewModelScope.launch(Dispatchers.IO) {
+//            repository.updateCategoryIndex()
+//        }
     }
 
     fun onEvent(appUiEvent: AppUiEvent) {
@@ -54,7 +54,7 @@ class AppViewModel(private val repository: ApplicationRepository): ViewModel() {
                     isUserRegistered = it
                 )
             }
-            if (uiState.value.isUserRegistered) {
+            if (it) {
                 checkApplicationState()
             } else {
                 uiState.update {currentState ->
@@ -74,6 +74,7 @@ class AppViewModel(private val repository: ApplicationRepository): ViewModel() {
                 currentState.copy(
                     readyToTakeOrder = it,
                     currentApplication = if (it) Applications.OrderManagementApp else Applications.MenuManagementApp,
+                    currentScreen = if (it) Screen.StartOrderScreen else Screen.EditMenuScreen,
                     isLoading = false
                 )
             }
