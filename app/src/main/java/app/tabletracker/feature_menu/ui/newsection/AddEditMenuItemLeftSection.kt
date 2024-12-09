@@ -5,17 +5,23 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_menu.data.entity.withUpdatedPrice
+import app.tabletracker.feature_menu.data.entity.withUpdatedPrices
 import app.tabletracker.feature_menu.ui.EditMenuUiEvent
 import app.tabletracker.feature_order.data.entity.OrderType
 
@@ -25,13 +31,43 @@ fun AddEditMenuItemLeftSection(
     modifier: Modifier = Modifier,
     onEditMenu: (event: EditMenuUiEvent) -> Unit
 ) {
+    var dineInPrice by remember {
+        mutableStateOf(menuItem.prices[OrderType.DineIn].toString())
+    }
+    var takeOutPrice by remember {
+        mutableStateOf(menuItem.prices[OrderType.TakeOut].toString())
+    }
+    var deliveryPrice by remember {
+        mutableStateOf(menuItem.prices[OrderType.Delivery].toString())
+    }
+    LaunchedEffect(menuItem) {
+        dineInPrice =
+            if (menuItem.prices[OrderType.DineIn].toString() == "null") "" else menuItem.prices[OrderType.DineIn].toString()
+        takeOutPrice =
+            if (menuItem.prices[OrderType.TakeOut].toString() == "null") "" else menuItem.prices[OrderType.TakeOut].toString()
+        deliveryPrice =
+            if (menuItem.prices[OrderType.Delivery].toString() == "null") "" else menuItem.prices[OrderType.Delivery].toString()
+    }
 
     Scaffold(
         bottomBar = {
             AddEditMenuItemBottomBar(
                 showDelete = menuItem.name.isNotEmpty(),
                 showUpdate = true,
-                onUpsertClick = { onEditMenu(EditMenuUiEvent.UpsertMenuItem(menuItem)) },
+                onUpsertClick = {
+                    onEditMenu(
+                        EditMenuUiEvent.ChangeDetailsOfMenuItem(
+                            menuItem.withUpdatedPrices(
+                                mapOf(
+                                    Pair(OrderType.DineIn, dineInPrice.toFloatOrNull()?: 0.0f),
+                                    Pair(OrderType.TakeOut, takeOutPrice.toFloatOrNull()?: 0.0f),
+                                    Pair(OrderType.Delivery, deliveryPrice.toFloatOrNull()?: 0.0f)
+                                )
+                            )
+                        )
+                    )
+                    onEditMenu(EditMenuUiEvent.UpsertMenuItem(menuItem))
+                },
                 onDeleteClick = { onEditMenu(EditMenuUiEvent.DeleteMenuItem(menuItem)) }
             )
         }
@@ -41,6 +77,12 @@ fun AddEditMenuItemLeftSection(
         ) {
             AddEditMenuItemBody(
                 menuItem = menuItem,
+                dineInPrice = dineInPrice,
+                takeOutPrice = takeOutPrice,
+                deliveryPrice = deliveryPrice,
+                onDineInPriceChange = { dineInPrice = it },
+                onTakeOutPriceChange = { takeOutPrice = it },
+                onDeliveryPriceChange = { deliveryPrice = it },
                 onEditMenu = onEditMenu
             )
         }
@@ -51,7 +93,13 @@ fun AddEditMenuItemLeftSection(
 @Composable
 fun AddEditMenuItemBody(
     menuItem: MenuItem,
+    dineInPrice: String,
+    takeOutPrice: String,
+    deliveryPrice: String,
     modifier: Modifier = Modifier,
+    onDineInPriceChange: (String) -> Unit,
+    onTakeOutPriceChange: (String) -> Unit,
+    onDeliveryPriceChange: (String) -> Unit,
     onEditMenu: (event: EditMenuUiEvent) -> Unit
 ) {
     Column {
@@ -62,7 +110,8 @@ fun AddEditMenuItemBody(
             },
             label = {
                 Text(text = "Item name")
-            }
+            },
+            singleLine = true
         )
 
         TextField(
@@ -72,7 +121,8 @@ fun AddEditMenuItemBody(
             },
             label = {
                 Text(text = "Item abbreviation")
-            }
+            },
+            singleLine = true
         )
         TextField(
             value = menuItem.description,
@@ -87,45 +137,33 @@ fun AddEditMenuItemBody(
         Spacer(Modifier.height(8.dp))
 
         TextField(
-            value = menuItem.prices[OrderType.DineIn].toString(),
-            onValueChange = {
-                onEditMenu(
-                    EditMenuUiEvent.ChangeDetailsOfMenuItem(
-                        menuItem.withUpdatedPrice(OrderType.DineIn, it.toFloatOrNull()?: 0.0f)
-                    )
-                )
-            },
+            value = dineInPrice,
+            onValueChange = onDineInPriceChange,
             label = {
                 Text(text = "Dine In Price")
-            }
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
         )
 
         TextField(
-            value = menuItem.prices[OrderType.TakeOut].toString(),
-            onValueChange = {
-                onEditMenu(
-                    EditMenuUiEvent.ChangeDetailsOfMenuItem(
-                        menuItem.withUpdatedPrice(OrderType.TakeOut, it.toFloatOrNull()?: 0.0f)
-                    )
-                )
-            },
+            value = takeOutPrice,
+            onValueChange = onTakeOutPriceChange,
             label = {
-                Text(text = "Dine In Price")
-            }
+                Text(text = "Takeout Price")
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
         )
 
         TextField(
-            value = menuItem.prices[OrderType.Delivery].toString(),
-            onValueChange = {
-                onEditMenu(
-                    EditMenuUiEvent.ChangeDetailsOfMenuItem(
-                        menuItem.withUpdatedPrice(OrderType.Delivery, it.toFloatOrNull()?: 0.0f)
-                    )
-                )
-            },
+            value = deliveryPrice,
+            onValueChange = onDeliveryPriceChange,
             label = {
-                Text(text = "Dine In Price")
-            }
+                Text(text = "Delivery Price")
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
         )
     }
 }

@@ -65,7 +65,7 @@ fun LargeScreenApp(
 
                         }
                     },
-                    extraNavOptions = if (appUiState.currentScreen == Screen.EditMenuScreen || appUiState.currentScreen == Screen.SettingsScreen)
+                    extraNavOptions = if (appUiState.currentApplication == Applications.MenuManagementApp || appUiState.currentApplication == Applications.SettingsApp)
                         listOf(ExtraNavOption.Done)
                     else listOf(
                         ExtraNavOption.Edit,

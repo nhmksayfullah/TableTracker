@@ -37,3 +37,8 @@ fun MenuItem.withUpdatedPrice(orderType: OrderType, newPrice: Float): MenuItem {
     // Return a new instance of MenuItem with the updated prices
     return this.copy(prices = updatedPrices)
 }
+
+fun MenuItem.withUpdatedPrices(newPrices: Map<OrderType, Float>): MenuItem {
+    // Return a new instance of MenuItem with the updated prices
+    return this.copy(prices = newPrices)
+}
