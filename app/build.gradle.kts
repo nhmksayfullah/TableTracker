@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
@@ -81,6 +82,7 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     //Navigation Component
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
     // ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)

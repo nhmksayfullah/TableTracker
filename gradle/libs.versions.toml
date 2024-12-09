@@ -14,7 +14,8 @@ moshiKotlinCodegen = "1.15.1"
 lifecycleRuntimeKtx = "2.8.2"
 activityCompose = "1.9.0"
 composeBom = "2024.06.00"
-navigationCompose = "2.7.7"
+navigationCompose = "2.8.4"
+serialization = "1.7.1"
 reorderable = "2.1.1"
 roomRuntime = "2.6.1"
 ksp = "1.9.21-1.0.15"
@@ -47,10 +48,12 @@ moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiKotlinCodegen" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 #realm-base = { module = "io.realm.kotlin:library-base", version.ref = "realmBase" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 devtools-ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
