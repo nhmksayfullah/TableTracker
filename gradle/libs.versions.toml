@@ -3,7 +3,8 @@ agp = "8.5.0"
 coreSplashscreen = "1.0.1"
 desugar_jdk_libs = "2.0.4"
 escposThermalprinterAndroid = "3.3.0"
-kotlin = "1.9.0"
+kotlin = "2.0.0"
+jetbrainsKotlinJvm = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -18,7 +19,7 @@ navigationCompose = "2.8.4"
 serialization = "1.7.1"
 reorderable = "2.1.1"
 roomRuntime = "2.6.1"
-ksp = "1.9.21-1.0.15"
+ksp = "2.0.0-1.0.24"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +55,8 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 devtools-ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 

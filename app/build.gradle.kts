@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.jetbrains.kotlin.serialization)
 }

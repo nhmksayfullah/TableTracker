@@ -27,6 +27,11 @@ import app.tabletracker.core.navigation.Screen
 import app.tabletracker.core.navigation.SetupBottomNavigationBar
 import app.tabletracker.feature_menu.menuManagementApp
 import app.tabletracker.feature_order.orderManagementApp
+import app.tabletracker.feature_order.v2.OrderManagementApp2
+import app.tabletracker.feature_order.v2.RunningOrderScreen
+import app.tabletracker.feature_order.v2.StartOrderScreen
+import app.tabletracker.feature_order.v2.screen.RunningOrderScreen2
+import app.tabletracker.feature_order.v2.setupOrderManagementApp2
 import app.tabletracker.settings.settingsApp
 
 @Composable
@@ -53,17 +58,28 @@ fun LargeScreenApp(
                     ),
                     onNavigationItemClick = {
                         // TODO("check the null safety again")
-                        if (currentDestination?.route != Screen.TakeOrderScreen.route) {
-                            if (currentDestination?.route != it.navOption.route) {
-                                navController.navigate(
-                                    route = it.navOption.route ?: Screen.StartOrderScreen.route
-                                ) {
-                                    popUpTo(navController.graph.findStartDestination().id)
-                                    launchSingleTop = true
-                                }
-                            }
+                        if (it.navOption.route == Screen.StartOrderScreen.route) {
 
+                            navController.navigate(StartOrderScreen) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        } else if (it.navOption.route == Screen.RunningOrderScreen.route) {
+                            navController.navigate(RunningOrderScreen)
                         }
+//                        if (currentDestination?.route != Screen.TakeOrderScreen.route) {
+//                            if (currentDestination?.route != it.navOption.route) {
+//                                navController.navigate(
+//                                    route = it.navOption.route ?: Screen.StartOrderScreen.route
+//                                ) {
+//                                    popUpTo(navController.graph.findStartDestination().id)
+//                                    launchSingleTop = true
+//                                }
+//                            }
+//                        }
                     },
                     extraNavOptions = if (appUiState.currentApplication == Applications.MenuManagementApp || appUiState.currentApplication == Applications.SettingsApp)
                         listOf(ExtraNavOption.Done)
@@ -119,7 +135,7 @@ fun LargeScreenApp(
                 ) {
                     if (appUiState.currentApplication == Applications.OrderManagementApp) {
                         onAppUiEvent(AppUiEvent.ChangeScreen(Screen.StartOrderScreen))
-                        navController.navigate(Applications.OrderManagementApp.route)
+                        navController.navigate(OrderManagementApp2)
 
                     } else if (appUiState.currentApplication == Applications.MenuManagementApp) {
                         onAppUiEvent(AppUiEvent.ChangeScreen(Screen.EditMenuScreen))
@@ -145,7 +161,13 @@ fun LargeScreenApp(
                 onAppUiEvent(it)
             }
 
-            orderManagementApp(
+//            orderManagementApp(
+//                navController = navController,
+//                onAppUiEvent = {
+//                    onAppUiEvent(it)
+//                }
+//            )
+            setupOrderManagementApp2(
                 navController = navController,
                 onAppUiEvent = {
                     onAppUiEvent(it)

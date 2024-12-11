@@ -71,6 +71,8 @@ class OrderViewModel(
                     )
                 }
             }
+
+            OrderUiEvent.PopulateLatestOrder -> populateLatestOrder()
         }
     }
 

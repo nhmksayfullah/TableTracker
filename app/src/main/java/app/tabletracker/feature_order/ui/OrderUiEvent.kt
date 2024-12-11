@@ -19,4 +19,5 @@ sealed class OrderUiEvent {
 
     data class UpdateCurrentOrderWithOrderItems(val orderId: String?): OrderUiEvent()
     data object UpdateCurrentOrderWithNull: OrderUiEvent()
+    data object PopulateLatestOrder: OrderUiEvent()
 }
