@@ -1,25 +1,22 @@
 package app.tabletracker.feature_order.v2.component
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
@@ -27,17 +24,10 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.tabletracker.theme.TableTrackerTheme
 
-
-@Immutable
-data class VerticalCarouselItem(
-    val header: @Composable () -> Unit,
-    val content: @Composable () -> Unit
-)
 
 class VerticalCarouselState(
     initialIndex: Int = 0
@@ -64,6 +54,12 @@ fun ColumnScope.VerticalCarouselItem(
     header: @Composable () -> Unit,
     content: @Composable () -> Unit
 ) {
+
+    val animatedHeight by animateDpAsState(
+        targetValue = 0.dp,
+        animationSpec = tween(durationMillis = 0, easing = LinearOutSlowInEasing)
+    )
+
     Card(
         modifier = modifier
             .padding(vertical = 2.dp)
@@ -76,15 +72,25 @@ fun ColumnScope.VerticalCarouselItem(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(!isExpanded) { onToggleExpand() }
+                    .clickable(
+                        enabled = !isExpanded,
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+
+                        onToggleExpand()
+                    }
             ) {
                 header()
             }
-            AnimatedVisibility(
-                visible = isExpanded,
-                modifier = Modifier.animateContentSize(),
-                enter = expandVertically(animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing)),
-                exit = shrinkVertically(animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize()
+                    .then(
+                        if (isExpanded) Modifier.weight(1f)
+                        else Modifier.height(animatedHeight)
+                    )
             ) {
                 content()
             }
@@ -96,94 +102,87 @@ fun ColumnScope.VerticalCarouselItem(
 fun VerticalCarousel(
     state: VerticalCarouselState,
     modifier: Modifier = Modifier,
-    items: List<VerticalCarouselItem>
+    content: @Composable ColumnScope.() -> Unit
 ) {
-    Column {
-        items.forEachIndexed { index, item ->
-            VerticalCarouselItem(
-                isExpanded = state.isExpanded(index),
-                modifier = modifier,
-                header = item.header,
-                content = item.content,
-                onToggleExpand = { state.toggleExpand(index) }
-            )
-        }
-    }
+    Column(
+        modifier = modifier
+            .fillMaxSize(),
+        content = content
+    )
 }
 
 @Preview
 @Composable
 private fun VerticalCarouselPreview() {
-    LazyColumn {
 
-    }
-    val items = listOf(
-        VerticalCarouselItem(
-            header = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Customer")
-                }
-            },
-            content = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Red)
-                )
-            }
-        ),
-        VerticalCarouselItem(
-            header = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Order")
-                }
-            },
-            content = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Blue)
-                )
-            }
-        ),
-        VerticalCarouselItem(
-            header = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Pay")
-                }
-            },
-            content = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Yellow)
-                )
-            }
-        )
-    )
-    val state = rememberVerticalCarouselState(items.size)
+    val state = rememberVerticalCarouselState(3)
     LaunchedEffect(Unit) {
         state.toggleExpand(1)
     }
     TableTrackerTheme {
         VerticalCarousel(
-            state = state,
-            items = items
-        )
+            state = state
+        ) {
+            VerticalCarouselItem(
+                isExpanded = state.isExpanded(0),
+                onToggleExpand = { state.toggleExpand(0) },
+                header = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Customer")
+                    }
+                },
+                content = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                }
+            )
+            VerticalCarouselItem(
+                isExpanded = state.isExpanded(1),
+                onToggleExpand = { state.toggleExpand(1) },
+                header = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Order")
+                    }
+                },
+                content = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                }
+            )
+            VerticalCarouselItem(
+                isExpanded = state.isExpanded(2),
+                onToggleExpand = { state.toggleExpand(2) },
+                header = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Pay")
+                    }
+                },
+                content = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                }
+            )
+        }
     }
 }
