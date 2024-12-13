@@ -13,9 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.LineHeightStyle
 import app.tabletracker.core.ui.SplitScreen
-import app.tabletracker.feature_menu.data.entity.Category
 import app.tabletracker.feature_menu.ui.EditMenuUiEvent
 import app.tabletracker.feature_menu.ui.EditMenuViewModel
 import app.tabletracker.feature_menu.ui.newsection.AddEditCategoryLeftSection
