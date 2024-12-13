@@ -17,13 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.component.TextBoxComponent
 import app.tabletracker.feature_order.data.entity.OrderType
-import app.tabletracker.feature_order.ui.OrderUiEvent
-import app.tabletracker.feature_order.ui.OrderViewModel
-import app.tabletracker.util.TableTrackerDefault
+import app.tabletracker.feature_order.v2.state.OrderUiEvent2
+import app.tabletracker.feature_order.v2.state.OrderViewModel2
 
 @Composable
 fun StartOrderScreen2(
-    orderViewModel: OrderViewModel,
+    orderViewModel: OrderViewModel2,
     modifier: Modifier = Modifier,
     onCreateNewOrder: () -> Unit,
 ) {
@@ -52,7 +51,7 @@ fun StartOrderScreen2(
             textModifier = Modifier.padding(36.dp),
             textStyle = MaterialTheme.typography.displaySmall
         ) {
-            orderViewModel.onEvent(OrderUiEvent.CreateNewOrder(OrderType.DineIn))
+            orderViewModel.onEvent(OrderUiEvent2.CreateNewOrder(OrderType.DineIn))
             onCreateNewOrder()
         }
         TextBoxComponent(
@@ -61,7 +60,7 @@ fun StartOrderScreen2(
             textModifier = Modifier.padding(36.dp),
             textStyle = MaterialTheme.typography.displaySmall
         ) {
-            orderViewModel.onEvent(OrderUiEvent.CreateNewOrder(OrderType.TakeOut))
+            orderViewModel.onEvent(OrderUiEvent2.CreateNewOrder(OrderType.TakeOut))
             onCreateNewOrder()
         }
         TextBoxComponent(
@@ -70,7 +69,7 @@ fun StartOrderScreen2(
             textModifier = Modifier.padding(36.dp),
             textStyle = MaterialTheme.typography.displaySmall
         ) {
-            orderViewModel.onEvent(OrderUiEvent.CreateNewOrder(OrderType.Delivery))
+            orderViewModel.onEvent(OrderUiEvent2.CreateNewOrder(OrderType.Delivery))
             onCreateNewOrder()
         }
     }

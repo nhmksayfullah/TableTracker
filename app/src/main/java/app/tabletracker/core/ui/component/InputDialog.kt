@@ -85,6 +85,9 @@ fun KeyboardDialog(
                         },
                         onSpacePressed = {
                             _value += " "
+                        },
+                        onLinePressed = {
+                            _value += "\n"
                         }
                     )
                 }
@@ -205,7 +208,8 @@ fun CoreAlphabeticKeyboard(
     onKeyPressed: (Char) -> Unit,
     onBackspacePressed: () -> Unit,
     onDonePressed: () -> Unit,
-    onSpacePressed: () -> Unit
+    onSpacePressed: () -> Unit,
+    onLinePressed: () -> Unit = {}
 ) {
     var isCaps by rememberSaveable {
         mutableStateOf(true)
@@ -269,7 +273,7 @@ fun CoreAlphabeticKeyboard(
         ) {
             Card(
                 modifier = Modifier
-                    .weight(2f)
+                    .weight(1.5f)
                     .align(Alignment.CenterVertically)
                     .clickable {
                         isCaps = !isCaps
@@ -286,7 +290,7 @@ fun CoreAlphabeticKeyboard(
             }
             Card(
                 modifier = Modifier
-                    .weight(6f)
+                    .weight(5.5f)
                     .align(Alignment.CenterVertically)
                     .clickable {
                         onSpacePressed()
@@ -304,7 +308,25 @@ fun CoreAlphabeticKeyboard(
 
             Card(
                 modifier = Modifier
-                    .weight(2f)
+                    .weight(1.5f)
+                    .align(Alignment.CenterVertically)
+                    .clickable {
+                        onLinePressed()
+                    }
+            ) {
+                Text(
+                    text = "Line",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+
+            Card(
+                modifier = Modifier
+                    .weight(1.5f)
                     .align(Alignment.CenterVertically)
                     .clickable {
                         onDonePressed()

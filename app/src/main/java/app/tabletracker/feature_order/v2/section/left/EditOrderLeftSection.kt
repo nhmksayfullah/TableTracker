@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import app.tabletracker.feature_order.data.entity.OrderItem
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
 import app.tabletracker.feature_order.v2.component.FoodItemInOrderComponent
 
@@ -30,7 +31,9 @@ fun EditOrderLeftSectionHeader(
 @Composable
 fun EditOrderLeftSectionContent(
     runningOrder: OrderWithOrderItems,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onItemRemoveClick: (OrderItem) -> Unit = {},
+    onItemChange: (OrderItem) -> Unit = {}
 ) {
     LazyColumn(
         modifier = modifier
@@ -39,8 +42,8 @@ fun EditOrderLeftSectionContent(
             FoodItemInOrderComponent(
                 item = it,
                 orderType = runningOrder.order.orderType,
-                onItemRemoveClick = {},
-                onItemChange = {}
+                onItemRemoveClick = {onItemRemoveClick(it)},
+                onItemChange = {onItemChange(it)}
             )
         }
     }

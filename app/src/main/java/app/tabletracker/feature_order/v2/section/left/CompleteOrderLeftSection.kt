@@ -1,6 +1,5 @@
 package app.tabletracker.feature_order.v2.section.left
 
-import android.app.Activity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,8 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -20,7 +22,9 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -35,28 +39,24 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.component.DialogKeyboardType
 import app.tabletracker.core.ui.component.DisabledTextField
 import app.tabletracker.core.ui.component.KeyboardDialog
 import app.tabletracker.feature_order.data.entity.Discount
-import app.tabletracker.feature_order.v2.component.VerticalCarouselItem
 import app.tabletracker.feature_order.data.entity.Order
-import app.tabletracker.feature_order.data.entity.OrderItemStatus
-import app.tabletracker.feature_order.data.entity.OrderStatus
 import app.tabletracker.feature_order.data.entity.OrderType
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
-import app.tabletracker.feature_order.ui.OrderUiEvent
-import app.tabletracker.feature_printing.domain.PrinterManager
-import app.tabletracker.feature_receipt.domain.ReceiptGenerator
 import app.tabletracker.util.TableTrackerDefault
 
 
 @Composable
 fun CompleteOrderLeftSectionHeader(
     order: Order,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCancelOrder: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -64,7 +64,22 @@ fun CompleteOrderLeftSectionHeader(
             .wrapContentHeight()
             .padding(horizontal = 16.dp)
     ) {
-        Text("Sub Total: £%.2f".format(order.totalPrice))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text("Sub Total: £%.2f".format(order.totalPrice))
+            Spacer(modifier = Modifier.weight(1f))
+            IconButton(
+                onClick = onCancelOrder,
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
+                )
+            ) {
+                Icon(imageVector = Icons.Default.Close, contentDescription = "Cancel Order")
+            }
+        }
     }
 }
 
@@ -83,33 +98,31 @@ fun CompleteOrderLeftSectionContent(
         mutableStateOf(false)
     }
     Scaffold(
+        modifier = modifier,
+        containerColor = Color.Transparent,
         bottomBar = {
             Column(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
-//                    if (orderUiState.currentOrder?.order?.orderType == OrderType.DineIn) {
-//
-//                    }
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-
-                    }
+                    onClick = onSaveOrder
                 ) {
                     Text(text = "Save Order")
                 }
                 Button(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-                    }
+                    onClick = onCompleteOrder
                 ) {
                     Text(text = "Complete Order")
                 }
             }
         }
     ) { paddingValues ->
+        val scrollState = rememberScrollState()
         Column(
             modifier = Modifier
+                .verticalScroll(scrollState)
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
@@ -137,7 +150,7 @@ fun CompleteOrderLeftSectionContent(
                 Row {
                     Text(text = "Total:")
                     Spacer(modifier = Modifier.weight(1f))
-                    Text("Sub Total: £%.2f".format(order.totalPrice - discount))
+                    Text("£%.2f".format(order.totalPrice - discount))
                 }
             } else {
                 Box(
@@ -221,8 +234,8 @@ fun CompleteOrderLeftSectionContent(
                     val fieldValue: String =
                         if (order.tableNumber != null) {
                             "Table ${order.tableNumber}"
-                        } else selectedTable
-                    TextField(
+                        } else "Table: $selectedTable"
+                    OutlinedTextField(
                         value = fieldValue,
                         onValueChange = {
                             selectedTable = it

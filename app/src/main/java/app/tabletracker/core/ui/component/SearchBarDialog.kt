@@ -52,10 +52,10 @@ fun SearchBarDialog(
                 onBackspacePressed = { /*TODO*/ },
                 onDonePressed = {
                     isActive = false
-                }
-            ) {
-
-            }
+                },
+                onSpacePressed = { /*TODO*/ },
+                onLinePressed = { /*TODO*/ }
+            )
         }
     }
 }

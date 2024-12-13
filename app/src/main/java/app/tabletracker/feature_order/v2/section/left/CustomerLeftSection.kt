@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -59,6 +60,13 @@ fun CustomerLeftSectionContent(
     }
     var customerStreet by rememberSaveable {
         mutableStateOf(customer?.street ?: "")
+    }
+    LaunchedEffect(customer) {
+        customerName = customer?.name ?: ""
+        customerContact = customer?.contact ?: ""
+        customerPostCode = customer?.postCode ?: ""
+        customerHouseNumber = customer?.houseNumber ?: ""
+        customerStreet = customer?.street ?: ""
     }
 
 
