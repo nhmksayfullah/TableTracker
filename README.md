@@ -1,8 +1,8 @@
-# TableTracker  *[Deprecated]*
+# TableTracker  *[Experimental]*
 
 **TableTracker** is an offline Android application designed to streamline order management in Indian restaurant settings. It supports Dine-In, Takeaway, and Delivery orders, catering specifically to the unique needs of Indian restaurants.  
 
-This project is now deprecated and will be replaced by **DoddleSuite**, a more feature-rich and modular solution currently under development.  
+This project is now experimental and serves as a foundation for exploring concepts and gathering feedback. It will eventually be replaced by **DoddleSuite**, a more feature-rich and modular solution currently under development.  
 
 ---
 
@@ -60,43 +60,40 @@ TableTracker is tailored specifically for Indian restaurants, covering all three
 - **Minimum Android Version**: 7.0 (API Level 24)  
 - **Target Android Version**: 14 (API Level 34)  
 
----
+---  
 
+## Screenshots  
 
-
-## Screenshots
-
-Here are some screenshots showcasing the TableTracker app:
+Here are some screenshots showcasing the TableTracker app:  
 
 | ![Screenshot 1](https://github.com/user-attachments/assets/259be3a0-e027-4022-b663-52cb4f12773b) | ![Screenshot 2](https://github.com/user-attachments/assets/2568aaa2-a6e1-482e-ada0-f8362a3a6b84) |
 |:---:|:---:|
-| **Screenshot 1:** Take Order Screen of TableTracker app. | **Screenshot 2:** Finishing the Order with all the details on a Navigation Drawer |
+| **Screenshot 1:** Take Order Screen of TableTracker app. | **Screenshot 2:** Finishing the Order with all the details on a Navigation Drawer |  
 
 | ![Screenshot 3](https://github.com/user-attachments/assets/9d24e2ec-cfb9-4785-9f9c-472c38c78692) | ![Screenshot 4](https://github.com/user-attachments/assets/cbc433d4-a21e-454a-a627-fc5833508711) |
 |:---:|:---:|
-| **Screenshot 3:** Invantory Management Screen for managing Food Items | **Screenshot 4:** Saved Orders Screen to manage saved and completed orders |
+| **Screenshot 3:** Inventory Management Screen for managing Food Items | **Screenshot 4:** Saved Orders Screen to manage saved and completed orders |  
 
+<br><br>  
 
-<br><br>
-
-**Note: These screenshots represent the app's MVP state and may have visual or functional differences from the final version.**
+**Note: These screenshots represent the app's MVP state and may have visual or functional differences from the final version.**  
 
 ---
 
 ## Current Status  
 
-- **Status**: *Deprecated*
+- **Status**: *Experimental*  
 - **Known Issues**:  
   - Dependencies are tightly coupled as the app is not modularized.  
   - No animations in screen transitions, making the UI feel static.  
 
-**Note**: This app was developed as an MVP to gather feedback from stakeholders. Small updates might still be made until DoddleSuite is released.  
+**Note**: This app was developed as an MVP to test concepts and gather feedback from stakeholders. Updates may be infrequent as focus shifts to DoddleSuite.  
 
 ---
 
 ## Contributions  
 
-Contributions are not being accepted as this project will soon be discontinued.  
+Contributions are currently not being accepted, as this project is experimental and will eventually transition to DoddleSuite.  
 
 ---
 
