@@ -10,16 +10,11 @@ import app.tabletracker.feature_order.ui.section.dummyRestaurant
 data class OrderUiState(
     val menus: List<CategoryWithMenuItems> = emptyList(),
     val todayOrders: List<OrderWithOrderItems> = emptyList(),
+    val runningOrders: List<OrderWithOrderItems> = emptyList(),
+    val completedOrders: List<OrderWithOrderItems> = emptyList(),
+    val cancelledOrders: List<OrderWithOrderItems> = emptyList(),
+
     val currentOrder: OrderWithOrderItems? = null,
-    val runningOrders: List<OrderWithOrderItems> = todayOrders.filter {
-        it.order.orderStatus == OrderStatus.Running
-    },
-    val completedOrders: List<OrderWithOrderItems> = todayOrders.filter {
-        it.order.orderStatus == OrderStatus.Completed
-    },
-    val cancelledOrders: List<OrderWithOrderItems> = todayOrders.filter {
-        it.order.orderStatus == OrderStatus.Cancelled
-    },
     val restaurantInfo: Restaurant? = null,
     val restaurantExtra: RestaurantExtra? = null
 )

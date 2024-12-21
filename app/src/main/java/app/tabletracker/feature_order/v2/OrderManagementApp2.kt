@@ -51,7 +51,7 @@ fun NavGraphBuilder.setupOrderManagementApp2(
         }
 
         composable<RunningOrderScreen> {
-            val orderViewModel = it.accessSharedViewModel<OrderViewModel2>(navController)
+            val orderViewModel = it.accessSharedViewModel<OrderViewModel>(navController)
             RunningOrderScreen2(
                 orderViewModel = orderViewModel,
                 onCustomizeCurrentOrder = {

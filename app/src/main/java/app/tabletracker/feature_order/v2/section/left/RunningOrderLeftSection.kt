@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import app.tabletracker.feature_order.ui.OrderUiState
 import app.tabletracker.feature_order.v2.component.VerticalCarousel
 import app.tabletracker.feature_order.v2.component.VerticalCarouselItem
 import app.tabletracker.feature_order.v2.component.rememberVerticalCarouselState
@@ -14,7 +15,7 @@ import app.tabletracker.feature_receipt.domain.ReceiptGenerator
 
 @Composable
 fun RunningOrderLeftSection(
-    orderUiState: OrderUiState2,
+    orderUiState: OrderUiState,
     modifier: Modifier = Modifier,
     onCustomizeCurrentOrder: () -> Unit,
 ) {

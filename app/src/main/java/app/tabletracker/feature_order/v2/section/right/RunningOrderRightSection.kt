@@ -16,12 +16,13 @@ import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.TabbedScreen
 import app.tabletracker.feature_order.data.entity.OrderStatus
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
+import app.tabletracker.feature_order.ui.OrderUiState
 import app.tabletracker.feature_order.ui.component.ShowOrderColumnNamesOnRightSection
 import app.tabletracker.feature_order.v2.state.OrderUiState2
 
 @Composable
 fun RunningOrderRightSection(
-    orderUiState: OrderUiState2,
+    orderUiState: OrderUiState,
     modifier: Modifier = Modifier,
     onOrderItemClick: (OrderWithOrderItems) -> Unit
 ) {

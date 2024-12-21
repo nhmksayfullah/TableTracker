@@ -12,6 +12,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.tabletracker.core.ui.SplitRatio
 import app.tabletracker.core.ui.SplitScreen
+import app.tabletracker.feature_order.ui.OrderUiEvent
+import app.tabletracker.feature_order.ui.OrderViewModel
 import app.tabletracker.feature_order.v2.section.left.RunningOrderLeftSection
 import app.tabletracker.feature_order.v2.section.right.RunningOrderRightSection
 import app.tabletracker.feature_order.v2.state.OrderUiEvent2
@@ -19,7 +21,7 @@ import app.tabletracker.feature_order.v2.state.OrderViewModel2
 
 @Composable
 fun RunningOrderScreen2(
-    orderViewModel: OrderViewModel2,
+    orderViewModel: OrderViewModel,
     modifier: Modifier = Modifier,
     onCustomizeCurrentOrder: () -> Unit
 ) {
@@ -49,7 +51,7 @@ fun RunningOrderScreen2(
             RunningOrderRightSection(
                 orderUiState = uiState,
                 onOrderItemClick = {
-                    orderViewModel.onEvent(OrderUiEvent2.SetCurrentOrderWithOrderItems(it))
+                    orderViewModel.onEvent(OrderUiEvent.SetCurrentOrderWithOrderItems(it))
                 }
             )
         }
