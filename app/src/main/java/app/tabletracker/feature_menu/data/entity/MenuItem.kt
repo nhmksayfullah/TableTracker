@@ -25,7 +25,9 @@ data class MenuItem(
     @ColumnInfo(name = "isMeal", defaultValue = "false")
     val isMeal: Boolean = false,
     @ColumnInfo(name = "mealCourses", defaultValue = "[]")
-    val mealCourses: List<MealCourse> = emptyList()
+    val mealCourses: List<MealCourse> = emptyList(),
+    @ColumnInfo(name = "index", defaultValue = "-1")
+    val index: Int = -1
 )
 
 fun MenuItem.withUpdatedPrice(orderType: OrderType, newPrice: Float): MenuItem {

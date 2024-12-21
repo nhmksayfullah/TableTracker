@@ -2,7 +2,9 @@ package app.tabletracker.feature_order.v3.section
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import app.tabletracker.feature_order.data.entity.OrderItem
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
@@ -17,7 +19,14 @@ fun EditOrderLeftSectionContent3(
     onItemRemoveClick: (OrderItem) -> Unit = {},
     onItemChange: (OrderItem) -> Unit = {}
 ) {
+    val scrollState = rememberLazyListState()
+    LaunchedEffect(key1 = runningOrder.orderItems.size) {
+        if (runningOrder.orderItems.isNotEmpty()) {
+            scrollState.animateScrollToItem(runningOrder.orderItems.size - 1)
+        }
+    }
     LazyColumn(
+        state = scrollState,
         modifier = modifier
     ) {
         items(runningOrder.orderItems) {

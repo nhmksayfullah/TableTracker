@@ -110,6 +110,9 @@ fun InventoryScreen(
                         onAddNewMenuItem = {
                             leftState = LeftState.EditMenuItem
                             editMenuViewModel.onEvent(EditMenuUiEvent.AddNewMenuItem)
+                        },
+                        onMenuItemsReordered = {
+                            editMenuViewModel.onEvent(EditMenuUiEvent.ReorderMenuItems(it))
                         }
                     )
                 }

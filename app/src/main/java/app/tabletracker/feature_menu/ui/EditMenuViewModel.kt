@@ -107,12 +107,24 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
                     updateCategoryIndex(category.id, index)
                 }
             }
+
+            is EditMenuUiEvent.ReorderMenuItems -> {
+                event.menuItems.forEachIndexed { index, menuItem ->
+                    updateMenuItemIndex(menuItem.id, index)
+                }
+            }
         }
     }
 
     private fun updateCategoryIndex(categoryId: Int, newIndex: Int) {
         viewModelScope.launch {
             repository.updateCategoryIndex(categoryId, newIndex)
+        }
+    }
+
+    private fun updateMenuItemIndex(menuItemId: String, newIndex: Int) {
+        viewModelScope.launch {
+            repository.updateMenuItemIndex(menuItemId, newIndex)
         }
     }
 

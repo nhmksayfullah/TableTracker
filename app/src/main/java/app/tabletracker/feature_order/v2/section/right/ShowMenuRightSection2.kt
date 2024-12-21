@@ -47,7 +47,7 @@ fun ShowMenuRightSection2(
         }?.let {
             if (it.menuItems.isNotEmpty()) {
                 SelectMenuItemRightSection(
-                    menus = it.menuItems,
+                    menus = it.menuItems.sortedBy { it.index },
                     onMenuItemClicked = onMenuItemClicked
                 )
             } else {

@@ -24,6 +24,8 @@ interface MenuDao {
 
     @Query("UPDATE Category SET `index` = :newIndex WHERE id = :categoryId")
     suspend fun updateCategoryIndex(categoryId: Int, newIndex: Int)
+    @Query("UPDATE MenuItem SET `index` = :newIndex WHERE id = :menuItemId")
+    suspend fun updateMenuItemIndex(menuItemId: String, newIndex: Int)
 
     @Query("SELECT * FROM category")
     fun readAllCategory(): Flow<List<Category>>

@@ -9,6 +9,7 @@ interface EditMenuRepository {
     fun readAllMenuItems(): Flow<List<MenuItem>>
     fun readAllMenuItemsOnCategory(categoryId: Int): Flow<CategoryWithMenuItems>
     suspend fun updateCategoryIndex(categoryId: Int, newIndex: Int)
+    suspend fun updateMenuItemIndex(menuItemId: String, newIndex: Int)
 
     fun readAllCategory(): Flow<List<Category>>
     fun readAllCategoriesWithMenuItems(): Flow<List<CategoryWithMenuItems>>
@@ -18,4 +19,5 @@ interface EditMenuRepository {
     suspend fun deleteMenuItem(menuItem: MenuItem)
     suspend fun deleteCategory(category: Category)
     suspend fun updateCategories(categories: List<Category>)
+
 }

@@ -18,6 +18,9 @@ class EditMenuRoomRepository(private val menuDao: MenuDao): EditMenuRepository {
     override suspend fun updateCategoryIndex(categoryId: Int, newIndex: Int) {
         menuDao.updateCategoryIndex(categoryId, newIndex)
     }
+    override suspend fun updateMenuItemIndex(menuItemId: String, newIndex: Int) {
+        menuDao.updateMenuItemIndex(menuItemId, newIndex)
+    }
 
     override fun readAllCategory(): Flow<List<Category>> {
         return menuDao.readAllCategory()

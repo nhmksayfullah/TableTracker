@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -151,29 +152,93 @@ fun ShowMenuItemsRightSection(
     menuItems: List<MenuItem>,
     modifier: Modifier = Modifier,
     onMenuItemClicked: (MenuItem) -> Unit,
-    onAddNewMenuItem: () -> Unit
+    onAddNewMenuItem: () -> Unit,
+    onMenuItemsReordered: (List<MenuItem>) -> Unit,
 ) {
+
+    var canDrag by remember {
+        mutableStateOf(false)
+    }
+    val lazyGridState = rememberLazyGridState()
+
+    var updatedMenuItems by remember {
+        mutableStateOf(menuItems)
+    }
+    LaunchedEffect(menuItems) {
+        updatedMenuItems = menuItems.sortedBy { it.index }
+    }
+
+    val reorderableLazyGridState = rememberReorderableLazyGridState(lazyGridState) { from, to ->
+        updatedMenuItems = updatedMenuItems.toMutableList().apply {
+            add(to.index, removeAt(from.index))
+        }
+    }
+
     Scaffold(
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = onAddNewMenuItem
-            ) {
-                Text("New Item")
+            Row {
+                FloatingActionButton(
+                    onClick = {
+                        if (canDrag) {
+                            canDrag = false
+                            onMenuItemsReordered(updatedMenuItems)
+                        } else {
+                            canDrag = true
+                        }
+                    }
+                ) {
+                    if (canDrag) {
+                        Icon(
+                            imageVector = Icons.Default.Done,
+                            contentDescription = "Reorder End"
+                        )
+                    } else {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.baseline_swap_calls_24),
+                            contentDescription = "Reorder Start"
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.width(4.dp))
+                ExtendedFloatingActionButton(
+                    onClick = onAddNewMenuItem
+                ) {
+                    Text("New Item")
+                }
             }
+
         }
     ) {
         LazyVerticalGrid(
+            state = lazyGridState,
             columns = GridCells.Adaptive(120.dp),
             contentPadding = PaddingValues(8.dp),
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(it).fillMaxSize()
         ) {
-            items(menuItems) {
-                FoodBlockComponent(
-                    text = it.name,
-                    modifier = modifier.padding(4.dp)
+            items(updatedMenuItems, key = { it.id }) { menuItem ->
+                ReorderableItem(
+                    reorderableLazyGridState,
+                    key = menuItem.id
                 ) {
-                    onMenuItemClicked(it)
+                    FoodBlockComponent(
+                        text = menuItem.name,
+                        modifier = modifier.padding(4.dp)
+                    ) {
+                        onMenuItemClicked(menuItem)
+                    }
+                    if (canDrag) {
+                        IconButton(
+                            onClick = {},
+                            modifier = Modifier.draggableHandle()
+                        ) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.baseline_drag_indicator_24),
+                                contentDescription = "Drag Icon"
+                            )
+                        }
+                    }
                 }
+
             }
         }
     }
