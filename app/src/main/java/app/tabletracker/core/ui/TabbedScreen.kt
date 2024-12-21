@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.PrimaryScrollableTabRow
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
@@ -19,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,18 +36,10 @@ fun TabbedScreen(
     Column(
         modifier = Modifier.fillMaxSize().then(modifier)
     ) {
-        PrimaryScrollableTabRow(
-            modifier = Modifier.fillMaxWidth(),
+        PrimaryTabRow(
             selectedTabIndex = state,
-            indicator = @Composable {
-                if (state < it.size) {
-                    val width by animateDpAsState(targetValue = it[state].contentWidth, label = "DpAnimation")
-                    TabRowDefaults.PrimaryIndicator(
-                        modifier = Modifier.tabIndicatorOffset(it[state]),
-                        width = width
-                    )
-                }
-            }) {
+            modifier = Modifier.fillMaxWidth(),
+        ) {
             titles.forEachIndexed { index, title ->
                 Tab(
                     selected = state == index,
@@ -57,7 +51,6 @@ fun TabbedScreen(
                     text = { Text(text = title) },
                 )
             }
-
         }
         tabContent(state)
     }

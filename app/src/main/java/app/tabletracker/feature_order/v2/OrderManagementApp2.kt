@@ -4,14 +4,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import androidx.navigation.toRoute
 import app.tabletracker.app.ui.AppUiEvent
 import app.tabletracker.core.navigation.Screen
+import app.tabletracker.feature_order.ui.OrderUiEvent
+import app.tabletracker.feature_order.ui.OrderViewModel
 import app.tabletracker.feature_order.v2.screen.RunningOrderScreen2
 import app.tabletracker.feature_order.v2.screen.StartOrderScreen2
-import app.tabletracker.feature_order.v2.screen.TakeOrderScreen2
-import app.tabletracker.feature_order.v2.state.OrderUiEvent2
 import app.tabletracker.feature_order.v2.state.OrderViewModel2
+import app.tabletracker.feature_order.v3.screen.TakeOrderScreen3
 import app.tabletracker.util.accessSharedViewModel
 import kotlinx.serialization.Serializable
 
@@ -28,7 +28,7 @@ fun NavGraphBuilder.setupOrderManagementApp2(
         startDestination = StartOrderScreen
     ) {
         composable<StartOrderScreen> {
-            val orderViewModel = it.accessSharedViewModel<OrderViewModel2>(navController)
+            val orderViewModel = it.accessSharedViewModel<OrderViewModel>(navController)
             StartOrderScreen2(
                 orderViewModel = orderViewModel,
             ) {
@@ -38,15 +38,13 @@ fun NavGraphBuilder.setupOrderManagementApp2(
         }
 
         composable<TakeOrderScreen> {
-            val orderViewModel = it.accessSharedViewModel<OrderViewModel2>(navController)
-            val arguments = it.toRoute<TakeOrderScreen>()
-            val isNewOrder = arguments.isNewOrder
+            val orderViewModel = it.accessSharedViewModel<OrderViewModel>(navController)
 
-            TakeOrderScreen2(
+            TakeOrderScreen3(
                 orderViewModel = orderViewModel,
                 onOrderDismiss = {
                     onAppUiEvent(AppUiEvent.ChangeScreen(Screen.StartOrderScreen))
-                    orderViewModel.onEvent(OrderUiEvent2.SetCurrentOrderWithOrderItems(null))
+                    orderViewModel.onEvent(OrderUiEvent.SetCurrentOrderWithOrderItems(null))
                     navController.navigateUp()
                 }
             )

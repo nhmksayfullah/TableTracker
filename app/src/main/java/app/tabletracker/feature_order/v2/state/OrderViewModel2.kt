@@ -57,19 +57,6 @@ class OrderViewModel2(
                 calculateTotalPrice(state)
             }
         }
-//        viewModelScope.launch {
-//            uiState.collect { state ->
-//                state.currentOrder?.order?.orderStatus.let {
-//                    if (it == OrderStatus.Running || it == OrderStatus.Completed || it == OrderStatus.Cancelled) {
-//                        _uiState.update { currentState ->
-//                            currentState.copy(
-//                                currentOrder = null
-//                            )
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
 
     fun onEvent(event: OrderUiEvent2) {

@@ -112,7 +112,7 @@ fun TakeOrderScreen(
                             SelectMenuItemRightSection(
                                 menus = it.menuItems,
                                 onMenuItemClicked = {
-                                    orderViewModel.onEvent(OrderUiEvent.AddItemToOrder(it, orderUiState.currentOrder!!.order.id))
+                                    orderViewModel.onEvent(OrderUiEvent.AddMenuItemToOrder(it))
                                 }
                             )
                         } else {

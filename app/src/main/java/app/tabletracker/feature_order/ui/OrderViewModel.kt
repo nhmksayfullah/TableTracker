@@ -3,6 +3,7 @@ package app.tabletracker.feature_order.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.tabletracker.feature_customer.data.model.Customer
 import app.tabletracker.feature_customer.domain.repository.CustomerRepository
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_order.data.entity.Order
@@ -51,7 +52,7 @@ class OrderViewModel(
             is OrderUiEvent.CreateNewOrder -> createNewOrder(orderType = uiEvent.orderType)
             is OrderUiEvent.UpdateCurrentOrder -> updateCurrentOrder(order = uiEvent.order)
 
-            is OrderUiEvent.AddItemToOrder -> addOrUpdateOrderItem(menuItem = uiEvent.menuItem, orderId = uiEvent.orderId)
+            is OrderUiEvent.AddMenuItemToOrder -> addOrUpdateOrderItem(menuItem = uiEvent.menuItem)
             is OrderUiEvent.RemoveItemFromOrder -> removeItemFromOrder(orderItem = uiEvent.orderItem)
             is OrderUiEvent.UpdateOrderItem -> updateOrderItem(orderItem = uiEvent.orderItem)
 
@@ -73,10 +74,24 @@ class OrderViewModel(
             }
 
             OrderUiEvent.PopulateLatestOrder -> populateLatestOrder()
+            is OrderUiEvent.SetCurrentOrderWithOrderItems -> {
+                _uiState.update {
+                    it.copy(
+                        currentOrder = uiEvent.orderWithOrderItems
+                    )
+                }
+            }
+            is OrderUiEvent.UpdateCustomer -> updateCustomer(uiEvent.customer)
         }
     }
 
-
+    private fun updateCustomer(customer: Customer) {
+        viewModelScope.launch(Dispatchers.IO) {
+            uiState.value.currentOrder?.order?.let {
+                orderRepo.writeOrder(it.copy(customer = customer))
+            }
+        }
+    }
     private fun createNewOrder(orderType: OrderType) {
         Log.d("current order: creating", uiState.value.currentOrder.toString())
         val newOrder = Order(
@@ -134,16 +149,18 @@ class OrderViewModel(
     }
 
 
-    private fun addOrUpdateOrderItem(menuItem: MenuItem, orderId: String) {
+    private fun addOrUpdateOrderItem(menuItem: MenuItem) {
         val foundedOrderItem = uiState.value.currentOrder?.orderItems?.find {
             it.menuItem == menuItem && it.orderItemStatus == OrderItemStatus.Added
         }
-        if (foundedOrderItem == null) {
-            addItemToOrder(menuItem, orderId)
-        } else {
-            updateOrderItem(
-                foundedOrderItem.copy(quantity = foundedOrderItem.quantity + 1)
-            )
+        uiState.value.currentOrder?.let {
+            if (foundedOrderItem == null) {
+                addItemToOrder(menuItem, it.order.id)
+            } else {
+                updateOrderItem(
+                    foundedOrderItem.copy(quantity = foundedOrderItem.quantity + 1)
+                )
+            }
         }
     }
 
