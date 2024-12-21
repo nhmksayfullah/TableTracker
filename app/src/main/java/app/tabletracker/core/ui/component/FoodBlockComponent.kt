@@ -29,7 +29,7 @@ fun FoodBlockComponent(
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    onClick: () -> Unit
+    onClick: () -> Unit = {}
 ) {
     var resizedTextStyle by remember {
         mutableStateOf(textStyle)

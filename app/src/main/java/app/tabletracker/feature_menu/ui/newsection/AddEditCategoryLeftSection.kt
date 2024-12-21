@@ -2,6 +2,7 @@ package app.tabletracker.feature_menu.ui.newsection
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -83,7 +84,7 @@ fun EditCategoryBottomBar(
     onDeleteClick: () -> Unit = {}
 
 ) {
-    Row(modifier = modifier) {
+    Row(modifier = modifier.imePadding()) {
         Button(
             modifier = Modifier.weight(1f).padding(4.dp),
             onClick = onUpsertClick

@@ -96,7 +96,7 @@ fun LargeScreenApp(
                                     if (appUiState.readyToTakeOrder) {
                                         onAppUiEvent(AppUiEvent.ChangeScreen(Screen.StartOrderScreen))
                                         onAppUiEvent(AppUiEvent.ChangeApplication(Applications.OrderManagementApp))
-                                        navController.popBackStack()
+                                        navController.navigateUp()
 
                                     }
                                 }
@@ -159,11 +159,8 @@ fun LargeScreenApp(
             )
 
             menuManagementApp(
-                navController = navController,
-                appUiState = appUiState
-            ) {
-                onAppUiEvent(it)
-            }
+                navController = navController
+            )
 
 //            orderManagementApp(
 //                navController = navController,

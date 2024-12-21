@@ -1,5 +1,7 @@
 package app.tabletracker.feature_menu
 
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -16,11 +18,7 @@ import app.tabletracker.util.accessSharedViewModel
 
 fun NavGraphBuilder.menuManagementApp(
     navController: NavHostController,
-    appUiState: AppUiState,
-    onAppUiEvent: (AppUiEvent) -> Unit
 ) {
-
-
 
     navigation(
         route = Applications.MenuManagementApp.route,
@@ -29,11 +27,6 @@ fun NavGraphBuilder.menuManagementApp(
 
         composable(Screen.EditMenuScreen.route) {
             val editMenuViewModel = it.accessSharedViewModel<EditMenuViewModel>(navController)
-//            EditMenuScreen(
-//                appUiState = appUiState,
-//                onAppUiEvent = onAppUiEvent,
-//                editMenuViewModel = editMenuViewModel
-//            )
             InventoryScreen(
                 editMenuViewModel = editMenuViewModel
             )

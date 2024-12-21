@@ -16,4 +16,5 @@ sealed class EditMenuUiEvent {
 
     data class DeleteCategory(val category: Category): EditMenuUiEvent()
     data class DeleteMenuItem(val menuItem: MenuItem): EditMenuUiEvent()
+    data class ReorderCategories(val categories: List<Category>): EditMenuUiEvent()
 }

@@ -1,23 +1,46 @@
 package app.tabletracker.feature_menu.ui.newsection
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.component.FoodBlockComponent
 import app.tabletracker.feature_menu.data.entity.Category
 import app.tabletracker.feature_menu.data.entity.MenuItem
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyGridState
+import app.tabletracker.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -26,38 +49,98 @@ fun ShowCategoriesRightSection(
     modifier: Modifier = Modifier,
     onCategoryClicked: (Category) -> Unit,
     onCategoryDoubleClicked: (Category) -> Unit,
-    onAddNewCategory: () -> Unit
+    onAddNewCategory: () -> Unit,
+    onCategoryReordered: (List<Category>) -> Unit
 ) {
+    var canDrag by remember {
+        mutableStateOf(false)
+    }
+    val lazyGridState = rememberLazyGridState()
+
+    var updatedCategories by remember {
+        mutableStateOf(categories)
+    }
+    LaunchedEffect(categories) {
+        updatedCategories = categories.sortedBy { it.index }
+    }
+
+    val reorderableLazyGridState = rememberReorderableLazyGridState(lazyGridState) { from, to ->
+        updatedCategories = updatedCategories.toMutableList().apply {
+            add(to.index, removeAt(from.index))
+        }
+    }
+
     Scaffold(
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = onAddNewCategory
-            ) {
-                Text("New Category")
+            Row {
+                FloatingActionButton(
+                    onClick = {
+                        if (canDrag) {
+                            canDrag = false
+                            onCategoryReordered(updatedCategories)
+                        } else {
+                            canDrag = true
+                        }
+                    }
+                ) {
+                    if (canDrag) {
+                        Icon(
+                            imageVector = Icons.Default.Done,
+                            contentDescription = "Reorder End"
+                        )
+                    } else {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(R.drawable.baseline_swap_calls_24),
+                            contentDescription = "Reorder Start"
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.width(4.dp))
+                ExtendedFloatingActionButton(
+                    onClick = onAddNewCategory
+                ) {
+                    Text("New Category")
+                }
             }
         }
     ) {
         LazyVerticalGrid(
+            state = lazyGridState,
             columns = GridCells.Adaptive(120.dp),
             contentPadding = PaddingValues(8.dp),
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(it).fillMaxSize()
         ) {
-            items(categories) { category ->
-                FoodBlockComponent(
-                    text = category.name,
-                    modifier = modifier
-                        .padding(4.dp)
-                        .combinedClickable(
-                            onClick = {
-                                onCategoryClicked(category)
-                            },
-                            onDoubleClick = {
-                                onCategoryDoubleClicked(category)
-                            }
-                        )
+            items(updatedCategories, key = { it.id }) { category ->
+                ReorderableItem(
+                    reorderableLazyGridState,
+                    key = category.id
                 ) {
-//                onCategoryClicked(category)
+                    FoodBlockComponent(
+                        text = category.name,
+                        modifier = modifier
+                            .padding(4.dp)
+                            .combinedClickable(
+                                onClick = {
+                                    onCategoryClicked(category)
+                                },
+                                onDoubleClick = {
+                                    onCategoryDoubleClicked(category)
+                                }
+                            )
+                    )
+                    if (canDrag) {
+                        IconButton(
+                            onClick = {},
+                            modifier = Modifier.draggableHandle()
+                        ) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(R.drawable.baseline_drag_indicator_24),
+                                contentDescription = "Drag Icon"
+                            )
+                        }
+                    }
                 }
+
             }
         }
     }
@@ -95,3 +178,5 @@ fun ShowMenuItemsRightSection(
         }
     }
 }
+
+

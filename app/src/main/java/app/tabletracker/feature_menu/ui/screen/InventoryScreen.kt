@@ -94,6 +94,9 @@ fun InventoryScreen(
                         onAddNewCategory = {
                             leftState = LeftState.EditCategory
                             editMenuViewModel.onEvent(EditMenuUiEvent.AddNewCategory)
+                        },
+                        onCategoryReordered = {
+                            editMenuViewModel.onEvent(EditMenuUiEvent.ReorderCategories(it))
                         }
                     )
                 }
