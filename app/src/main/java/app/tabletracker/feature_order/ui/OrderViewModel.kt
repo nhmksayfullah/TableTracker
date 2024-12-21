@@ -14,6 +14,7 @@ import app.tabletracker.feature_order.data.entity.OrderType
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
 import app.tabletracker.feature_order.data.entity.toOrderItem
 import app.tabletracker.feature_order.domain.repository.OrderRepository
+import app.tabletracker.feature_order.v2.state.OrderUiState2
 import app.tabletracker.util.TableTrackerDefault
 import app.tabletracker.util.generateUniqueId
 import app.tabletracker.util.getEndOfDay
@@ -45,6 +46,14 @@ class OrderViewModel(
         populateMenus()
         populateTodayOrders()
         populateRestaurantInfo()
+    }
+
+    init {
+        viewModelScope.launch {
+            uiState.collect { state ->
+                calculateTotalPrice(state)
+            }
+        }
     }
 
     fun onEvent(uiEvent: OrderUiEvent) {
@@ -103,7 +112,7 @@ class OrderViewModel(
             orderRepo.writeOrder(
                 newOrder
             )
-            populateCurrentOrder(newOrder.id)
+            populateLatestOrder()
         }
     }
 
@@ -254,6 +263,19 @@ class OrderViewModel(
             }
         }
         return totalPrice
+    }
+
+    private suspend fun calculateTotalPrice(state: OrderUiState) {
+        val currentOrder = state.currentOrder ?: return
+        val totalPrice = currentOrder.orderItems.sumOf {
+            ((it.menuItem.prices[currentOrder.order.orderType] ?: 0.0f) * it.quantity).toDouble()
+        }.toFloat() // Convert the result back to Float
+
+        if (totalPrice != currentOrder.order.totalPrice) {
+            val updatedOrder = currentOrder.order.copy(totalPrice = totalPrice)
+            orderRepo.writeOrder(updatedOrder) // Save the updated total price
+            _uiState.update { it.copy(currentOrder = currentOrder.copy(order = updatedOrder)) }
+        }
     }
 
     private fun populateRestaurantInfo() {
