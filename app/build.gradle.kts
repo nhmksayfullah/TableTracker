@@ -10,7 +10,7 @@ ksp {
 }
 android {
     namespace = "app.tabletracker"
-    compileSdk = 34
+    compileSdk = 35
 
 
     defaultConfig {
