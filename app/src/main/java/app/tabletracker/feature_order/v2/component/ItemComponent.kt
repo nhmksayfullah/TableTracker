@@ -1,21 +1,29 @@
 package app.tabletracker.feature_order.v2.component
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +36,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import app.tabletracker.feature_order.data.entity.OrderItem
 import app.tabletracker.R
 import app.tabletracker.core.ui.component.KeyboardDialog
@@ -42,15 +52,12 @@ fun FoodItemInOrderComponent(
     onItemChange: (OrderItem) -> Unit
 ) {
 
-    var showKeyboard by rememberSaveable {
-        mutableStateOf(false)
-    }
-
     val unitPrice = item.menuItem.prices[orderType] ?: 0.0f
     FoodItem(
         foodName = item.menuItem.name,
         price = "%.2f".format(unitPrice.times(item.quantity)),
         quantity = item.quantity,
+        addedNote = item.addedNote,
         onPlusClick = {
             onItemChange(item.copy(quantity = item.quantity + 1))
         },
@@ -62,23 +69,11 @@ fun FoodItemInOrderComponent(
             }
         },
         onRemoveClick = onItemRemoveClick,
-        onCustomizeClick = {
-            showKeyboard = true
+        onNoteAdded = {
+            onItemChange(item.copy(addedNote = it))
         }
     )
 
-    if (showKeyboard) {
-        KeyboardDialog(
-            onDismissRequest = {
-                showKeyboard = false
-            },
-            value = item.addedNote,
-            label = "Note"
-        ) {
-            onItemChange(item.copy(addedNote = it))
-            showKeyboard = false
-        }
-    }
 }
 
 @Composable
@@ -86,12 +81,22 @@ fun FoodItem(
     foodName: String,
     price: String,
     quantity: Int,
+    addedNote: String,
     modifier: Modifier = Modifier,
     onPlusClick: () -> Unit,
     onMinusClick: () -> Unit,
     onRemoveClick: () -> Unit,
-    onCustomizeClick: () -> Unit
+    onNoteAdded: (note: String) -> Unit
 ) {
+    var showKeyboard by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var _addedNote by rememberSaveable {
+        mutableStateOf("")
+    }
+    LaunchedEffect(key1 = addedNote) {
+        _addedNote = addedNote
+    }
     Column(
         modifier = modifier
             .padding(vertical = 4.dp)
@@ -140,15 +145,44 @@ fun FoodItem(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(text = "£$price")
-                IconButton(
-                    onClick = onCustomizeClick
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Customize the item"
-                    )
+                if (showKeyboard) {
+                    IconButton(
+                        onClick = {
+                            onNoteAdded(_addedNote)
+                            showKeyboard = false
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Done,
+                            contentDescription = "Customize the item"
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = {
+                            showKeyboard = true
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Customize the item"
+                        )
+                    }
                 }
             }
+        }
+        AnimatedVisibility(showKeyboard) {
+            TextField(
+                value = _addedNote,
+                onValueChange = {
+                    _addedNote = it
+                },
+                label = {
+                    Text(text = "Note")
+                },
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 3,
+            )
         }
         Spacer(Modifier.fillMaxWidth().height(2.dp).background(MaterialTheme.colorScheme.inversePrimary))
     }
@@ -161,9 +195,10 @@ private fun ItemComponent() {
         foodName = "Pizza",
         price = "10.00",
         quantity = 1,
+        addedNote = "Extra Cheese",
         onPlusClick = {},
         onMinusClick = {},
         onRemoveClick = {},
-        onCustomizeClick = {}
+        onNoteAdded = {}
     )
 }

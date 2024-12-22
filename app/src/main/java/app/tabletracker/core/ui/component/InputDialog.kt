@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -54,21 +56,26 @@ fun KeyboardDialog(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
                 .fillMaxSize()
-                .padding(horizontal = 200.dp, vertical = 100.dp)
+                .padding(horizontal = 200.dp, vertical = 60.dp)
                 .background(MaterialTheme.colorScheme.background, RoundedCornerShape(16.dp))
                 .padding(16.dp)
         ) {
+
             TextField(
                 value = _value,
                 onValueChange = { _value = it },
                 readOnly = true,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 placeholder = {
                     Text(text = placeholder)
                 },
                 label = {
                     Text(text = label)
-                }
+                },
+                maxLines = 3,
+                minLines = 1
+
             )
             Spacer(modifier = Modifier.height(20.dp))
             when(keyboardType) {
