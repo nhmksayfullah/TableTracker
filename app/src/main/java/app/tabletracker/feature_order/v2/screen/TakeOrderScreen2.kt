@@ -26,6 +26,7 @@ fun TakeOrderScreen2(
                 onOrderUiEvent = orderViewModel::onEvent,
                 onOrderDismiss = onOrderDismiss
             )
+
         },
         rightContent = {
             ShowMenuRightSection2(

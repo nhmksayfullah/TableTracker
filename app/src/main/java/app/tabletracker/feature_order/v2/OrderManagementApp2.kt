@@ -11,6 +11,7 @@ import app.tabletracker.feature_order.ui.OrderViewModel
 import app.tabletracker.feature_order.v2.screen.RunningOrderScreen2
 import app.tabletracker.feature_order.v2.screen.StartOrderScreen2
 import app.tabletracker.feature_order.v2.state.OrderViewModel2
+import app.tabletracker.feature_order.v3.screen.RunningOrderScreen3
 import app.tabletracker.feature_order.v3.screen.TakeOrderScreen3
 import app.tabletracker.util.accessSharedViewModel
 import kotlinx.serialization.Serializable
@@ -52,7 +53,7 @@ fun NavGraphBuilder.setupOrderManagementApp2(
 
         composable<RunningOrderScreen> {
             val orderViewModel = it.accessSharedViewModel<OrderViewModel>(navController)
-            RunningOrderScreen2(
+            RunningOrderScreen3(
                 orderViewModel = orderViewModel,
                 onCustomizeCurrentOrder = {
                     onAppUiEvent(AppUiEvent.ChangeScreen(Screen.TakeOrderScreen))

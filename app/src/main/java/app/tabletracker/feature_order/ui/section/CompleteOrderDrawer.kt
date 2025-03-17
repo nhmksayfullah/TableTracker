@@ -34,6 +34,7 @@ import app.tabletracker.core.ui.component.KeyboardDialog
 import app.tabletracker.feature_order.data.entity.OrderItemStatus
 import app.tabletracker.feature_order.data.entity.OrderStatus
 import app.tabletracker.feature_order.data.entity.OrderType
+import app.tabletracker.feature_order.data.entity.PaymentMethod
 import app.tabletracker.feature_order.ui.OrderUiEvent
 import app.tabletracker.feature_order.ui.OrderUiState
 import app.tabletracker.feature_printing.domain.PrinterManager
@@ -171,17 +172,29 @@ fun CompleteOrderDrawer(
                 Spacer(modifier = Modifier.height(8.dp))
                 SingleChoiceSegmentedButtonRow {
                     paymentMethods.forEachIndexed { index, paymentMethod ->
+
                         SegmentedButton(
                             selected = paymentMethod == orderUiState.currentOrder?.order?.paymentMethod,
                             onClick = {
                                 if (orderUiState.currentOrder != null) {
-                                    orderUiEvent(
-                                        OrderUiEvent.UpdateCurrentOrder(
-                                            orderUiState.currentOrder.order.copy(
-                                                paymentMethod = paymentMethod
+                                    if (paymentMethod == orderUiState.currentOrder.order.paymentMethod) {
+                                        orderUiEvent(
+                                            OrderUiEvent.UpdateCurrentOrder(
+                                                orderUiState.currentOrder.order.copy(
+                                                    paymentMethod = PaymentMethod.None
+                                                )
                                             )
                                         )
-                                    )
+                                    } else {
+                                        orderUiEvent(
+                                            OrderUiEvent.UpdateCurrentOrder(
+                                                orderUiState.currentOrder.order.copy(
+                                                    paymentMethod = paymentMethod
+                                                )
+                                            )
+                                        )
+                                    }
+
                                 }
                             },
                             shape = SegmentedButtonDefaults.itemShape(
