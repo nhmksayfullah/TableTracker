@@ -7,6 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.tabletracker.core.ui.TabbedScreen
+import app.tabletracker.feature_order.data.entity.OrderStatus
 import app.tabletracker.feature_order.ui.OrderUiEvent
 import app.tabletracker.feature_order.ui.OrderUiState
 
@@ -16,7 +17,7 @@ fun TakeOrderLeftSection3(
     modifier: Modifier = Modifier,
     onPlaceOrder: () -> Unit,
     onOrderUiEvent: (OrderUiEvent) -> Unit,
-    onOrderDismiss: () -> Unit
+    onCancelOrder: (OrderUiEvent) -> Unit
 ) {
     Scaffold(
         bottomBar = {
@@ -24,7 +25,13 @@ fun TakeOrderLeftSection3(
                 CompleteOrderLeftSectionHeader3(
                     order = it.order,
                     onPlaceOrder = onPlaceOrder,
-                    onCancelOrder = onOrderDismiss,
+                    onCancelOrder = {
+                        onCancelOrder(OrderUiEvent.UpdateCurrentOrder(
+                            orderUiState.currentOrder.order.copy(
+                                orderStatus = OrderStatus.Cancelled
+                            )
+                        ))
+                    },
                     onOrderChange = {
                         onOrderUiEvent(OrderUiEvent.UpdateCurrentOrder(it))
                     }

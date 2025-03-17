@@ -47,8 +47,14 @@ fun CompleteOrderLeftSectionHeader3(
         mutableStateOf(false)
     }
 
+    var cancelOrderDialogState by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     Column(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp).then(modifier)
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .then(modifier)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -58,7 +64,7 @@ fun CompleteOrderLeftSectionHeader3(
             Spacer(modifier = Modifier.weight(1f))
             Text("£%.2f".format(order.totalPrice))
         }
-        if(order.discount != null) {
+        if (order.discount != null) {
             val discount = order.discount.value.let {
                 try {
                     it.toFloat() * order.totalPrice / 100
@@ -77,7 +83,7 @@ fun CompleteOrderLeftSectionHeader3(
                 IconButton(onClick = {
                     addDiscountDialogState = true
                 }) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription =null)
+                    Icon(imageVector = Icons.Default.Edit, contentDescription = null)
                 }
                 Text("-£%.2f".format(discount))
             }
@@ -108,8 +114,13 @@ fun CompleteOrderLeftSectionHeader3(
             }
             Spacer(modifier = Modifier.width(8.dp))
             Button(
-                onClick = onCancelOrder,
-                colors = ButtonDefaults.buttonColors().copy(containerColor = MaterialTheme.colorScheme.error)
+                onClick = {
+                    cancelOrderDialogState = true
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                ),
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,
@@ -119,12 +130,46 @@ fun CompleteOrderLeftSectionHeader3(
         }
     }
 
+    if (cancelOrderDialogState) {
+        AlertDialog(
+            onDismissRequest = {
+                cancelOrderDialogState = false
+            },
+            confirmButton = {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                    ),
+                    onClick = {
+                        onCancelOrder()
+                        cancelOrderDialogState = false
+                    }) {
+                    Text(text = "Cancel Order")
+                }
+            },
+            title = {
+                Text(text = "Cancel Order")
+            },
+            text = {
+                Text(text = "Are you sure you want to cancel this order?")
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    cancelOrderDialogState = false
+                }) {
+                    Text(text = "Dismiss")
+                }
+            }
+        )
+    }
+
     if (addDiscountDialogState) {
         var discount by rememberSaveable {
             mutableStateOf(order.discount?.value ?: "")
         }
         AlertDialog(
-            onDismissRequest = { addDiscountDialogState = false},
+            onDismissRequest = { addDiscountDialogState = false },
             confirmButton = {
                 Button(onClick = {
                     if (discount.isNotEmpty()) {
@@ -154,7 +199,14 @@ fun CompleteOrderLeftSectionHeader3(
                         InputChip(
                             onClick = {
                                 discount = "5%"
-                                onOrderChange(order.copy(discount = Discount(title = "", value = "5")))
+                                onOrderChange(
+                                    order.copy(
+                                        discount = Discount(
+                                            title = "",
+                                            value = "5"
+                                        )
+                                    )
+                                )
                                 addDiscountDialogState = false
                             },
                             label = {

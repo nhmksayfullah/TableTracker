@@ -14,5 +14,7 @@ data class Category(
     val isKitchenCategory: Boolean = true,
     val creationTime: Long = generateInstantTime(),
     @ColumnInfo(name = "index", defaultValue = "-1")
-    val index: Int = -1
+    val index: Int = -1,
+    @ColumnInfo(name = "color", defaultValue = "-1")
+    val color: Int = -1
 )

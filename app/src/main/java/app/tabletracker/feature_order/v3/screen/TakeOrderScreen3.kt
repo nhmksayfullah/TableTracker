@@ -36,7 +36,10 @@ fun TakeOrderScreen3(
             TakeOrderLeftSection3(
                 orderUiState = uiState,
                 onOrderUiEvent = orderViewModel::onEvent,
-                onOrderDismiss = onOrderDismiss,
+                onCancelOrder = {
+                    orderViewModel.onEvent(it)
+                    onOrderDismiss()
+                },
                 onPlaceOrder = {
                     scope.launch {
                         drawerState.open()

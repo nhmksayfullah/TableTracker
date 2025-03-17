@@ -42,6 +42,7 @@ import app.tabletracker.feature_menu.data.entity.MenuItem
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 import app.tabletracker.R
+import app.tabletracker.theme.MaterialColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -222,7 +223,8 @@ fun ShowMenuItemsRightSection(
                 ) {
                     FoodBlockComponent(
                         text = menuItem.name,
-                        modifier = modifier.padding(4.dp)
+                        modifier = modifier
+                            .padding(4.dp)
                     ) {
                         onMenuItemClicked(menuItem)
                     }

@@ -1,11 +1,17 @@
 package app.tabletracker.core.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -29,15 +35,9 @@ fun FoodBlockComponent(
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
+    verticalLineColor: Color? = null,
     onClick: () -> Unit = {}
 ) {
-    var resizedTextStyle by remember {
-        mutableStateOf(textStyle)
-    }
-    var shouldDraw by remember {
-        mutableStateOf(false)
-    }
-    val defaultFontSize = MaterialTheme.typography.bodyLarge.fontSize
     Card(
         modifier = Modifier
             .wrapContentSize()
@@ -49,27 +49,27 @@ fun FoodBlockComponent(
                 contentColor = contentColor
             ),
     ) {
-        Box(
+        Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .height(80.dp),
-            contentAlignment = Alignment.Center
+                .height(80.dp)
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            verticalLineColor?.let {
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(4.dp)
+                        .background(it, RoundedCornerShape(8.dp))
+                )
+            }
+
             Text(
                 text = text,
-                modifier = Modifier.padding(4.dp),
+                modifier = Modifier.padding(8.dp),
                 maxLines = 2,
-                style = resizedTextStyle,
-//                onTextLayout = {textLayoutResult ->
-//                    if (textLayoutResult.didOverflowHeight) {
-//                        resizedTextStyle = resizedTextStyle.copy(
-//                            fontSize = defaultFontSize * 0.8f,
-//                            textMotion = TextMotion.Animated
-//                        )
-//                    } else {
-//                        shouldDraw = true
-//                    }
-//                },
+                style = textStyle,
             )
         }
     }

@@ -1,6 +1,7 @@
 package app.tabletracker.feature_menu.v2.section
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.component.FoodBlockComponent
 import app.tabletracker.feature_menu.data.entity.Category
 import app.tabletracker.feature_menu.data.entity.MenuItem
+import app.tabletracker.theme.MaterialColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -52,7 +54,8 @@ fun ShowCategoriesRightSection(
                             onDoubleClick = {
                                 onCategoryDoubleClicked(category)
                             }
-                        )
+                        ),
+                    containerColor = MaterialColor.Blue.color
                 ) {
 //                onCategoryClicked(category)
                 }

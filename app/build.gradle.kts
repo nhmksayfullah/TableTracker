@@ -21,8 +21,8 @@ android {
         
 //        versionCode = 18
 //        versionName = "1.1.7"
-        versionCode = 20
-        versionName = "1.1.9"
+        versionCode = 21
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
