@@ -1,53 +1,54 @@
 package app.tabletracker.util
 
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.ZoneId
-import java.time.ZoneOffset
+import kotlinx.datetime.*
 
 fun generateInstantTime(): Long {
-    return Instant.now().toEpochMilli()
+    return Clock.System.now().toEpochMilliseconds()
 }
 
-fun LocalDateTime.toEpochMillis(): Long {
-    return this.toInstant(ZoneOffset.UTC).toEpochMilli()
+fun LocalDateTime.toEpochMillis(timeZone: TimeZone = TimeZone.UTC): Long {
+    return this.toInstant(timeZone).toEpochMilliseconds()
 }
 
-fun Long.toLocalDateTime(): LocalDateTime {
-    return Instant
-        .ofEpochMilli(this)
-        .atZone(ZoneId.systemDefault())
-        .toLocalDateTime()
+fun Long.toLocalDateTime(timeZone: TimeZone = TimeZone.UTC): LocalDateTime {
+    return Instant.fromEpochMilliseconds(this).toLocalDateTime(timeZone)
 }
+
+
+
+
 fun generateLocalDate(): LocalDate {
-    return LocalDate.now()
+    return Clock.System.todayIn(TimeZone.currentSystemDefault())
 }
 
 fun generateLocalDate(year: Int, month: Int, dayOfMonth: Int): LocalDate {
-    return LocalDate.of(year, month, dayOfMonth)
+    return LocalDate(year, month, dayOfMonth)
 }
 
 fun generateLocalTime(): LocalTime {
-    return LocalTime.now()
+    return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).time
 }
 
 fun generateLocalTime(hour: Int, minute: Int): LocalTime {
-    return LocalTime.of(hour, minute)
+    return LocalTime(hour, minute)
 }
 
 fun generateLocalDateTime(localDate: LocalDate, localTime: LocalTime): LocalDateTime {
-    return localDate.atTime(localTime)
+    return LocalDateTime(localDate.year, localDate.monthNumber, localDate.dayOfMonth, localTime.hour, localTime.minute)
 }
+
 fun generateLocalDateTime(): LocalDateTime {
-    return LocalDateTime.now()
+    return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 }
 
 fun getStartOfDay(): Long {
-    return LocalDate.now().atStartOfDay().toEpochMillis()
+    val today = generateLocalDate()
+    return today.atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds()
 }
 
 fun getEndOfDay(): Long {
-    return LocalDateTime.of(LocalDate.now(), LocalTime.MAX).toEpochMillis()
+    val today = generateLocalDate()
+    val endOfDayTime = LocalTime(23, 59, 59, 999_999_999) // 23:59:59.999999999
+    val endOfDay = LocalDateTime(today.year, today.monthNumber, today.dayOfMonth, endOfDayTime.hour, endOfDayTime.minute, endOfDayTime.second, endOfDayTime.nanosecond)
+    return endOfDay.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
 }

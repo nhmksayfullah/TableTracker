@@ -40,7 +40,6 @@ android {
         }
     }
     compileOptions {
-        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -95,9 +94,6 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    //realm
-//    implementation(libs.realm.base)
-
     //Type converter
     implementation(libs.moshi)
     ksp(libs.moshi.kotlin.codegen)
@@ -105,8 +101,8 @@ dependencies {
     
     implementation(libs.escpos.thermalprinter.android)
 
-    coreLibraryDesugaring(libs.desugar.jdk.libs)
-
     implementation(libs.reorderable)
+
+    implementation(libs.kotlinx.datetime)
 
 }

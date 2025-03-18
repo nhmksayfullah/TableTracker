@@ -14,7 +14,7 @@ sealed class BottomNavigationOption(val navOption: NavigationOption) {
     data object Order: BottomNavigationOption(
         NavigationOption(
             id = 0,
-            title = "Order",
+            title = "Dashboard",
             icon = R.drawable.rounded_grid_view_24,
             route = Screen.StartOrderScreen
         )

@@ -44,10 +44,8 @@ import app.tabletracker.theme.MaterialColor
 
 @Composable
 fun SettingsScreen(
-    settingsViewModel: SettingsViewModel,
-    onCompleteClick: () -> Unit
+    settingsViewModel: SettingsViewModel
 ) {
-    BackHandler(true) {}
 
     val settingsUiState by settingsViewModel.uiState.collectAsState()
 

@@ -23,9 +23,7 @@ fun NavGraphBuilder.settingsNavGraph(
             val viewModel = it.accessSharedViewModel<SettingsViewModel>(navController = navController)
             SettingsScreen(
                 settingsViewModel = viewModel
-            ) {
-                navController.popBackStack()
-            }
+            )
         }
     }
 }

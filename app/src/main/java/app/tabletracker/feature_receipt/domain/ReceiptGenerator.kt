@@ -70,10 +70,10 @@ class ReceiptGenerator(
     private fun populateOrderDetails() {
         val orderDetailsString = """
             [L]Order Type: ${orderWithOrderItems.order.orderType} [R]${
-            orderWithOrderItems.order.creationTime.toLocalDateTime().toLocalDate()
+            orderWithOrderItems.order.creationTime.toLocalDateTime().date
         }
             [L]Order ID: ${orderWithOrderItems.order.id} [R]${
-            orderWithOrderItems.order.creationTime.toLocalDateTime().toLocalTime()
+            orderWithOrderItems.order.creationTime.toLocalDateTime().time
         }${'\n'}${'\n'}
         """.trimIndent()
 
