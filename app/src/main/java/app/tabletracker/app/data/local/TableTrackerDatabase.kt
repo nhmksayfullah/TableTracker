@@ -22,8 +22,8 @@ import app.tabletracker.feature_menu.data.entity.MealTypeConverter
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_menu.data.local.MenuDao
 import app.tabletracker.feature_order.data.entity.Discount
-import app.tabletracker.feature_order.data.entity.DiscountTypeConverter
-import app.tabletracker.feature_order.data.entity.MenuItemTypeConverter
+import app.tabletracker.feature_order.data.converter.DiscountTypeConverter
+import app.tabletracker.feature_order.data.converter.MenuItemTypeConverter
 import app.tabletracker.feature_order.data.entity.Order
 import app.tabletracker.feature_order.data.entity.OrderItem
 import app.tabletracker.feature_order.data.local.OrderDao

@@ -3,7 +3,6 @@ package app.tabletracker.feature_menu.ui.screen
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -13,15 +12,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.LineHeightStyle
 import app.tabletracker.core.ui.SplitScreen
-import app.tabletracker.feature_menu.data.entity.Category
 import app.tabletracker.feature_menu.ui.EditMenuUiEvent
 import app.tabletracker.feature_menu.ui.EditMenuViewModel
-import app.tabletracker.feature_menu.ui.newsection.AddEditCategoryLeftSection
-import app.tabletracker.feature_menu.ui.newsection.AddEditMenuItemLeftSection
-import app.tabletracker.feature_menu.ui.newsection.ShowCategoriesRightSection
-import app.tabletracker.feature_menu.ui.newsection.ShowMenuItemsRightSection
+import app.tabletracker.feature_menu.ui.section.AddEditCategoryLeftSection
+import app.tabletracker.feature_menu.ui.section.AddEditMenuItemLeftSection
+import app.tabletracker.feature_menu.ui.section.ShowCategoriesRightSection
+import app.tabletracker.feature_menu.ui.section.ShowMenuItemsRightSection
 
 @Composable
 fun InventoryScreen(

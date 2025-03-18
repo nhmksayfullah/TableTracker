@@ -1,11 +1,8 @@
 package app.tabletracker.app.version
 
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
@@ -14,8 +11,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,12 +25,10 @@ import app.tabletracker.core.navigation.ExtraNavOption
 import app.tabletracker.core.navigation.Screen
 import app.tabletracker.core.navigation.SetupBottomNavigationBar
 import app.tabletracker.feature_menu.menuManagementApp
-import app.tabletracker.feature_order.orderManagementApp
-import app.tabletracker.feature_order.v2.OrderManagementApp2
-import app.tabletracker.feature_order.v2.RunningOrderScreen
-import app.tabletracker.feature_order.v2.StartOrderScreen
-import app.tabletracker.feature_order.v2.screen.RunningOrderScreen2
-import app.tabletracker.feature_order.v2.setupOrderManagementApp2
+import app.tabletracker.feature_order.OrderManagementApp2
+import app.tabletracker.feature_order.RunningOrderScreen
+import app.tabletracker.feature_order.StartOrderScreen
+import app.tabletracker.feature_order.orderManagementGraph
 import app.tabletracker.settings.settingsApp
 
 @Composable
@@ -58,11 +51,6 @@ fun LargeScreenApp(
                     visible = appUiState.currentScreen != Screen.TakeOrderScreen
                 ) {
                     SetupBottomNavigationBar(
-//                        modifier = Modifier
-//                            .animateContentSize()
-//                            .then(
-//                                if (appUiState.currentScreen == Screen.TakeOrderScreen) Modifier.height(0.dp) else Modifier
-//                            ),
                         navOptions = if (appUiState.currentScreen == Screen.EditMenuScreen || appUiState.currentScreen == Screen.SettingsScreen)
                             listOf()
                         else listOf(
@@ -161,14 +149,7 @@ fun LargeScreenApp(
             menuManagementApp(
                 navController = navController
             )
-
-//            orderManagementApp(
-//                navController = navController,
-//                onAppUiEvent = {
-//                    onAppUiEvent(it)
-//                }
-//            )
-            setupOrderManagementApp2(
+            orderManagementGraph(
                 navController = navController,
                 onAppUiEvent = {
                     onAppUiEvent(it)

@@ -5,8 +5,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import app.tabletracker.app.ui.AppViewModel
 import app.tabletracker.auth.ui.AuthViewModel
 import app.tabletracker.feature_menu.ui.EditMenuViewModel
-import app.tabletracker.feature_order.ui.OrderViewModel
-import app.tabletracker.feature_order.v2.state.OrderViewModel2
+import app.tabletracker.feature_order.ui.state.OrderViewModel
 import app.tabletracker.settings.ui.SettingsViewModel
 
 object AccessViewModelProvider {
@@ -20,8 +19,7 @@ object AccessViewModelProvider {
         }
         initializer {
             OrderViewModel(
-                orderRepo = accessTableTrackerApplication().container.orderRepository,
-                customerRepo = accessTableTrackerApplication().container.customerRepository
+                orderRepo = accessTableTrackerApplication().container.orderRepository
             )
         }
         initializer {
@@ -29,9 +27,6 @@ object AccessViewModelProvider {
         }
         initializer {
             SettingsViewModel(repository = accessTableTrackerApplication().container.settingsRepository)
-        }
-        initializer {
-            OrderViewModel2(repository = accessTableTrackerApplication().container.orderRepository)
         }
     }
 }
