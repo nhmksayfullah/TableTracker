@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 
 class ApplicationRoomRepository(private val appDao: AppDao): ApplicationRepository {
-    override fun isTableNotEmpty(): Flow<Boolean> {
-        return appDao.isTableNotEmpty()
+    override fun hasInventory(): Flow<Boolean> {
+        return appDao.hasInventory()
     }
 
     override fun isUserRegistered(): Flow<Boolean> {

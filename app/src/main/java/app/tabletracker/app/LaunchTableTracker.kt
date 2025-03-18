@@ -43,7 +43,7 @@ fun LaunchTableTracker(
     // show splash screen until all data has fetched
     activity.installSplashScreen().apply {
         setKeepOnScreenCondition {
-            appUiState.isLoading
+            appUiState.loading
         }
     }
 
@@ -75,9 +75,9 @@ fun LaunchTableTracker(
                 // this app for big screens.
                 WindowWidthSizeClass.Expanded -> {
 
-                    LargeScreenApp(appUiState = appUiState) {
-                        appViewModel.onEvent(it)
-                    }
+                    LargeScreenApp(
+                        appUiState = appUiState,
+                    )
                 }
             }
         }

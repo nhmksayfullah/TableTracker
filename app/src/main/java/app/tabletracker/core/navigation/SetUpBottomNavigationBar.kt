@@ -9,74 +9,59 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import app.tabletracker.app.ui.AppUiState
 
 @Composable
 fun SetupBottomNavigationBar(
     modifier: Modifier = Modifier,
-    navOptions: List<BottomNavigationOption>,
-    extraNavOptions: List<ExtraNavOption> ,
-    onNavigationItemClick: (BottomNavigationOption) -> Unit,
-    onExtraNavOptionClick: (ExtraNavOption) -> Unit = {},
+    navOptions: List<BottomNavigationOption> = getBottomNavigationOptions(),
+    onNavigationItemClick: (BottomNavigationOption) -> Unit = {},
 ) {
     Row(
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primaryContainer)
-            .then(modifier)
+            .background(MaterialTheme.colorScheme.secondaryContainer),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        navOptions.forEach { bottomNavigationOption ->
-            BottomNavItem(bottomNavOption = bottomNavigationOption) {
-                onNavigationItemClick(bottomNavigationOption)
-            }
-        }
-
-        Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.End
-        ) {
-            extraNavOptions.forEach {
-                IconButton(
-                    onClick = {
-                        onExtraNavOptionClick(it)
-                    }
+        navOptions.forEach {
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                ),
+                onClick = {
+                    onNavigationItemClick(it)
+                }
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Icon(imageVector = it.navOption.icon, contentDescription = it.navOption.title)
+                    Icon(
+                        painter = painterResource(id = it.navOption.icon),
+                        contentDescription = it.navOption.title
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = it.navOption.title)
                 }
             }
         }
-
-    }
-}
-
-@Composable
-private fun BottomNavItem(
-    bottomNavOption: BottomNavigationOption,
-    onClick: (BottomNavigationOption) -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .clickable {
-                onClick(bottomNavOption)
-            }
-            .wrapContentSize()
-            .padding(horizontal = 36.dp, vertical = 16.dp)
-
-    ) {
-        Icon(imageVector = bottomNavOption.navOption.icon, contentDescription = null)
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = bottomNavOption.navOption.title)
     }
 }

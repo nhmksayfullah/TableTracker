@@ -4,39 +4,37 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import app.tabletracker.app.ui.AppUiEvent
 import app.tabletracker.core.navigation.Screen
 import app.tabletracker.auth.ui.AuthViewModel
 import app.tabletracker.auth.ui.screen.RegisterLicenceScreen
 import app.tabletracker.auth.ui.screen.RegisterRestaurantScreen
-import app.tabletracker.core.navigation.Applications
+import app.tabletracker.feature_order.OrderManagementApp
 import app.tabletracker.util.accessSharedViewModel
+import kotlinx.serialization.Serializable
 
-fun NavGraphBuilder.authenticationApp(
+@Serializable
+data object AuthenticationApp
+
+fun NavGraphBuilder.authenticationNavGraph(
     navController: NavHostController,
-    onAppUiEvent: (AppUiEvent) -> Unit
+    onRegistrationSuccessful: () -> Unit
 ) {
-    navigation(
-        route = Applications.AuthenticationApp.route,
-        startDestination = Screen.RegisterRestaurantScreen.route
+    navigation<AuthenticationApp>(
+        startDestination = Screen.RegisterRestaurantScreen
     ) {
-        composable(Screen.RegisterRestaurantScreen.route) {
+        composable<Screen.RegisterRestaurantScreen> {
             RegisterRestaurantScreen(
                 authViewModel = it.accessSharedViewModel<AuthViewModel>(navController),
                 onRegisterClick = {
-                    navController.navigate(Screen.RegisterLicenceScreen.route)
+                    navController.navigate(Screen.RegisterLicenceScreen)
 
                 }
             )
         }
-        composable(Screen.RegisterLicenceScreen.route) {
+        composable<Screen.RegisterLicenceScreen> {
             RegisterLicenceScreen(
                 authViewModel = it.accessSharedViewModel<AuthViewModel>(navController),
-                onRegistrationSuccessful = {
-                    onAppUiEvent(AppUiEvent.ChangeApplication(Applications.LoadingApp))
-                    onAppUiEvent(AppUiEvent.ChangeScreen(Screen.LoadingScreen))
-                    navController.navigate(Applications.LoadingApp.route)
-                }
+                onRegistrationSuccessful = onRegistrationSuccessful
             )
         }
     }

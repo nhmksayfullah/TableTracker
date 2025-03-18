@@ -3,79 +3,48 @@ package app.tabletracker.app.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.tabletracker.app.domain.repository.ApplicationRepository
-import app.tabletracker.core.navigation.Applications
-import app.tabletracker.core.navigation.Screen
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
-class AppViewModel(private val repository: ApplicationRepository): ViewModel() {
+class AppViewModel(
+    private val repository: ApplicationRepository
+): ViewModel() {
 
     var uiState = MutableStateFlow(AppUiState())
         private set
-    private var job: Job? = null
 
 
     init {
-        checkRegistrationState()
-//        viewModelScope.launch(Dispatchers.IO) {
-//            repository.updateCategoryIndex()
-//        }
+        checkRegistrationStatus()
     }
 
-    fun onEvent(appUiEvent: AppUiEvent) {
-        when(appUiEvent) {
-            is AppUiEvent.ChangeApplication -> {
-                uiState.update {
-                    it.copy(
-                        currentApplication = appUiEvent.application
-                    )
-                }
-            }
 
-            is AppUiEvent.ChangeScreen -> {
-                uiState.update {
-                    it.copy(
-                        currentScreen = appUiEvent.screen
-                    )
-                }
-            }
-        }
-    }
-
-    private fun checkRegistrationState() {
-        repository.isUserRegistered().onEach {
+    private fun checkRegistrationStatus() {
+        repository.isUserRegistered().onEach { registrationStatus ->
             uiState.update {currentState ->
                 currentState.copy(
-                    isUserRegistered = it
+                    isRegistered = registrationStatus
                 )
             }
-            if (it) {
+            if (registrationStatus) {
                 checkApplicationState()
             } else {
                 uiState.update {currentState ->
                     currentState.copy(
-                        currentApplication = Applications.AuthenticationApp,
-                        currentScreen = Screen.RegisterRestaurantScreen,
-                        isLoading = false
+                        loading = false
                     )
                 }
             }
         }.launchIn(viewModelScope)
     }
     private fun checkApplicationState() {
-        job?.cancel()
-        job = repository.isTableNotEmpty().onEach {
+        repository.hasInventory().onEach { hasInventory ->
             uiState.update {currentState ->
                 currentState.copy(
-                    readyToTakeOrder = it,
-                    currentApplication = if (it) Applications.OrderManagementApp else Applications.MenuManagementApp,
-                    currentScreen = if (it) Screen.StartOrderScreen else Screen.EditMenuScreen,
-                    isLoading = false
+                    hasInventory = hasInventory,
+                    loading = false
                 )
             }
         }.launchIn(viewModelScope)

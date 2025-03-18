@@ -1,33 +1,63 @@
 package app.tabletracker.core.navigation
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.ShoppingCart
+import app.tabletracker.R
+
+data class NavigationOption(
+    val id: Int,
+    val title: String,
+    val icon: Int,
+    val route: Screen
+)
+
 
 sealed class BottomNavigationOption(val navOption: NavigationOption) {
     data object Order: BottomNavigationOption(
         NavigationOption(
             id = 0,
             title = "Order",
-            icon = Icons.Default.ShoppingCart,
-            route = Screen.StartOrderScreen.route
+            icon = R.drawable.rounded_grid_view_24,
+            route = Screen.StartOrderScreen
         )
     )
     data object RunningOrder: BottomNavigationOption(
         NavigationOption(
             id = 1,
             title = "Running Order",
-            icon = Icons.Default.Add,
-            route = Screen.RunningOrderScreen.route
+            icon = R.drawable.outline_deployed_code_history_24,
+            route = Screen.RunningOrderScreen
         )
     )
     data object Bookings: BottomNavigationOption(
         NavigationOption(
             id = 2,
             title = "Bookings",
-            icon = Icons.Default.DateRange,
-            route = Screen.BookingScreen.route
+            icon = R.drawable.outline_calendar_month_24,
+            route = Screen.BookingScreen
         )
+    )
+    data object Inventory: BottomNavigationOption(
+        NavigationOption(
+            id = 3,
+            title = "Inventory",
+            icon = R.drawable.outline_inventory_2_24,
+            route = Screen.InventoryScreen
+        )
+    )
+    data object Settings: BottomNavigationOption(
+        NavigationOption(
+            id = 4,
+            title = "Settings",
+            icon = R.drawable.round_settings_24,
+            route = Screen.SettingsScreen
+        )
+    )
+}
+fun getBottomNavigationOptions(): List<BottomNavigationOption> {
+    return listOf(
+        BottomNavigationOption.Order,
+        BottomNavigationOption.RunningOrder,
+//        BottomNavigationOption.Bookings,
+        BottomNavigationOption.Inventory,
+        BottomNavigationOption.Settings
     )
 }

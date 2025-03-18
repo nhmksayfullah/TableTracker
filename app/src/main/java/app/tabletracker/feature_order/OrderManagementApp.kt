@@ -4,7 +4,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import app.tabletracker.app.ui.AppUiEvent
 import app.tabletracker.core.navigation.Screen
 import app.tabletracker.feature_order.ui.state.OrderUiEvent
 import app.tabletracker.feature_order.ui.state.OrderViewModel
@@ -14,48 +13,41 @@ import app.tabletracker.feature_order.ui.screen.TakeOrderScreen
 import app.tabletracker.util.accessSharedViewModel
 import kotlinx.serialization.Serializable
 
-@Serializable data object OrderManagementApp2
-@Serializable data object StartOrderScreen
-@Serializable data class TakeOrderScreen(val orderId: String?, val isNewOrder: Boolean)
-@Serializable data object RunningOrderScreen
+@Serializable data object OrderManagementApp
 
-fun NavGraphBuilder.orderManagementGraph(
+fun NavGraphBuilder.orderManagementNavGraph(
     navController: NavHostController,
-    onAppUiEvent: (AppUiEvent) -> Unit
 ) {
-    navigation<OrderManagementApp2>(
-        startDestination = StartOrderScreen
+    navigation<OrderManagementApp>(
+        startDestination = Screen.StartOrderScreen
     ) {
-        composable<StartOrderScreen> {
+        composable<Screen.StartOrderScreen> {
             val orderViewModel = it.accessSharedViewModel<OrderViewModel>(navController)
             StartOrderScreen(
                 orderViewModel = orderViewModel,
             ) {
-                onAppUiEvent(AppUiEvent.ChangeScreen(Screen.TakeOrderScreen))
-                navController.navigate(TakeOrderScreen(orderId = "", isNewOrder = true))
+                navController.navigate(Screen.TakeOrderScreen)
             }
         }
 
-        composable<TakeOrderScreen> {
+        composable< Screen.TakeOrderScreen> {
             val orderViewModel = it.accessSharedViewModel<OrderViewModel>(navController)
 
             TakeOrderScreen(
                 orderViewModel = orderViewModel,
                 onOrderDismiss = {
-                    onAppUiEvent(AppUiEvent.ChangeScreen(Screen.StartOrderScreen))
                     orderViewModel.onEvent(OrderUiEvent.SetCurrentOrderWithOrderItems(null))
                     navController.navigateUp()
                 }
             )
         }
 
-        composable<RunningOrderScreen> {
+        composable<Screen.RunningOrderScreen> {
             val orderViewModel = it.accessSharedViewModel<OrderViewModel>(navController)
             RunningOrderScreen3(
                 orderViewModel = orderViewModel,
                 onCustomizeCurrentOrder = {
-                    onAppUiEvent(AppUiEvent.ChangeScreen(Screen.TakeOrderScreen))
-                    navController.navigate(TakeOrderScreen(orderId = "", isNewOrder = false))
+                    navController.navigate(Screen.TakeOrderScreen)
                 }
             )
         }

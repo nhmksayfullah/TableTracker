@@ -1,6 +1,5 @@
 package app.tabletracker.app.version
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -11,30 +10,23 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import app.tabletracker.app.ui.AppUiEvent
 import app.tabletracker.app.ui.AppUiState
-import app.tabletracker.auth.authenticationApp
-import app.tabletracker.core.navigation.Applications
-import app.tabletracker.core.navigation.BottomNavigationOption
-import app.tabletracker.core.navigation.ExtraNavOption
+import app.tabletracker.auth.authenticationNavGraph
 import app.tabletracker.core.navigation.Screen
 import app.tabletracker.core.navigation.SetupBottomNavigationBar
-import app.tabletracker.feature_menu.menuManagementApp
-import app.tabletracker.feature_order.OrderManagementApp2
-import app.tabletracker.feature_order.RunningOrderScreen
-import app.tabletracker.feature_order.StartOrderScreen
-import app.tabletracker.feature_order.orderManagementGraph
-import app.tabletracker.settings.settingsApp
+import app.tabletracker.feature_menu.InventoryApp
+import app.tabletracker.feature_menu.inventoryNavGraph
+import app.tabletracker.feature_order.OrderManagementApp
+import app.tabletracker.feature_order.orderManagementNavGraph
+import app.tabletracker.settings.settingsNavGraph
 
 @Composable
 fun LargeScreenApp(
     appUiState: AppUiState,
-    onAppUiEvent: (AppUiEvent) -> Unit
 ) {
 
     val navController = rememberNavController()
@@ -43,125 +35,52 @@ fun LargeScreenApp(
 
     Scaffold(
         bottomBar = {
-
-            if (!appUiState.isLoading) {
-                if (!appUiState.isUserRegistered) return@Scaffold
-                if (appUiState.currentScreen == Screen.TakeOrderScreen) return@Scaffold
-                AnimatedVisibility(
-                    visible = appUiState.currentScreen != Screen.TakeOrderScreen
-                ) {
-                    SetupBottomNavigationBar(
-                        navOptions = if (appUiState.currentScreen == Screen.EditMenuScreen || appUiState.currentScreen == Screen.SettingsScreen)
-                            listOf()
-                        else listOf(
-                            BottomNavigationOption.Order,
-                            BottomNavigationOption.RunningOrder
-                        ),
-                        onNavigationItemClick = {
-                            // TODO("check the null safety again")
-                            if (it.navOption.route == Screen.StartOrderScreen.route) {
-
-                                navController.navigate(StartOrderScreen) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            } else if (it.navOption.route == Screen.RunningOrderScreen.route) {
-                                navController.navigate(RunningOrderScreen)
-                            }
-                        },
-                        extraNavOptions = if (appUiState.currentApplication == Applications.MenuManagementApp || appUiState.currentApplication == Applications.SettingsApp)
-                            listOf(ExtraNavOption.Done)
-                        else listOf(
-                            ExtraNavOption.Edit,
-                            ExtraNavOption.Settings
-                        ),
-                        onExtraNavOptionClick = {
-                            when (it) {
-                                ExtraNavOption.Done -> {
-                                    if (appUiState.readyToTakeOrder) {
-                                        onAppUiEvent(AppUiEvent.ChangeScreen(Screen.StartOrderScreen))
-                                        onAppUiEvent(AppUiEvent.ChangeApplication(Applications.OrderManagementApp))
-                                        navController.navigateUp()
-
-                                    }
-                                }
-
-                                ExtraNavOption.Edit -> {
-                                    if (currentDestination?.route != Screen.TakeOrderScreen.route) {
-                                        onAppUiEvent(AppUiEvent.ChangeScreen(Screen.EditMenuScreen))
-                                        onAppUiEvent(AppUiEvent.ChangeApplication(Applications.MenuManagementApp))
-                                        navController.navigate(Applications.MenuManagementApp.route)
-                                    }
-
-                                }
-
-                                ExtraNavOption.Settings -> {
-                                    onAppUiEvent(AppUiEvent.ChangeScreen(Screen.SettingsScreen))
-                                    onAppUiEvent(AppUiEvent.ChangeApplication(Applications.SettingsApp))
-                                    navController.navigate(Applications.SettingsApp.route)
-                                }
-                            }
-                        }
-                    )
+            SetupBottomNavigationBar(
+                onNavigationItemClick = {
+                    navController.navigate(it.navOption.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
-            }
+            )
         }
     ) {
         NavHost(
             navController = navController,
-            startDestination = Applications.LoadingApp.route,
-            modifier = Modifier.padding(it),
+            startDestination = Screen.LoadingScreen,
+            modifier = Modifier.padding(it)
         ) {
-            composable(Applications.LoadingApp.route) {
+            composable<Screen.LoadingScreen> {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
                 }
                 LaunchedEffect(
-                    appUiState.currentApplication
+                    appUiState.loading
                 ) {
-                    if (appUiState.currentApplication == Applications.OrderManagementApp) {
-                        onAppUiEvent(AppUiEvent.ChangeScreen(Screen.StartOrderScreen))
-                        navController.navigate(OrderManagementApp2)
+                    if (appUiState.loading == false) {
+                        if (appUiState.hasInventory) {
+                            navController.navigate(OrderManagementApp)
+                        } else {
+                            if (appUiState.isRegistered) {
+                                navController.navigate(InventoryApp)
+                            } else {
 
-                    } else if (appUiState.currentApplication == Applications.MenuManagementApp) {
-                        onAppUiEvent(AppUiEvent.ChangeScreen(Screen.EditMenuScreen))
-                        navController.navigate(Applications.MenuManagementApp.route)
-                    } else if (appUiState.currentApplication == Applications.AuthenticationApp) {
-                        navController.navigate(Applications.AuthenticationApp.route)
-                        onAppUiEvent(AppUiEvent.ChangeScreen(Screen.RegisterRestaurantScreen))
+                            }
+                        }
                     }
                 }
+
             }
-
-            authenticationApp(
-                navController = navController,
-                onAppUiEvent = {
-                    onAppUiEvent(it)
-                }
-            )
-
-            menuManagementApp(
-                navController = navController
-            )
-            orderManagementGraph(
-                navController = navController,
-                onAppUiEvent = {
-                    onAppUiEvent(it)
-                }
-            )
-
-            settingsApp(
-                navController = navController,
-                onAppUiEvent = {
-                    onAppUiEvent(it)
-                }
-            )
+            authenticationNavGraph(navController) {
+                navController.navigate(OrderManagementApp)
+            }
+            orderManagementNavGraph(navController)
+            inventoryNavGraph(navController)
+            settingsNavGraph(navController)
         }
     }
 }
