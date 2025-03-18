@@ -14,5 +14,6 @@ data class OrderUiState(
 
     val currentOrder: OrderWithOrderItems? = null,
     val restaurantInfo: Restaurant? = null,
-    val restaurantExtra: RestaurantExtra? = null
+    val restaurantExtra: RestaurantExtra? = null,
+    val currentOrderLocked: Boolean = false
 )

@@ -61,9 +61,6 @@ fun CompleteOrderDrawer(
                 Column(
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
-//                    if (orderUiState.currentOrder?.order?.orderType == OrderType.DineIn) {
-//
-//                    }
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
@@ -88,13 +85,7 @@ fun CompleteOrderDrawer(
                                         )
                                     )
                                 )
-//                                orderUiEvent(
-//                                    OrderUiEvent.UpdateCurrentOrderItemsStatus(OrderItemStatus.Served)
-//                                )
-                                onOrderDismiss(
-                                    OrderUiEvent.UpdateCurrentOrderItemsStatus(OrderItemStatus.Served)
-                                )
-                                orderUiEvent(OrderUiEvent.UpdateCurrentOrderWithOrderItems(null))
+                                onOrderDismiss(null)
                             }
                         }
                     ) {
@@ -126,7 +117,6 @@ fun CompleteOrderDrawer(
                                     )
                                 )
                                 onOrderDismiss(null)
-                                orderUiEvent(OrderUiEvent.UpdateCurrentOrderWithOrderItems(null))
                             }
                         }
                     ) {

@@ -1,10 +1,8 @@
 package app.tabletracker.feature_order.ui.state
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.tabletracker.feature_customer.data.model.Customer
-import app.tabletracker.feature_customer.domain.repository.CustomerRepository
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_order.data.entity.Order
 import app.tabletracker.feature_order.data.entity.OrderItem
@@ -14,31 +12,30 @@ import app.tabletracker.feature_order.data.entity.OrderType
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
 import app.tabletracker.feature_order.data.entity.toOrderItem
 import app.tabletracker.feature_order.domain.repository.OrderRepository
-import app.tabletracker.util.TableTrackerDefault
 import app.tabletracker.util.generateUniqueId
 import app.tabletracker.util.getEndOfDay
 import app.tabletracker.util.getStartOfDay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class OrderViewModel(
     private val orderRepo: OrderRepository
 ) : ViewModel() {
+
+    // The UI collects from this StateFlow to get its state updates
     private var _uiState = MutableStateFlow(OrderUiState())
     val uiState = _uiState.asStateFlow()
-
-
-    private var populateMenusJob: Job? = null
-    private var populateTodayOrdersJob: Job? = null
-    private var populateRestaurantInfoJob: Job? = null
-    private var populateRestaurantExtraJob: Job? = null
-
+    var currentOrderJob: Job? = null
+    var calculateTotalPriceJob: Job? = null
 
     init {
         populateMenus()
@@ -46,49 +43,21 @@ class OrderViewModel(
         populateRestaurantInfo()
     }
 
-    init {
-        viewModelScope.launch {
-            uiState.collect { state ->
-                calculateTotalPrice(state)
-            }
+
+    fun onEvent(event: OrderUiEvent) {
+        if (uiState.value.currentOrderLocked && event is OrderUiEvent.SetCurrentOrderWithOrderItems) {
+            // Skip this event if order is locked
+            return
         }
-    }
 
-    fun onEvent(uiEvent: OrderUiEvent) {
-        when (uiEvent) {
-            is OrderUiEvent.CreateNewOrder -> createNewOrder(orderType = uiEvent.orderType)
-            is OrderUiEvent.UpdateCurrentOrder -> updateCurrentOrder(order = uiEvent.order)
-
-            is OrderUiEvent.AddMenuItemToOrder -> addOrUpdateOrderItem(menuItem = uiEvent.menuItem)
-            is OrderUiEvent.RemoveItemFromOrder -> removeItemFromOrder(orderItem = uiEvent.orderItem)
-            is OrderUiEvent.UpdateOrderItem -> updateOrderItem(orderItem = uiEvent.orderItem)
-
-            is OrderUiEvent.UpdateCurrentOrderWithOrderItems -> {
-                if (uiEvent.orderId == TableTrackerDefault.noOrderId) {
-                    populateLatestOrder()
-                } else {
-                    populateCurrentOrder(orderId = uiEvent.orderId)
-                }
-            }
-
-            is OrderUiEvent.UpdateCurrentOrderItemsStatus -> updateCurrentOrderItemsStatus(uiEvent.orderItemStatus)
-            OrderUiEvent.UpdateCurrentOrderWithNull -> {
-                _uiState.update {
-                    it.copy(
-                        currentOrder = null
-                    )
-                }
-            }
-
-            OrderUiEvent.PopulateLatestOrder -> populateLatestOrder()
-            is OrderUiEvent.SetCurrentOrderWithOrderItems -> {
-                _uiState.update {
-                    it.copy(
-                        currentOrder = uiEvent.orderWithOrderItems
-                    )
-                }
-            }
-            is OrderUiEvent.UpdateCustomer -> updateCustomer(uiEvent.customer)
+        when (event) {
+            is OrderUiEvent.CreateNewOrder -> createNewOrder(event.orderType)
+            is OrderUiEvent.SetCurrentOrderWithOrderItems -> setCurrentOrder(event.orderWithOrderItems)
+            is OrderUiEvent.UpdateCurrentOrder -> updateCurrentOrder(event.order)
+            is OrderUiEvent.AddMenuItemToOrder -> addOrUpdateOrderItem(event.menuItem)
+            is OrderUiEvent.RemoveItemFromOrder -> removeItemFromOrder(event.orderItem)
+            is OrderUiEvent.UpdateOrderItem -> updateOrderItem(event.orderItem)
+            is OrderUiEvent.UpdateCustomer -> updateCustomer(event.customer)
         }
     }
 
@@ -100,82 +69,85 @@ class OrderViewModel(
         }
     }
     private fun createNewOrder(orderType: OrderType) {
-        Log.d("current order: creating", uiState.value.currentOrder.toString())
-        val newOrder = Order(
-            id = generateUniqueId(),
-            orderNumber = generateOrderNumber(),
-            orderType = orderType
-        )
-        viewModelScope.launch(Dispatchers.IO) {
-            orderRepo.writeOrder(
-                newOrder
+        viewModelScope.launch {
+            calculateTotalPriceJob?.cancel()
+            currentOrderJob?.cancel()
+            // Clear current order first
+            // Generate new order number
+            val orderNumber = generateOrderNumber()
+
+            // Create new order
+            val newOrder = Order(
+                orderNumber = orderNumber,
+                orderType = orderType
             )
-            populateLatestOrder()
-        }
-    }
 
-    private fun populateCurrentOrder(orderId: String?) {
-        if (orderId != null) {
-            orderRepo.readOrderWithOrderItems(orderId).onEach {
-                _uiState.update { state ->
-                    state.copy(
-                        currentOrder = it
-                    )
-                }
-                if (it.orderItems.isNotEmpty()) {
-                    val totalPrice = calculateTotalPrice(it)
-                    if (totalPrice != uiState.value.currentOrder?.order?.totalPrice) {
-                        it.order.copy(totalPrice = totalPrice)
-                            .let { order ->
-                                updateCurrentOrder(order)
-                            }
+            // Save to database
+            withContext(Dispatchers.IO) {
+
+                orderRepo.writeOrder(newOrder)
+                // Wait until the order is fully saved and get the complete order with its ID
+                currentOrderJob = orderRepo.readOrderWithOrderItems(newOrder.id)
+                    .onEach {
+                        val createdOrderWithItems = it
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                currentOrder = createdOrderWithItems
+                            )
+                        }
+                    }.launchIn(viewModelScope)
+                calculateTotalPriceJob = viewModelScope.launch(Dispatchers.IO) {
+                    uiState.collectLatest {
+                        calculateTotalPrice(it)
                     }
-
                 }
-            }.launchIn(viewModelScope)
-        } else {
-            populateLatestOrder()
+            }
         }
     }
+
 
     private fun updateCurrentOrder(order: Order) {
         viewModelScope.launch(Dispatchers.IO) {
             orderRepo.writeOrder(order)
         }
-//        if (order.orderStatus == OrderStatus.Cancelled) updateCurrentOrderWithOrderItems(null)
-    }
-
-    private fun updateCurrentOrderItemsStatus(orderItemStatus: OrderItemStatus) {
-        viewModelScope.launch(Dispatchers.IO) {
-            uiState.value.currentOrder?.orderItems?.forEach {
-                val orderItem = it.copy(orderItemStatus = orderItemStatus)
-                orderRepo.writeOrderItem(orderItem)
-
-            }
-        }
     }
 
 
     private fun addOrUpdateOrderItem(menuItem: MenuItem) {
-        val foundedOrderItem = uiState.value.currentOrder?.orderItems?.find {
-            it.menuItem == menuItem && it.orderItemStatus == OrderItemStatus.Added
-        }
-        uiState.value.currentOrder?.let {
-            if (foundedOrderItem == null) {
-                addItemToOrder(menuItem, it.order.id)
-            } else {
-                updateOrderItem(
-                    foundedOrderItem.copy(quantity = foundedOrderItem.quantity + 1)
-                )
+        val currentOrder = uiState.value.currentOrder ?: return
+        val orderId = currentOrder.order.id
+
+        viewModelScope.launch {
+            // Lock the current order temporarily to prevent changes during this operation
+            val isLocked = true
+
+            try {
+                // Check if item already exists in order
+                val existingItem = currentOrder.orderItems.find {
+                    it.menuItem == menuItem && it.orderItemStatus == OrderItemStatus.Added
+                }
+
+                if (existingItem != null) {
+                    // Update quantity
+                    withContext(Dispatchers.IO) {
+                        // Double-check that current order hasn't changed
+                        if (uiState.value.currentOrder?.order?.id == orderId) {
+                            orderRepo.writeOrderItem(existingItem.copy(quantity = existingItem.quantity + 1))
+                        }
+                    }
+                } else {
+                    // Add new item
+                    withContext(Dispatchers.IO) {
+                        // Double-check that current order hasn't changed
+                        if (uiState.value.currentOrder?.order?.id == orderId) {
+                            orderRepo.writeOrderItem(menuItem.toOrderItem(orderId = orderId))
+                        }
+                    }
+                }
+            } finally {
+                // Unlock the current order
+                val isLocked = false
             }
-        }
-    }
-
-    private fun addItemToOrder(menuItem: MenuItem, orderId: String) {
-        val orderItem = menuItem.toOrderItem(orderId = orderId)
-        viewModelScope.launch(Dispatchers.IO) {
-            orderRepo.writeOrderItem(orderItem)
-
         }
     }
 
@@ -193,10 +165,6 @@ class OrderViewModel(
         }
     }
 
-//    private fun updateCurrentOrderWithOrderItems(orderId: String?) {
-//
-//    }
-
 
 
     private fun generateOrderNumber(): Int {
@@ -210,20 +178,9 @@ class OrderViewModel(
     }
 
 
-    private fun populateLatestOrder() {
-        orderRepo.readLastAddedOrder().onEach {
-            _uiState.update {state ->
-                state.copy(
-                    currentOrder = it
-                )
-            }
-        }.launchIn(viewModelScope)
-    }
-
     private fun populateTodayOrders() {
-        populateTodayOrdersJob?.cancel()
-        populateTodayOrdersJob = orderRepo.readOrdersCreatedToday(getStartOfDay(), getEndOfDay()).onEach {
-            _uiState.update {currentState ->
+        orderRepo.readOrdersCreatedToday(getStartOfDay(), getEndOfDay()).onEach {
+            _uiState.update { currentState ->
                 currentState.copy(
                     todayOrders = it,
                     runningOrders = it.filter { orderWithOrderItems ->
@@ -241,26 +198,13 @@ class OrderViewModel(
     }
 
     private fun populateMenus() {
-        populateMenusJob?.cancel()
-        populateMenusJob = orderRepo.readAllCategoriesWithMenuItems().onEach {
+        orderRepo.readAllCategoriesWithMenuItems().onEach {
             _uiState.update {state ->
                 state.copy(
                     menus = it
                 )
             }
         }.launchIn(viewModelScope)
-    }
-
-    private fun calculateTotalPrice(orderWithOrderItems: OrderWithOrderItems): Float {
-        var totalPrice = 0.0f
-
-        val orderItems = orderWithOrderItems.orderItems
-        if (orderItems.isNotEmpty()) {
-            orderItems.forEach {
-                totalPrice += it.menuItem.prices[orderWithOrderItems.order.orderType]?.times(it.quantity) ?: 0.0f
-            }
-        }
-        return totalPrice
     }
 
     private suspend fun calculateTotalPrice(state: OrderUiState) {
@@ -277,8 +221,7 @@ class OrderViewModel(
     }
 
     private fun populateRestaurantInfo() {
-        populateRestaurantInfoJob?.cancel()
-        populateRestaurantInfoJob = orderRepo.readRestaurantInfo().onEach {
+        orderRepo.readRestaurantInfo().onEach {
             _uiState.update {currentState ->
                 currentState.copy(
                     restaurantInfo = it
@@ -291,14 +234,36 @@ class OrderViewModel(
     private fun populateRestaurantExtra(restaurantId: String) {
         if (uiState.value.restaurantInfo != null) {
             if (uiState.value.restaurantInfo!!.id.isNotEmpty()) {
-                populateRestaurantExtraJob?.cancel()
-                populateRestaurantExtraJob = orderRepo.readRestaurantExtra(restaurantId).onEach {
+                orderRepo.readRestaurantExtra(restaurantId).onEach {
                     _uiState.update {state ->
                         state.copy(
                             restaurantExtra = it
                         )
                     }
                 }.launchIn(viewModelScope)
+            }
+        }
+    }
+
+    private fun setCurrentOrder(orderWithOrderItems: OrderWithOrderItems?) {
+        val orderId = orderWithOrderItems?.order?.id
+        orderId?.let {
+            viewModelScope.launch(Dispatchers.IO) {
+                calculateTotalPriceJob?.cancel()
+                currentOrderJob?.cancel()
+                currentOrderJob = orderRepo.readOrderWithOrderItems(it).onEach {
+                    _uiState.update {state ->
+                        state.copy(
+                            currentOrder = it
+                        )
+                    }
+                }.launchIn(viewModelScope)
+
+                calculateTotalPriceJob = viewModelScope.launch(Dispatchers.IO) {
+                    uiState.collectLatest {
+                        calculateTotalPrice(it)
+                    }
+                }
             }
         }
     }

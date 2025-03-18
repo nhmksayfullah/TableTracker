@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import app.tabletracker.core.ui.TabbedScreen
@@ -46,6 +47,9 @@ fun TakeOrderScreenLeftSection(
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
+            Text(
+                text = orderUiState.currentOrder?.order?.orderNumber.toString()
+            )
             TabbedScreen(
                 titles = listOf("Order Details", "Customer Details")
             ) {

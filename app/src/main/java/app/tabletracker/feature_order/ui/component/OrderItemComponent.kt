@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,8 +52,14 @@ fun OrderItemComponent(
         mutableStateOf(false)
     }
     var addedNote by rememberSaveable {
-        mutableStateOf("")
+        mutableStateOf(orderItem.addedNote)
     }
+
+    // Add this LaunchedEffect to keep local state in sync with orderItem
+    LaunchedEffect(orderItem.addedNote) {
+        addedNote = orderItem.addedNote
+    }
+
     Column(
         modifier = Modifier
             .padding(vertical = 4.dp)
@@ -160,21 +167,6 @@ fun OrderItemComponent(
             }
         }
 
-        // this section will only appear if user click the drop down arrow.
-        if (keyboardState) {
-            KeyboardDialog(
-                onDismissRequest = {
-                    keyboardState = false
-                },
-                value = orderItem.addedNote,
-                label = "Note"
-            ) {
-                addedNote = it
-                onItemChange(orderItem.copy(addedNote = it))
-                keyboardState = false
-            }
-
-        }
 
         // It draws a horizontal line on the bottom of the item to separate it from the next item.
         Spacer(
