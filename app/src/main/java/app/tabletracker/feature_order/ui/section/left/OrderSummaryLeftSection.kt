@@ -1,6 +1,8 @@
 package app.tabletracker.feature_order.ui.section.left
 
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,12 +13,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -52,9 +52,9 @@ fun OrderSummaryLeftSection(
     }
 
     Column(
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .then(modifier)
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .padding(4.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -80,11 +80,17 @@ fun OrderSummaryLeftSection(
             ) {
                 Text(text = "Discount:")
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = {
-                    addDiscountDialogState = true
-                }) {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = null)
-                }
+
+                Text(
+                    text = "Edit",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier
+                        .clickable {
+                            addDiscountDialogState = true
+                        }
+                        .padding(horizontal = 16.dp),
+                    color = MaterialTheme.colorScheme.error
+                )
                 Text("-£%.2f".format(discount))
             }
             Row {
@@ -97,9 +103,10 @@ fun OrderSummaryLeftSection(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             ) {
-                TextButton(onClick = {
-                    addDiscountDialogState = true
-                }) {
+                TextButton(
+                    onClick = {
+                        addDiscountDialogState = true
+                    }) {
                     Text(text = "Add Discount")
                 }
             }

@@ -7,14 +7,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import app.tabletracker.feature_order.data.entity.Order
+import app.tabletracker.R
 
 
 @Composable
@@ -29,7 +34,7 @@ fun RunningOrderSummaryLeftSection(
     Column(
         modifier = modifier
             .background(MaterialTheme.colorScheme.secondaryContainer)
-            .padding(8.dp)
+            .padding(4.dp)
     ) {
         Column {
             Row(
@@ -73,20 +78,34 @@ fun RunningOrderSummaryLeftSection(
         ) {
             Text("Customize Order")
         }
-        Button(
-            onClick = onPrintReceipt,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Text("Print Receipt")
-        }
+        Row {
 
-        Button(
-            onClick = onPrintKitchenCopy,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Text("Print Kitchen Copy")
+            Button(
+                onClick = onPrintReceipt,
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_print_24),
+                    contentDescription = "Print Receipt"
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("Receipt")
+            }
+            Spacer(modifier = Modifier.width(2.dp))
+
+            OutlinedButton(
+                onClick = onPrintKitchenCopy,
+                modifier = Modifier
+                    .weight(1f)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.baseline_print_24),
+                    contentDescription = "Print Receipt"
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("Kitchen Copy")
+            }
         }
     }
 }

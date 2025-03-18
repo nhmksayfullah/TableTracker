@@ -61,9 +61,8 @@ fun OrderItemComponent(
     }
 
     Column(
-        modifier = Modifier
-            .padding(vertical = 4.dp)
-            .then(modifier),
+        modifier = modifier
+            .padding(vertical = 4.dp),
     ) {
 
         // this section is the main visible section.
@@ -83,7 +82,8 @@ fun OrderItemComponent(
             ) {
                 Icon(
                     imageVector = Icons.Default.Clear,
-                    contentDescription = "Remove item from the order"
+                    contentDescription = "Remove item from the order",
+                    tint = MaterialTheme.colorScheme.error
                 )
             }
 
