@@ -2,7 +2,7 @@ package app.tabletracker.auth.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import app.tabletracker.app.MADRAS_SPICE_LICENCE_KEY
+import app.tabletracker.app.MADRAS_SPICE_RESTAURANT
 import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.auth.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,7 @@ class AuthViewModel(private val repository: AuthRepository): ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     fun registerRestaurant(): Boolean {
-        return if (uiState.value.restaurant.licence == MADRAS_SPICE_LICENCE_KEY) {
+        return if (uiState.value.restaurant.licence == MADRAS_SPICE_RESTAURANT.licence) {
             viewModelScope.launch {
                 repository.registerRestaurant(uiState.value.restaurant)
             }

@@ -40,6 +40,8 @@ class PrinterManager(private val activity: Activity) {
                     synchronized(this) {
                         val usbManager: UsbManager? =
                             activity.getSystemService(Context.USB_SERVICE) as UsbManager?
+
+                        @Suppress("DEPRECATION")
                         val usbDevice: UsbDevice? =
                             intent.getParcelableExtra<Parcelable>(UsbManager.EXTRA_DEVICE) as UsbDevice?
                         if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {

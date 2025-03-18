@@ -6,10 +6,19 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.theme.TableTrackerTheme
 
+val MADRAS_SPICE_RESTAURANT = Restaurant(
+    name = "Madras Spice Restaurant",
+    address = "180 Northenden Rd, Sale M33 2SR",
+    contactNumber = "07123456789",
+    licence = "87222f7a-149f-4d14-99a2-2283eaf797d3",
+    website = "www.madras-spice.uk",
+    vatNumber = "303043464"
+)
 
-const val MADRAS_SPICE_LICENCE_KEY = "87222f7a-149f-4d14-99a2-2283eaf797d3"
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

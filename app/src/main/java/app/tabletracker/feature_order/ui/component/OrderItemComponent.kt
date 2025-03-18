@@ -16,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,7 +29,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.tabletracker.R
-import app.tabletracker.core.ui.component.KeyboardDialog
 import app.tabletracker.feature_menu.data.DummyData
 import app.tabletracker.feature_order.data.entity.OrderItem
 import app.tabletracker.feature_order.data.entity.OrderItemStatus
@@ -178,74 +176,6 @@ fun OrderItemComponent(
     }
 }
 
-// user can customize an order item by add or remove ingredients and addons.
-@Composable
-fun OrderItemCustomizeSection(
-    addedNote: String,
-    readOnly: Boolean = false,
-    onAddedNoteChange: (String) -> Unit
-) {
-
-    Column(
-        modifier = Modifier
-            .wrapContentSize()
-            .padding(4.dp)
-    ) {
-
-        TextField(
-            value = addedNote,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp),
-            onValueChange = {
-                onAddedNoteChange(it)
-            },
-            placeholder = { Text(text = "Add notes")},
-            readOnly = readOnly
-        )
-
-/*
-        Text(
-            text = "Ingredient",
-            fontWeight = FontWeight.Bold
-        )
-         Ingredients:: this section prints the list of ingredients on an item.
-        for (ingredient in orderItem.ingredients) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox(
-                    checked = ingredient.second,
-                    onCheckedChange = {
-                        onItemChange(orderItem.updateIngredientStatus(ingredient.first, it))
-                    })
-                Text(text = ingredient.first)
-            }
-        }
-
-
-        Text(
-            text = "Addons",
-            fontWeight = FontWeight.Bold
-        )
-         Addons:: this section prints the list of addons on an item.
-        for (addon in orderItem.addons) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox(
-                    checked = addon.second,
-                    onCheckedChange = {
-                        onItemChange(orderItem.updateAddonStatus(addon.first, it))
-                    })
-                Text(text = addon.first)
-            }
-        }
- */
-    }
-
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun OrderItemPreview() {
@@ -269,82 +199,3 @@ private fun OrderItemPreview() {
         )
     }
 }
-
-/*
-@Composable
-fun OrderListItemComponent(
-    item: OrderItem,
-    modifier: Modifier = Modifier,
-    onQuantityChange: (Int) -> Unit
-) {
-    var dropDownState by rememberSaveable {
-        mutableStateOf(false)
-    }
-    Column {
-        ListItem(
-            leadingContent = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Default.Clear,
-                        contentDescription = "Remove item from the order"
-                    )
-                }
-            },
-            headlineContent = {
-//                Text(
-//                    text = item.itemName
-//                )
-            },
-            supportingContent = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { onQuantityChange(item.quantity - 1) }) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.remove_circle_outlined),
-                            contentDescription = "Decrease Quantity"
-                        )
-
-                    }
-                    Text(text = item.quantity.toString())
-                    IconButton(onClick = { onQuantityChange(item.quantity + 1) }) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.add_circle_outline),
-                            contentDescription = "Increase Quantity"
-                        )
-                    }
-                }
-            },
-            trailingContent = {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-//                    Text(text = "£${item.price}")
-
-                    IconButton(
-                        onClick = { dropDownState = !dropDownState }
-                    ) {
-                        Icon(
-                            imageVector = if (dropDownState)
-                                Icons.Default.KeyboardArrowUp
-                            else Icons.Default.KeyboardArrowDown,
-                            contentDescription = "Customize the item"
-                        )
-                    }
-                }
-            }
-        )
-        if (dropDownState) {
-            OrderItemCustomizeSection(addedNote = "") {
-
-            }
-        }
-        Spacer(
-            modifier = Modifier
-                .height(1.dp)
-                .fillMaxWidth()
-        )
-
-    }
-}
- */

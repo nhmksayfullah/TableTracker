@@ -24,7 +24,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -35,9 +34,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.tabletracker.auth.data.model.Restaurant
-import app.tabletracker.core.ui.component.DialogKeyboardType
-import app.tabletracker.core.ui.component.DisabledTextField
-import app.tabletracker.core.ui.component.KeyboardDialog
 import app.tabletracker.feature_order.data.entity.OrderItemStatus
 import app.tabletracker.feature_order.data.entity.OrderStatus
 import app.tabletracker.feature_order.data.entity.OrderType
@@ -319,24 +315,6 @@ fun CompleteOrderDrawer(
                         )
                     )
 
-                    if (drawerState) {
-                        KeyboardDialog(
-                            onDismissRequest = { /*TODO*/ },
-                            value = (orderUiState.currentOrder.order.totalPerson ?: "").toString(),
-                            label = "Total Person",
-                            keyboardType = DialogKeyboardType.Numeric,
-                            dialogState = drawerState
-                        ) {
-                            orderUiEvent(
-                                OrderUiEvent.UpdateCurrentOrder(
-                                    orderUiState.currentOrder.order.copy(
-                                        totalPerson = it.toIntOrNull()
-                                    )
-                                )
-                            )
-                            drawerState = false
-                        }
-                    }
 
 
                 }
@@ -348,11 +326,3 @@ fun CompleteOrderDrawer(
 
 }
 
-val dummyRestaurant = Restaurant(
-    name = "Madras Spice Restaurant",
-    address = "180 Northenden Rd, Sale M33 2SR",
-    contactNumber = "07123456789",
-    licence = "",
-    website = "www.madras-spice.uk",
-    vatNumber = "303043464"
-)
