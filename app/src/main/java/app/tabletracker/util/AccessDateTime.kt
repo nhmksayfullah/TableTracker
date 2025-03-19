@@ -1,6 +1,15 @@
 package app.tabletracker.util
 
-import kotlinx.datetime.*
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
 
 fun generateInstantTime(): Long {
     return Clock.System.now().toEpochMilliseconds()
@@ -13,8 +22,6 @@ fun LocalDateTime.toEpochMillis(timeZone: TimeZone = TimeZone.UTC): Long {
 fun Long.toLocalDateTime(timeZone: TimeZone = TimeZone.UTC): LocalDateTime {
     return Instant.fromEpochMilliseconds(this).toLocalDateTime(timeZone)
 }
-
-
 
 
 fun generateLocalDate(): LocalDate {
@@ -34,7 +41,13 @@ fun generateLocalTime(hour: Int, minute: Int): LocalTime {
 }
 
 fun generateLocalDateTime(localDate: LocalDate, localTime: LocalTime): LocalDateTime {
-    return LocalDateTime(localDate.year, localDate.monthNumber, localDate.dayOfMonth, localTime.hour, localTime.minute)
+    return LocalDateTime(
+        localDate.year,
+        localDate.monthNumber,
+        localDate.dayOfMonth,
+        localTime.hour,
+        localTime.minute
+    )
 }
 
 fun generateLocalDateTime(): LocalDateTime {
@@ -49,6 +62,14 @@ fun getStartOfDay(): Long {
 fun getEndOfDay(): Long {
     val today = generateLocalDate()
     val endOfDayTime = LocalTime(23, 59, 59, 999_999_999) // 23:59:59.999999999
-    val endOfDay = LocalDateTime(today.year, today.monthNumber, today.dayOfMonth, endOfDayTime.hour, endOfDayTime.minute, endOfDayTime.second, endOfDayTime.nanosecond)
+    val endOfDay = LocalDateTime(
+        today.year,
+        today.monthNumber,
+        today.dayOfMonth,
+        endOfDayTime.hour,
+        endOfDayTime.minute,
+        endOfDayTime.second,
+        endOfDayTime.nanosecond
+    )
     return endOfDay.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
 }

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AuthViewModel(private val repository: AuthRepository): ViewModel() {
+class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     private var _uiState = MutableStateFlow(AuthUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -33,7 +33,7 @@ class AuthViewModel(private val repository: AuthRepository): ViewModel() {
 
     fun readRestaurantInfo() {
         repository.readRestaurantInfo().onEach {
-            _uiState.update {currentState ->
+            _uiState.update { currentState ->
                 currentState.copy(
                     restaurant = it
                 )
@@ -41,6 +41,7 @@ class AuthViewModel(private val repository: AuthRepository): ViewModel() {
         }.launchIn(viewModelScope)
     }
 }
+
 data class AuthUiState(
     val restaurant: Restaurant = Restaurant(
         name = "",

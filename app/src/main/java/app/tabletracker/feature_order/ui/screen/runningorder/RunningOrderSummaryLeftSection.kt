@@ -1,7 +1,5 @@
 package app.tabletracker.feature_order.ui.screen.runningorder
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,8 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import app.tabletracker.feature_order.data.entity.Order
 import app.tabletracker.R
+import app.tabletracker.feature_order.data.entity.Order
 
 
 @Composable
@@ -40,7 +38,12 @@ fun RunningOrderSummaryLeftSection(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceDim
         ),
-        shape = RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 0.dp, topStart = 8.dp, topEnd = 8.dp),
+        shape = RoundedCornerShape(
+            bottomStart = 0.dp,
+            bottomEnd = 0.dp,
+            topStart = 8.dp,
+            topEnd = 8.dp
+        ),
     ) {
         Column(
             modifier = Modifier
@@ -55,7 +58,7 @@ fun RunningOrderSummaryLeftSection(
                 Text("£%.2f".format(order.totalPrice))
             }
 
-            if(order.discount != null) {
+            if (order.discount != null) {
                 val discount = order.discount.value.let {
                     try {
                         it.toFloat() * order.totalPrice / 100
@@ -78,8 +81,10 @@ fun RunningOrderSummaryLeftSection(
                 }
             }
 
-            Spacer(modifier = Modifier
-                .height(8.dp))
+            Spacer(
+                modifier = Modifier
+                    .height(8.dp)
+            )
             Button(
                 onClick = onCustomizeOrder,
                 modifier = Modifier

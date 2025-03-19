@@ -61,9 +61,9 @@ fun AddEditMenuItemLeftSection(
                         EditMenuUiEvent.ChangeDetailsOfMenuItem(
                             menuItem.withUpdatedPrices(
                                 mapOf(
-                                    Pair(OrderType.DineIn, dineInPrice.toFloatOrNull()?: 0.0f),
-                                    Pair(OrderType.TakeOut, takeOutPrice.toFloatOrNull()?: 0.0f),
-                                    Pair(OrderType.Delivery, deliveryPrice.toFloatOrNull()?: 0.0f)
+                                    Pair(OrderType.DineIn, dineInPrice.toFloatOrNull() ?: 0.0f),
+                                    Pair(OrderType.TakeOut, takeOutPrice.toFloatOrNull() ?: 0.0f),
+                                    Pair(OrderType.Delivery, deliveryPrice.toFloatOrNull() ?: 0.0f)
                                 )
                             )
                         )
@@ -75,7 +75,9 @@ fun AddEditMenuItemLeftSection(
         }
     ) {
         Column(
-            modifier = Modifier.padding(it).verticalScroll(rememberScrollState())
+            modifier = Modifier
+                .padding(it)
+                .verticalScroll(rememberScrollState())
         ) {
             AddEditMenuItemBody(
                 menuItem = menuItem,

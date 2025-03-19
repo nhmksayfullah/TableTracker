@@ -16,7 +16,7 @@ fun MenuItem.removeMealCourse(mealCourse: MealCourse): MenuItem {
     newMealCourses.remove(mealCourse)
     return this.copy(
         mealCourses = newMealCourses
-        )
+    )
 }
 
 fun MenuItem.updateMealCourse(mealCourse: MealCourse): MenuItem {
@@ -32,7 +32,6 @@ fun MenuItem.updateMealCourse(mealCourse: MealCourse): MenuItem {
         mealCourses = newMealCourses
     )
 }
-
 
 
 fun MenuItem.addItemToMealCourse(mealCourse: MealCourse, item: MenuItem): MenuItem {

@@ -8,13 +8,14 @@ import com.squareup.moshi.adapter
 @OptIn(ExperimentalStdlibApi::class)
 class ItemPriceTypeConverter {
 
-    private val moshi : Moshi by lazy { Moshi.Builder().build() }
+    private val moshi: Moshi by lazy { Moshi.Builder().build() }
 
     @TypeConverter
     fun fromMap(map: Map<OrderType, Float>?): String? {
         val adapter = moshi.adapter<Map<OrderType, Float>>()
         return adapter.toJson(map)
     }
+
     @TypeConverter
     fun toMap(json: String?): Map<OrderType, Float>? {
         val adapter = moshi.adapter<Map<OrderType, Float>>()

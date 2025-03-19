@@ -37,8 +37,11 @@ fun GeneralSettingsSection(
             ExtendedFloatingActionButton(onClick = {
                 if (settingsUiState.restaurantExtra != null) {
                     val total = totalTable.toIntOrNull() ?: 0
-                    onSettingsUiEvent(SettingsUiEvent.UpdateRestaurantExtra(
-                        settingsUiState.restaurantExtra.copy(totalTable = total)))
+                    onSettingsUiEvent(
+                        SettingsUiEvent.UpdateRestaurantExtra(
+                            settingsUiState.restaurantExtra.copy(totalTable = total)
+                        )
+                    )
                 } else {
                     if (settingsUiState.restaurantInfo != null) {
                         val total = totalTable.toIntOrNull() ?: 0
@@ -64,7 +67,8 @@ fun GeneralSettingsSection(
                 .padding(16.dp)
         ) {
             TextField(
-                value = if (firstTime) settingsUiState.restaurantExtra?.totalTable?.toString() ?: totalTable else totalTable,
+                value = if (firstTime) settingsUiState.restaurantExtra?.totalTable?.toString()
+                    ?: totalTable else totalTable,
                 onValueChange = {
                     firstTime = false
                     totalTable = it

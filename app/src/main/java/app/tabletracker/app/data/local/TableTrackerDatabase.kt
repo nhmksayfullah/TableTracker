@@ -21,9 +21,9 @@ import app.tabletracker.feature_menu.data.entity.ItemPriceTypeConverter
 import app.tabletracker.feature_menu.data.entity.MealTypeConverter
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_menu.data.local.MenuDao
-import app.tabletracker.feature_order.data.entity.Discount
 import app.tabletracker.feature_order.data.converter.DiscountTypeConverter
 import app.tabletracker.feature_order.data.converter.MenuItemTypeConverter
+import app.tabletracker.feature_order.data.entity.Discount
 import app.tabletracker.feature_order.data.entity.Order
 import app.tabletracker.feature_order.data.entity.OrderItem
 import app.tabletracker.feature_order.data.local.OrderDao
@@ -81,8 +81,8 @@ abstract class TableTrackerDatabase : RoomDatabase() {
                     "table_tracker_database"
                 ).addMigrations(migration6To7)
                     .build().also {
-                    instance = it
-                }
+                        instance = it
+                    }
             }
         }
     }
@@ -90,7 +90,7 @@ abstract class TableTrackerDatabase : RoomDatabase() {
 }
 
 @DeleteColumn(tableName = "MenuItem", columnName = "meal")
-class Migration4To5: AutoMigrationSpec
+class Migration4To5 : AutoMigrationSpec
 
 val migration6To7 = object : Migration(6, 7) {
     override fun migrate(db: SupportSQLiteDatabase) {

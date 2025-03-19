@@ -11,7 +11,7 @@ data class NavigationOption(
 
 
 sealed class BottomNavigationOption(val navOption: NavigationOption) {
-    data object Order: BottomNavigationOption(
+    data object Order : BottomNavigationOption(
         NavigationOption(
             id = 0,
             title = "Dashboard",
@@ -19,7 +19,8 @@ sealed class BottomNavigationOption(val navOption: NavigationOption) {
             route = Screen.StartOrderScreen
         )
     )
-    data object RunningOrder: BottomNavigationOption(
+
+    data object RunningOrder : BottomNavigationOption(
         NavigationOption(
             id = 1,
             title = "Orders",
@@ -27,7 +28,8 @@ sealed class BottomNavigationOption(val navOption: NavigationOption) {
             route = Screen.RunningOrderScreen
         )
     )
-    data object Bookings: BottomNavigationOption(
+
+    data object Bookings : BottomNavigationOption(
         NavigationOption(
             id = 2,
             title = "Bookings",
@@ -35,7 +37,8 @@ sealed class BottomNavigationOption(val navOption: NavigationOption) {
             route = Screen.BookingScreen
         )
     )
-    data object Inventory: BottomNavigationOption(
+
+    data object Inventory : BottomNavigationOption(
         NavigationOption(
             id = 3,
             title = "Inventory",
@@ -43,7 +46,8 @@ sealed class BottomNavigationOption(val navOption: NavigationOption) {
             route = Screen.InventoryScreen
         )
     )
-    data object Settings: BottomNavigationOption(
+
+    data object Settings : BottomNavigationOption(
         NavigationOption(
             id = 4,
             title = "Settings",
@@ -52,6 +56,7 @@ sealed class BottomNavigationOption(val navOption: NavigationOption) {
         )
     )
 }
+
 fun getBottomNavigationOptions(): List<BottomNavigationOption> {
     return listOf(
         BottomNavigationOption.Order,

@@ -12,12 +12,10 @@ import app.tabletracker.feature_order.data.entity.OrderType
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
 import app.tabletracker.feature_order.data.entity.toOrderItem
 import app.tabletracker.feature_order.domain.repository.OrderRepository
-import app.tabletracker.util.generateUniqueId
 import app.tabletracker.util.getEndOfDay
 import app.tabletracker.util.getStartOfDay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -68,6 +66,7 @@ class OrderViewModel(
             }
         }
     }
+
     private fun createNewOrder(orderType: OrderType) {
         viewModelScope.launch {
             calculateTotalPriceJob?.cancel()
@@ -119,7 +118,6 @@ class OrderViewModel(
 
         viewModelScope.launch {
             // Lock the current order temporarily to prevent changes during this operation
-            val isLocked = true
 
             try {
                 // Check if item already exists in order
@@ -146,7 +144,6 @@ class OrderViewModel(
                 }
             } finally {
                 // Unlock the current order
-                val isLocked = false
             }
         }
     }
@@ -160,11 +157,10 @@ class OrderViewModel(
     }
 
     private fun updateOrderItem(orderItem: OrderItem) {
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             orderRepo.writeOrderItem(orderItem)
         }
     }
-
 
 
     private fun generateOrderNumber(): Int {
@@ -199,7 +195,7 @@ class OrderViewModel(
 
     private fun populateMenus() {
         orderRepo.readAllCategoriesWithMenuItems().onEach {
-            _uiState.update {state ->
+            _uiState.update { state ->
                 state.copy(
                     menus = it
                 )
@@ -222,7 +218,7 @@ class OrderViewModel(
 
     private fun populateRestaurantInfo() {
         orderRepo.readRestaurantInfo().onEach {
-            _uiState.update {currentState ->
+            _uiState.update { currentState ->
                 currentState.copy(
                     restaurantInfo = it
                 )
@@ -235,7 +231,7 @@ class OrderViewModel(
         if (uiState.value.restaurantInfo != null) {
             if (uiState.value.restaurantInfo!!.id.isNotEmpty()) {
                 orderRepo.readRestaurantExtra(restaurantId).onEach {
-                    _uiState.update {state ->
+                    _uiState.update { state ->
                         state.copy(
                             restaurantExtra = it
                         )
@@ -252,7 +248,7 @@ class OrderViewModel(
                 calculateTotalPriceJob?.cancel()
                 currentOrderJob?.cancel()
                 currentOrderJob = orderRepo.readOrderWithOrderItems(it).onEach {
-                    _uiState.update {state ->
+                    _uiState.update { state ->
                         state.copy(
                             currentOrder = it
                         )

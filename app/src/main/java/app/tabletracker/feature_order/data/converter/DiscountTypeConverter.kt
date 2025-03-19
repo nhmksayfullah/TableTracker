@@ -14,6 +14,7 @@ class DiscountTypeConverter {
         val adapter = moshi.adapter<Discount>()
         return adapter.toJson(discount)
     }
+
     @TypeConverter
     fun toDiscount(json: String): Discount? {
         val adapter = moshi.adapter<Discount>()

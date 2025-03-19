@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
 
 class AppViewModel(
     private val repository: ApplicationRepository
-): ViewModel() {
+) : ViewModel() {
 
     var uiState = MutableStateFlow(AppUiState())
         private set
@@ -23,7 +23,7 @@ class AppViewModel(
 
     private fun checkRegistrationStatus() {
         repository.isUserRegistered().onEach { registrationStatus ->
-            uiState.update {currentState ->
+            uiState.update { currentState ->
                 currentState.copy(
                     isRegistered = registrationStatus
                 )
@@ -31,7 +31,7 @@ class AppViewModel(
             if (registrationStatus) {
                 checkApplicationState()
             } else {
-                uiState.update {currentState ->
+                uiState.update { currentState ->
                     currentState.copy(
                         loading = false
                     )
@@ -39,9 +39,10 @@ class AppViewModel(
             }
         }.launchIn(viewModelScope)
     }
+
     private fun checkApplicationState() {
         repository.hasInventory().onEach { hasInventory ->
-            uiState.update {currentState ->
+            uiState.update { currentState ->
                 currentState.copy(
                     hasInventory = hasInventory,
                     loading = false

@@ -12,7 +12,7 @@ import app.tabletracker.feature_order.data.local.OrderDao
 import app.tabletracker.feature_order.domain.repository.OrderRepository
 import kotlinx.coroutines.flow.Flow
 
-class OrderRoomRepository(private val orderDao: OrderDao): OrderRepository {
+class OrderRoomRepository(private val orderDao: OrderDao) : OrderRepository {
     override fun readAllCategoriesWithMenuItems(): Flow<List<CategoryWithMenuItems>> {
         return orderDao.readAllCategoriesWithMenuItems()
     }

@@ -20,9 +20,6 @@ import androidx.compose.ui.unit.dp
 import app.tabletracker.feature_customer.data.model.Customer
 
 
-
-
-
 @Composable
 fun CustomerDetailsFormLeftSection(
     customer: Customer?,
@@ -113,7 +110,10 @@ fun CustomerDetailsFormLeftSection(
                 Text(text = "07123456789")
             },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next, keyboardType = KeyboardType.Phone),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Phone
+            ),
             singleLine = true
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -173,7 +173,10 @@ fun CustomerDetailsFormLeftSection(
                 Text(text = "13")
             },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next, keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Number
+            ),
             singleLine = true
         )
         Spacer(modifier = Modifier.height(8.dp))

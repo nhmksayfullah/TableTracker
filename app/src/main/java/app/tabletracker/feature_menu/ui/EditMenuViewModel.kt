@@ -3,7 +3,6 @@ package app.tabletracker.feature_menu.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import app.tabletracker.feature_menu.data.entity.Category
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_menu.domain.repository.EditMenuRepository
@@ -11,12 +10,11 @@ import app.tabletracker.feature_order.data.entity.OrderType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel() {
+class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel() {
     var uiState = MutableStateFlow(EditMenuUiState())
         private set
     private var job: Job? = null
@@ -27,7 +25,7 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
     }
 
     fun onEvent(event: EditMenuUiEvent) {
-        when(event) {
+        when (event) {
             is EditMenuUiEvent.ChangeCategory -> {
                 uiState.update {
                     it.copy(
@@ -55,6 +53,7 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
                     )
                 }
             }
+
             EditMenuUiEvent.AddNewMenuItem -> {
                 uiState.update {
                     it.copy(
@@ -77,6 +76,7 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
                 }
 
             }
+
             is EditMenuUiEvent.UpsertMenuItem -> {
                 viewModelScope.launch {
                     repository.writeMenuItem(uiState.value.selectedMenuItem)
@@ -89,6 +89,7 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
                     repository.deleteCategory(event.category)
                 }
             }
+
             is EditMenuUiEvent.DeleteMenuItem -> {
                 viewModelScope.launch {
                     repository.deleteMenuItem(event.menuItem)
@@ -129,7 +130,7 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
     }
 
 
-    private fun updateKitchenCopyStatusOfMenuItemsOnCategory(category: Category){
+    private fun updateKitchenCopyStatusOfMenuItemsOnCategory(category: Category) {
         Log.d("status: ", "category: ${category.isKitchenCategory}")
         uiState.value.menus.forEach {
             if (it.category.id == category.id) {
@@ -163,7 +164,7 @@ class EditMenuViewModel(private val repository: EditMenuRepository): ViewModel()
     private fun populateCategory() {
         job?.cancel()
         job = repository.readAllCategory().onEach {
-            uiState.update {currentState ->
+            uiState.update { currentState ->
                 currentState.copy(
                     categories = it
                 )

@@ -19,13 +19,13 @@ val MADRAS_SPICE_RESTAURANT = Restaurant(
 )
 
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if((resources.configuration.screenLayout
+        if ((resources.configuration.screenLayout
                     and Configuration.SCREENLAYOUT_SIZE_MASK)
-            >= Configuration.SCREENLAYOUT_SIZE_LARGE) {
+            >= Configuration.SCREENLAYOUT_SIZE_LARGE
+        ) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
             @Suppress("DEPRECATION")

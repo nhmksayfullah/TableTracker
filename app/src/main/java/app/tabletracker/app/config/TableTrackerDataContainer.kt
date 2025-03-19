@@ -23,7 +23,7 @@ interface TableTrackerContainer {
     val customerRepository: CustomerRepository
 }
 
-class TableTrackerDataContainer(database: TableTrackerDatabase): TableTrackerContainer {
+class TableTrackerDataContainer(database: TableTrackerDatabase) : TableTrackerContainer {
     override val applicationRepository: ApplicationRepository by lazy {
         ApplicationRoomRepository(database.appDao)
     }

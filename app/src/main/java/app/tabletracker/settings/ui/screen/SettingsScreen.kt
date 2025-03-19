@@ -39,7 +39,6 @@ fun SettingsScreen(
     val settingsUiState by settingsViewModel.uiState.collectAsState()
 
 
-
     val settingsTitle = listOf("General", "Printer", "Receipt", "Discounts")
     TabbedScreen(titles = settingsTitle) {
         when (it) {
@@ -50,6 +49,7 @@ fun SettingsScreen(
                     settingsViewModel.onEvent(it)
                 }
             }
+
             3 -> {
                 Column {
                     LazyVerticalGrid(
@@ -79,7 +79,7 @@ fun SettingsScreen(
                                         containerColor = MaterialTheme.colorScheme.primaryContainer
                                     ),
                             ) {
-                                Row (
+                                Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(80.dp)

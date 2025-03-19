@@ -277,14 +277,11 @@ fun CompleteOrderDrawer(
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
-                    var drawerState by rememberSaveable {
-                        mutableStateOf(false)
-                    }
                     var totalPerson by rememberSaveable {
                         mutableStateOf("")
                     }
                     LaunchedEffect(Unit) {
-                        totalPerson = "${orderUiState.currentOrder.order.totalPerson?: ""}"
+                        totalPerson = "${orderUiState.currentOrder.order.totalPerson ?: ""}"
                     }
                     TextField(
                         value = totalPerson,
@@ -313,7 +310,6 @@ fun CompleteOrderDrawer(
                             }
                         )
                     )
-
 
 
                 }

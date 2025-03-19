@@ -29,7 +29,9 @@ fun RegisterLicenceScreen(
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.fillMaxHeight().fillMaxWidth(.7f),
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(.7f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {

@@ -22,20 +22,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import app.tabletracker.R
 import app.tabletracker.core.ui.component.FoodBlockComponent
 import app.tabletracker.feature_menu.data.entity.Category
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
-import app.tabletracker.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -103,7 +103,9 @@ fun ShowCategoriesRightSection(
             state = lazyGridState,
             columns = GridCells.Adaptive(120.dp),
             contentPadding = PaddingValues(8.dp),
-            modifier = Modifier.padding(it).fillMaxSize()
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
         ) {
             items(updatedCategories, key = { it.id }) { category ->
                 ReorderableItem(
@@ -207,7 +209,9 @@ fun ShowMenuItemsRightSection(
             state = lazyGridState,
             columns = GridCells.Adaptive(120.dp),
             contentPadding = PaddingValues(8.dp),
-            modifier = Modifier.padding(it).fillMaxSize()
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
         ) {
             items(updatedMenuItems, key = { it.id }) { menuItem ->
                 ReorderableItem(

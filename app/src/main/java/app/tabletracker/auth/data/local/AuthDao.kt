@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
 import app.tabletracker.auth.data.model.Restaurant
-import app.tabletracker.common.data.RestaurantExtra
 import kotlinx.coroutines.flow.Flow
 
 @Dao

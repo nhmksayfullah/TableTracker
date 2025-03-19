@@ -12,7 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.component.TextBoxComponent
@@ -93,7 +92,8 @@ fun calculateTotalTransaction(orders: List<OrderWithOrderItems>): Float {
     }
     var total = 0f
     completedOrders.forEach {
-        total += it.order.discount?.value?.toFloatOrNull()?.let {it1 -> it.order.totalPrice - (it.order.totalPrice *it1 / 100)}
+        total += it.order.discount?.value?.toFloatOrNull()
+            ?.let { it1 -> it.order.totalPrice - (it.order.totalPrice * it1 / 100) }
             ?: 0f
     }
     return total

@@ -11,7 +11,6 @@ import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
 import app.tabletracker.feature_order.ui.component.FoodItemInOrderComponent
 
 
-
 @Composable
 fun OrderItemsComponentLeftSection(
     runningOrder: OrderWithOrderItems,
@@ -33,8 +32,8 @@ fun OrderItemsComponentLeftSection(
             FoodItemInOrderComponent(
                 item = it,
                 orderType = runningOrder.order.orderType,
-                onItemRemoveClick = {onItemRemoveClick(it)},
-                onItemChange = {onItemChange(it)}
+                onItemRemoveClick = { onItemRemoveClick(it) },
+                onItemChange = { onItemChange(it) }
             )
         }
     }

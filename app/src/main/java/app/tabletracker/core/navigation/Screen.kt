@@ -4,30 +4,30 @@ import kotlinx.serialization.Serializable
 
 sealed class Screen() {
     @Serializable
-    data object LoadingScreen: Screen()
+    data object LoadingScreen : Screen()
 
     @Serializable
-    data object RegisterRestaurantScreen: Screen()
+    data object RegisterRestaurantScreen : Screen()
 
     @Serializable
-    data object RegisterLicenceScreen: Screen()
+    data object RegisterLicenceScreen : Screen()
 
     @Serializable
-    data object StartOrderScreen: Screen()
+    data object StartOrderScreen : Screen()
 
     @Serializable
-    data object TakeOrderScreen: Screen()
+    data object TakeOrderScreen : Screen()
 
     @Serializable
-    data object RunningOrderScreen: Screen()
+    data object RunningOrderScreen : Screen()
 
     @Serializable
-    data object BookingScreen: Screen()
+    data object BookingScreen : Screen()
 
     @Serializable
-    data object SettingsScreen: Screen()
+    data object SettingsScreen : Screen()
 
     @Serializable
-    data object InventoryScreen: Screen()
+    data object InventoryScreen : Screen()
 }
 

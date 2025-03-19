@@ -86,7 +86,9 @@ fun EditCategoryBottomBar(
 ) {
     Row(modifier = modifier.imePadding()) {
         Button(
-            modifier = Modifier.weight(1f).padding(4.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(4.dp),
             onClick = onUpsertClick
         ) {
             if (showUpdate) Text(text = "Update") else Text(text = "Create")
@@ -94,7 +96,9 @@ fun EditCategoryBottomBar(
 
         if (showDelete) {
             Button(
-                modifier = Modifier.weight(1f).padding(4.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(4.dp),
                 onClick = onDeleteClick
             ) {
                 Text(text = "Delete")

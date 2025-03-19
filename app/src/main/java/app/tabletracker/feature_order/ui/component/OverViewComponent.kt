@@ -30,7 +30,7 @@ fun OverViewComponent(
         modifier = modifier
             .wrapContentSize(),
 
-    ) {
+        ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)

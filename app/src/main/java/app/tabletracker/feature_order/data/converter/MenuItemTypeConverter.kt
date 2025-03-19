@@ -8,7 +8,7 @@ import com.squareup.moshi.adapter
 
 @OptIn(ExperimentalStdlibApi::class)
 class MenuItemTypeConverter {
-    private val moshi : Moshi by lazy { Moshi.Builder().build() }
+    private val moshi: Moshi by lazy { Moshi.Builder().build() }
 
 
     @TypeConverter

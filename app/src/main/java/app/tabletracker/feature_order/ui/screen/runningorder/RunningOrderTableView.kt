@@ -58,7 +58,7 @@ fun RunningOrderTableView(
                 colors = CardDefaults.cardColors().copy(
                     containerColor = MaterialColor.Green.color
                 )
-            ) {  }
+            ) { }
             Spacer(Modifier.width(8.dp))
             Text(
                 text = "Available",
@@ -72,7 +72,7 @@ fun RunningOrderTableView(
                 colors = CardDefaults.cardColors().copy(
                     containerColor = MaterialColor.PureRed.color
                 )
-            ) {  }
+            ) { }
             Spacer(Modifier.width(8.dp))
             Text(
                 text = "Booked",
@@ -89,7 +89,7 @@ fun RunningOrderTableView(
                 item {
                     Column(
                         modifier = Modifier
-                        .padding(2.dp)
+                            .padding(2.dp)
                     ) {
                         TableBoxComponent(
                             tableNumber = i,
@@ -119,7 +119,7 @@ fun TableBoxComponent(
 ) {
     Card(
         colors = CardDefaults.cardColors().copy(
-            containerColor = if(booked) MaterialColor.PureRed.color else MaterialColor.Green.color,
+            containerColor = if (booked) MaterialColor.PureRed.color else MaterialColor.Green.color,
             contentColor = Color.White
         ),
         modifier = Modifier

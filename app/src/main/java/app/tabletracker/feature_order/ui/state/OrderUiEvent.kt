@@ -9,11 +9,12 @@ import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
 
 
 sealed class OrderUiEvent {
-    data class CreateNewOrder(val orderType: OrderType): OrderUiEvent()
-    data class UpdateCurrentOrder(val order: Order): OrderUiEvent()
-    data class UpdateCustomer(val customer: Customer): OrderUiEvent()
-    data class AddMenuItemToOrder(val menuItem: MenuItem): OrderUiEvent()
-    data class RemoveItemFromOrder(val orderItem: OrderItem): OrderUiEvent()
-    data class UpdateOrderItem(val orderItem: OrderItem): OrderUiEvent()
-    data class SetCurrentOrderWithOrderItems(val orderWithOrderItems: OrderWithOrderItems?): OrderUiEvent()
+    data class CreateNewOrder(val orderType: OrderType) : OrderUiEvent()
+    data class UpdateCurrentOrder(val order: Order) : OrderUiEvent()
+    data class UpdateCustomer(val customer: Customer) : OrderUiEvent()
+    data class AddMenuItemToOrder(val menuItem: MenuItem) : OrderUiEvent()
+    data class RemoveItemFromOrder(val orderItem: OrderItem) : OrderUiEvent()
+    data class UpdateOrderItem(val orderItem: OrderItem) : OrderUiEvent()
+    data class SetCurrentOrderWithOrderItems(val orderWithOrderItems: OrderWithOrderItems?) :
+        OrderUiEvent()
 }

@@ -20,7 +20,8 @@ fun NavGraphBuilder.settingsNavGraph(
         startDestination = Screen.SettingsScreen
     ) {
         composable<Screen.SettingsScreen> {
-            val viewModel = it.accessSharedViewModel<SettingsViewModel>(navController = navController)
+            val viewModel =
+                it.accessSharedViewModel<SettingsViewModel>(navController = navController)
             SettingsScreen(
                 settingsViewModel = viewModel
             )

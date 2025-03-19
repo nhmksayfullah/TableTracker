@@ -54,7 +54,10 @@ fun LargeScreenApp(
                     initialOffsetY = { it },
                     animationSpec = tween(durationMillis = 500)
                 ),
-                exit = slideOutVertically(targetOffsetY = { it }, animationSpec = tween(durationMillis = 500))
+                exit = slideOutVertically(
+                    targetOffsetY = { it },
+                    animationSpec = tween(durationMillis = 500)
+                )
             ) {
 
                 SetupBottomNavigationBar(

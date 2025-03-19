@@ -56,7 +56,12 @@ fun OrderSummaryLeftSection(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceDim
         ),
-        shape = RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 0.dp, topStart = 8.dp, topEnd = 8.dp)
+        shape = RoundedCornerShape(
+            bottomStart = 0.dp,
+            bottomEnd = 0.dp,
+            topStart = 8.dp,
+            topEnd = 8.dp
+        )
     ) {
         Column(
             modifier = Modifier

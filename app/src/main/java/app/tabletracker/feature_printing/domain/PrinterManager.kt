@@ -17,8 +17,6 @@ import com.dantsu.escposprinter.connection.usb.UsbConnection
 import com.dantsu.escposprinter.connection.usb.UsbPrintersConnections
 
 
-
-
 class PrinterManager(private val activity: Activity) {
     companion object {
         private const val ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION"
@@ -48,7 +46,12 @@ class PrinterManager(private val activity: Activity) {
                             if (usbManager != null && usbDevice != null) {
                                 // YOUR PRINT CODE HERE
                                 val printer =
-                                    EscPosPrinter(UsbConnection(usbManager, usbDevice), 203, 80f, 46)
+                                    EscPosPrinter(
+                                        UsbConnection(usbManager, usbDevice),
+                                        203,
+                                        80f,
+                                        46
+                                    )
                                 printer
                                     .printFormattedTextAndCut(formattedText)
                                 printer.disconnectPrinter()

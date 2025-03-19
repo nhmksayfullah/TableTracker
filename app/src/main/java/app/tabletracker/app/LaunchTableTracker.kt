@@ -38,8 +38,6 @@ fun LaunchTableTracker(
     val windowSize = calculateWindowSizeClass(activity = context as Activity).widthSizeClass
 
 
-
-
     // show splash screen until all data has fetched
     activity.installSplashScreen().apply {
         setKeepOnScreenCondition {
@@ -53,7 +51,7 @@ fun LaunchTableTracker(
             modifier = modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            when(windowSize) {
+            when (windowSize) {
                 // this app for mobile phones
                 WindowWidthSizeClass.Compact -> {
                     Box(

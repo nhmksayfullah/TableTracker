@@ -57,6 +57,7 @@ fun InventoryScreen(
                         onEditMenu = editMenuViewModel::onEvent
                     )
                 }
+
                 LeftState.EditMenuItem -> {
                     AddEditMenuItemLeftSection(
                         menuItem = state.selectedMenuItem,
@@ -64,6 +65,7 @@ fun InventoryScreen(
                         onEditMenu = editMenuViewModel::onEvent
                     )
                 }
+
                 LeftState.Nothing -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
@@ -97,9 +99,11 @@ fun InventoryScreen(
                         }
                     )
                 }
+
                 RightState.MenuItem -> {
                     ShowMenuItemsRightSection(
-                        menuItems = state.menus.find { it.category == state.selectedCategory }?.menuItems ?: emptyList(),
+                        menuItems = state.menus.find { it.category == state.selectedCategory }?.menuItems
+                            ?: emptyList(),
                         onMenuItemClicked = {
                             editMenuViewModel.onEvent(EditMenuUiEvent.ChangeDetailsOfMenuItem(it))
                             leftState = LeftState.EditMenuItem

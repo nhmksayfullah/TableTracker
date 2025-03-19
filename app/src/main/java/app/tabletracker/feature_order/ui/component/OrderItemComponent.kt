@@ -130,7 +130,7 @@ fun OrderItemComponent(
 
                     // Increase:: add one quantity on every click
                     IconButton(onClick = {
-                        if(!readOnly) {
+                        if (!readOnly) {
                             onItemChange(orderItem.copy(quantity = orderItem.quantity + 1))
                         }
                     }) {

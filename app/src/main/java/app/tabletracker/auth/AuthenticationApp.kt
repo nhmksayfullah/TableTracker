@@ -4,11 +4,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import app.tabletracker.core.navigation.Screen
 import app.tabletracker.auth.ui.AuthViewModel
 import app.tabletracker.auth.ui.screen.RegisterLicenceScreen
 import app.tabletracker.auth.ui.screen.RegisterRestaurantScreen
-import app.tabletracker.feature_order.OrderManagementApp
+import app.tabletracker.core.navigation.Screen
 import app.tabletracker.util.accessSharedViewModel
 import kotlinx.serialization.Serializable
 

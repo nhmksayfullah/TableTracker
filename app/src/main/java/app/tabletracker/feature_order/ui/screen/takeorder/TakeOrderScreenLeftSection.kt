@@ -67,6 +67,7 @@ fun TakeOrderScreenLeftSection(
                             )
                         }
                     }
+
                     1 -> {
                         CustomerDetailsFormLeftSection(
                             customer = orderUiState.currentOrder?.order?.customer,

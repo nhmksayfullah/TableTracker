@@ -5,7 +5,7 @@ import app.tabletracker.feature_customer.data.model.Customer
 import app.tabletracker.feature_customer.domain.repository.CustomerRepository
 import kotlinx.coroutines.flow.Flow
 
-class CustomerRoomRepository(private val customerDao: CustomerDao): CustomerRepository {
+class CustomerRoomRepository(private val customerDao: CustomerDao) : CustomerRepository {
     override suspend fun insertCustomer(customer: Customer) {
         customerDao.insertCustomer(customer)
     }

@@ -5,7 +5,7 @@ import app.tabletracker.app.domain.repository.ApplicationRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 
-class ApplicationRoomRepository(private val appDao: AppDao): ApplicationRepository {
+class ApplicationRoomRepository(private val appDao: AppDao) : ApplicationRepository {
     override fun hasInventory(): Flow<Boolean> {
         return appDao.hasInventory()
     }

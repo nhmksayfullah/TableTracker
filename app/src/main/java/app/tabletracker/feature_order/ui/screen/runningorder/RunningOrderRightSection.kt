@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.TabbedScreen
 import app.tabletracker.feature_order.data.entity.OrderStatus
 import app.tabletracker.feature_order.data.entity.OrderWithOrderItems
-import app.tabletracker.feature_order.ui.state.OrderUiState
 import app.tabletracker.feature_order.ui.component.ShowOrderColumnNamesOnRightSection
+import app.tabletracker.feature_order.ui.state.OrderUiState
 
 @Composable
 fun RunningOrderRightSection(
@@ -61,6 +61,7 @@ fun RunningOrderRightSection(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
+
             OrderStatus.Completed -> {
                 ShowOrderColumnNamesOnRightSection()
                 Spacer(modifier = Modifier.height(4.dp))
@@ -77,6 +78,7 @@ fun RunningOrderRightSection(
                     onOrderItemClick = onOrderItemClick
                 )
             }
+
             OrderStatus.Cancelled -> {
                 ShowOrderColumnNamesOnRightSection()
                 Spacer(modifier = Modifier.height(4.dp))

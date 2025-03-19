@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SettingsViewModel(private val repository: SettingsRepository): ViewModel() {
+class SettingsViewModel(private val repository: SettingsRepository) : ViewModel() {
     private var _uiState = MutableStateFlow(SettingsUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -25,7 +25,7 @@ class SettingsViewModel(private val repository: SettingsRepository): ViewModel()
     }
 
     fun onEvent(event: SettingsUiEvent) {
-        when(event) {
+        when (event) {
             is SettingsUiEvent.UpdateRestaurantExtra -> {
                 updateRestaurantExtra(event.restaurantExtra)
             }
@@ -42,7 +42,7 @@ class SettingsViewModel(private val repository: SettingsRepository): ViewModel()
     private fun populateRestaurantInfo() {
         populateRestaurantInfoJob?.cancel()
         populateRestaurantInfoJob = repository.readRestaurantInfo().onEach {
-            _uiState.update {currentState ->
+            _uiState.update { currentState ->
                 currentState.copy(
                     restaurantInfo = it
                 )
@@ -56,7 +56,7 @@ class SettingsViewModel(private val repository: SettingsRepository): ViewModel()
             if (uiState.value.restaurantInfo!!.id.isNotEmpty()) {
                 populateRestaurantExtraJob?.cancel()
                 populateRestaurantExtraJob = repository.readRestaurantExtra(restaurantId).onEach {
-                    _uiState.update {state ->
+                    _uiState.update { state ->
                         state.copy(
                             restaurantExtra = it
                         )

@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.auth.ui.AuthViewModel
 
 @Composable
@@ -53,7 +52,10 @@ fun RegisterRestaurantScreen(
                     Text(text = "Madras Spice Restaurant")
                 },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next, keyboardType = KeyboardType.Text)
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Text
+                )
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextField(
@@ -69,7 +71,10 @@ fun RegisterRestaurantScreen(
                     Text(text = "180 Northenden Rd, Sale M33 2SR")
                 },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next, keyboardType = KeyboardType.Text)
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Text
+                )
             )
             Spacer(modifier = Modifier.height(16.dp))
             TextField(
@@ -85,7 +90,10 @@ fun RegisterRestaurantScreen(
                     Text(text = "0712345678")
                 },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next, keyboardType = KeyboardType.Phone)
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Phone
+                )
             )
             Spacer(modifier = Modifier.height(16.dp))
             authUiState.restaurant.website?.let {
@@ -102,7 +110,10 @@ fun RegisterRestaurantScreen(
                         Text(text = "www.madras-spice.uk")
                     },
                     singleLine = true,
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next, keyboardType = KeyboardType.Text)
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text
+                    )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -120,7 +131,10 @@ fun RegisterRestaurantScreen(
                     Text(text = "123456789")
                 },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Number
+                )
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(

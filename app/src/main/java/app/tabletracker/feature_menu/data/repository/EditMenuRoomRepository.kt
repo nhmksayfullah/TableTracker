@@ -7,7 +7,7 @@ import app.tabletracker.feature_menu.data.local.MenuDao
 import app.tabletracker.feature_menu.domain.repository.EditMenuRepository
 import kotlinx.coroutines.flow.Flow
 
-class EditMenuRoomRepository(private val menuDao: MenuDao): EditMenuRepository {
+class EditMenuRoomRepository(private val menuDao: MenuDao) : EditMenuRepository {
     override fun readAllMenuItems(): Flow<List<MenuItem>> {
         return menuDao.readAllMenuItems()
     }
@@ -15,9 +15,11 @@ class EditMenuRoomRepository(private val menuDao: MenuDao): EditMenuRepository {
     override fun readAllMenuItemsOnCategory(categoryId: Int): Flow<CategoryWithMenuItems> {
         return menuDao.readAllMenuItemsOnCategory(categoryId)
     }
+
     override suspend fun updateCategoryIndex(categoryId: Int, newIndex: Int) {
         menuDao.updateCategoryIndex(categoryId, newIndex)
     }
+
     override suspend fun updateMenuItemIndex(menuItemId: String, newIndex: Int) {
         menuDao.updateMenuItemIndex(menuItemId, newIndex)
     }

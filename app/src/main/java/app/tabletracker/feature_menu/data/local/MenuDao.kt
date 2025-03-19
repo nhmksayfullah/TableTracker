@@ -24,6 +24,7 @@ interface MenuDao {
 
     @Query("UPDATE Category SET `index` = :newIndex WHERE id = :categoryId")
     suspend fun updateCategoryIndex(categoryId: Int, newIndex: Int)
+
     @Query("UPDATE MenuItem SET `index` = :newIndex WHERE id = :menuItemId")
     suspend fun updateMenuItemIndex(menuItemId: String, newIndex: Int)
 
@@ -36,10 +37,13 @@ interface MenuDao {
 
     @Upsert
     suspend fun writeMenuItem(menuItem: MenuItem)
+
     @Upsert
     suspend fun writeCategory(category: Category)
+
     @Delete
     suspend fun deleteMenuItem(menuItem: MenuItem)
+
     @Delete
     suspend fun deleteCategory(category: Category)
 

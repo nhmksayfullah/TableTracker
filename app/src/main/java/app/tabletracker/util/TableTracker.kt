@@ -7,7 +7,7 @@ import app.tabletracker.app.config.TableTrackerContainer
 import app.tabletracker.app.config.TableTrackerDataContainer
 import app.tabletracker.app.data.local.TableTrackerDatabase
 
-class TableTracker: Application() {
+class TableTracker : Application() {
 
 
     lateinit var container: TableTrackerContainer

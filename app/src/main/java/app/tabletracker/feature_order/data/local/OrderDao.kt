@@ -47,10 +47,13 @@ interface OrderDao {
 
     @Upsert
     suspend fun writeOrder(order: Order)
+
     @Upsert
     suspend fun writeOrderItem(orderItem: OrderItem)
+
     @Delete
     suspend fun deleteOrder(order: Order)
+
     @Delete
     suspend fun deleteOrderItem(orderItem: OrderItem)
 
