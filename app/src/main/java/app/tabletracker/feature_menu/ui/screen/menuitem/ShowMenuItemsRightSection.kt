@@ -1,4 +1,4 @@
-package app.tabletracker.feature_menu.ui.screen.category
+package app.tabletracker.feature_menu.ui.screen.menuitem
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -30,36 +30,35 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import app.tabletracker.R
-import app.tabletracker.core.ui.component.CategoryComponent
-import app.tabletracker.core.ui.component.FoodBlockComponent
 import app.tabletracker.core.ui.component.MenuItemComponent
-import app.tabletracker.feature_menu.data.entity.Category
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 
+
 @Composable
-fun ShowCategoriesRightSection(
-    categories: List<Category>,
+fun ShowMenuItemsRightSection(
+    menuItems: List<MenuItem>,
     modifier: Modifier = Modifier,
-    onCategoryClicked: (Category) -> Unit,
-    onAddNewCategory: () -> Unit,
-    onCategoryReordered: (List<Category>) -> Unit
+    onMenuItemClicked: (MenuItem) -> Unit,
+    onAddNewMenuItem: () -> Unit,
+    onMenuItemsReordered: (List<MenuItem>) -> Unit,
 ) {
+
     var canDrag by remember {
         mutableStateOf(false)
     }
     val lazyGridState = rememberLazyGridState()
 
-    var updatedCategories by remember {
-        mutableStateOf(categories)
+    var updatedMenuItems by remember {
+        mutableStateOf(menuItems)
     }
-    LaunchedEffect(categories) {
-        updatedCategories = categories.sortedBy { it.index }
+    LaunchedEffect(menuItems) {
+        updatedMenuItems = menuItems.sortedBy { it.index }
     }
 
     val reorderableLazyGridState = rememberReorderableLazyGridState(lazyGridState) { from, to ->
-        updatedCategories = updatedCategories.toMutableList().apply {
+        updatedMenuItems = updatedMenuItems.toMutableList().apply {
             add(to.index, removeAt(from.index))
         }
     }
@@ -72,7 +71,7 @@ fun ShowCategoriesRightSection(
                     onClick = {
                         if (canDrag) {
                             canDrag = false
-                            onCategoryReordered(updatedCategories)
+                            onMenuItemsReordered(updatedMenuItems)
                         } else {
                             canDrag = true
                         }
@@ -94,13 +93,14 @@ fun ShowCategoriesRightSection(
                 }
                 Spacer(modifier = Modifier.width(4.dp))
                 ExtendedFloatingActionButton(
-                    onClick = onAddNewCategory,
+                    onClick = onAddNewMenuItem,
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
-                    Text("New Category")
+                    Text("New Item")
                 }
             }
+
         }
     ) {
         LazyVerticalGrid(
@@ -111,21 +111,18 @@ fun ShowCategoriesRightSection(
                 .padding(it)
                 .fillMaxSize()
         ) {
-            items(updatedCategories, key = { it.id }) { category ->
+            items(updatedMenuItems, key = { it.id }) { menuItem ->
                 ReorderableItem(
                     reorderableLazyGridState,
-                    key = category.id,
-                    modifier = Modifier
-                        .padding(2.dp)
+                    key = menuItem.id
                 ) {
-                    CategoryComponent(
-                        text = category.name,
-                        onClick = {
-                            onCategoryClicked(category)
-                        },
-                        containerColor = category.color
-
-                    )
+                    MenuItemComponent(
+                        title = menuItem.name,
+                        modifier = Modifier
+                            .padding(2.dp)
+                    ) {
+                        onMenuItemClicked(menuItem)
+                    }
                     if (canDrag) {
                         IconButton(
                             onClick = {},
@@ -143,3 +140,5 @@ fun ShowCategoriesRightSection(
         }
     }
 }
+
+

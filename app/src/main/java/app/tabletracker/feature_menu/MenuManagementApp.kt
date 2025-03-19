@@ -45,7 +45,7 @@ fun NavGraphBuilder.inventoryNavGraph(
             val editMenuViewModel = it.accessSharedViewModel<EditMenuViewModel>(navController)
             CategoryScreen(
                 editMenuViewModel = editMenuViewModel,
-                onCategoryDoubleClicked = {
+                onNavigateToMenuItems = {
                     navController.navigate(Screen.MenuItemScreen)
                 }
             )

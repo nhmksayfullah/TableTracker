@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Objects
 
 class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel() {
     var uiState = MutableStateFlow(EditMenuUiState())
@@ -51,7 +52,15 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
 
             is EditMenuUiEvent.UpsertMenuItem -> {
                 viewModelScope.launch {
-                    repository.writeMenuItem(event.menuItem)
+                    val newMenuItem = updateMenuItemPrice(event.newPrices)
+                    newMenuItem?.let {
+                        repository.writeMenuItem(it)
+                        uiState.update { currentState ->
+                            currentState.copy(
+                                selectedMenuItem = MenuItem.empty(it.categoryId)
+                            )
+                        }
+                    }
 
                 }
             }
@@ -82,6 +91,13 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
             }
 
 
+            is EditMenuUiEvent.UpdateSelectedMenuItem -> {
+                uiState.update {
+                    it.copy(
+                        selectedMenuItem = event.menuItem
+                    )
+                }
+            }
         }
     }
 
@@ -140,18 +156,19 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
         }.launchIn(viewModelScope)
     }
 
-//    private fun updateMenuItemPrice(orderType: OrderType, newPrice: Float) {
-//        var menuItem = uiState.value.selectedMenuItem
-//        val updatedPrices = menuItem.prices.toMutableMap()
-//        updatedPrices[orderType] = newPrice
-//        uiState.update {
-//            it.copy(
-//                selectedMenuItem = it.selectedMenuItem.copy(
-//                    prices = updatedPrices
-//                )
-//            )
-//        }
-//    }
+    private fun updateMenuItemPrice(newPrices: Map<OrderType, Float>): MenuItem? {
+        var menuItem = uiState.value.selectedMenuItem
+        menuItem?.let {
+            uiState.update { currentState ->
+                currentState.copy(
+                    selectedMenuItem = it.copy(prices = newPrices)
+                )
+            }
+            val newMenuItem = it.copy(prices = newPrices)
+            return newMenuItem
+        }
+        return null
+    }
 
     private fun updateCategoryIndex() {
         if (uiState.value.categories.any { it.index == -1 }) {

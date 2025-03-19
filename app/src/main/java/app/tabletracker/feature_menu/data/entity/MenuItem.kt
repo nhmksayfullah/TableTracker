@@ -1,5 +1,6 @@
 package app.tabletracker.feature_menu.data.entity
 
+import android.view.Menu
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -30,7 +31,21 @@ data class MenuItem(
     val index: Int = -1,
     @ColumnInfo(name = "color", defaultValue = "-1")
     val color: Int = -1
-)
+
+) {
+    companion object {
+        fun empty(categoryId: Int): MenuItem {
+            return MenuItem(
+                name = "",
+                abbreviation = "",
+                prices = emptyMap(),
+                categoryId = categoryId,
+            )
+        }
+    }
+}
+
+
 
 fun MenuItem.withUpdatedPrice(orderType: OrderType, newPrice: Float): MenuItem {
     // Create a new map with the updated price for the specified order type

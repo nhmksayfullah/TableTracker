@@ -2,6 +2,7 @@ package app.tabletracker.core.ui.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -35,7 +36,6 @@ fun CategoryComponent(
     contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     verticalLineColor: Color? = null,
     onClick: () -> Unit = {},
-    onDoubleClick: () -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -54,10 +54,9 @@ fun CategoryComponent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
-                .combinedClickable(
-                    onClick = onClick,
-                    onDoubleClick = onDoubleClick
-                )
+                .clickable{
+                    onClick()
+                }
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
