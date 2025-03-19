@@ -101,13 +101,8 @@ object ColorDarkTokens {
 }
 
 
-
-
-
-
-
-
 enum class MaterialColor(val color: Color) {
+    PureRed(Color(0xFFD81A1A)),
     Red(Color(0xFFE91E63)),
     Blue(Color(0xFF2196F3)),
     Green(Color(0xFF4CAF50)),

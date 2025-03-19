@@ -1,4 +1,4 @@
-package app.tabletracker.feature_order.ui.section.left
+package app.tabletracker.feature_order.ui.screen.takeorder
 
 import android.app.Activity
 import androidx.compose.foundation.layout.Column
@@ -33,7 +33,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.feature_order.data.entity.OrderItemStatus
 import app.tabletracker.feature_order.data.entity.OrderStatus
 import app.tabletracker.feature_order.data.entity.OrderType

@@ -33,43 +33,37 @@ fun ShowOrderColumnNamesOnRightSection() {
         TableCell {
             Text(
                 text = "Order No.",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleSmall,
             )
         }
         TableCell {
             Text(
                 text = "Order Type",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleSmall,
             )
         }
         TableCell {
             Text(
                 text = "Table Number",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleSmall,
             )
         }
         TableCell {
             Text(
                 text = "Payment Method",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleSmall,
             )
         }
         TableCell {
             Text(
                 text = "Total Person",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleSmall,
             )
         }
         TableCell {
             Text(
                 text = "Total Price",
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.titleSmall,
             )
         }
     }

@@ -34,7 +34,7 @@ fun SetupBottomNavigationBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface),
+            .background(MaterialTheme.colorScheme.secondary),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -42,7 +42,7 @@ fun SetupBottomNavigationBar(
             Button(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
-                    contentColor = MaterialTheme.colorScheme.onSurface
+                    contentColor = MaterialTheme.colorScheme.onSecondary
                 ),
                 onClick = {
                     onNavigationItemClick(it)

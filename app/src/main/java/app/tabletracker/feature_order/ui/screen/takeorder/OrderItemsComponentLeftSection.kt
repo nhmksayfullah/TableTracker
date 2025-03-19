@@ -1,4 +1,4 @@
-package app.tabletracker.feature_order.ui.section.left
+package app.tabletracker.feature_order.ui.screen.takeorder
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items

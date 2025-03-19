@@ -1,52 +1,55 @@
-package app.tabletracker.feature_order.ui.section.left
+package app.tabletracker.feature_order.ui.screen.takeorder
 
-import android.app.Activity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import app.tabletracker.core.ui.TabbedScreen
+import app.tabletracker.feature_order.data.entity.OrderStatus
+import app.tabletracker.feature_order.ui.state.OrderUiEvent
 import app.tabletracker.feature_order.ui.state.OrderUiState
-import app.tabletracker.feature_printing.domain.PrinterManager
-import app.tabletracker.feature_receipt.domain.ReceiptGenerator
 
 @Composable
-fun RunningOrderLeftSection(
+fun TakeOrderScreenLeftSection(
     orderUiState: OrderUiState,
     modifier: Modifier = Modifier,
-    onCustomizeCurrentOrder: () -> Unit,
+    onPlaceOrder: () -> Unit,
+    onOrderUiEvent: (OrderUiEvent) -> Unit,
+    onCancelOrder: (OrderUiEvent) -> Unit
 ) {
-    val context = LocalContext.current
     Scaffold(
         bottomBar = {
-            orderUiState.currentOrder?.order?.let {
-                RunningOrderSummaryLeftSection(
-                    order = it,
-                    onCustomizeOrder = onCustomizeCurrentOrder,
-                    onPrintReceipt = {
-                        val printerManager = PrinterManager(context as Activity)
-                        val receiptGenerator =
-                            ReceiptGenerator(orderUiState.restaurantInfo, orderUiState.currentOrder)
-                        printerManager.print(receiptGenerator.generateReceipt())
+            orderUiState.currentOrder?.let {
+                OrderSummaryLeftSection(
+                    order = it.order,
+                    onPlaceOrder = onPlaceOrder,
+                    onCancelOrder = {
+                        onCancelOrder(
+                            OrderUiEvent.UpdateCurrentOrder(
+                                orderUiState.currentOrder.order.copy(
+                                    orderStatus = OrderStatus.Cancelled
+                                )
+                            )
+                        )
                     },
-                    onPrintKitchenCopy = {
-                        val printerManager = PrinterManager(context as Activity)
-                        val receiptGenerator =
-                            ReceiptGenerator(orderUiState.restaurantInfo, orderUiState.currentOrder)
-                        printerManager.print(receiptGenerator.generateKitchenCopy(printFullKitchenCopy = true))
+                    onOrderChange = {
+                        onOrderUiEvent(OrderUiEvent.UpdateCurrentOrder(it))
                     }
                 )
             }
         }
-    ) {
+    ) { paddingValues ->
         Column(
             modifier = modifier
-                .padding(it)
+                .padding(paddingValues)
                 .fillMaxSize()
         ) {
+            Text(
+                text = orderUiState.currentOrder?.order?.orderNumber.toString()
+            )
             TabbedScreen(
                 titles = listOf("Order Details", "Customer Details")
             ) {
@@ -56,8 +59,10 @@ fun RunningOrderLeftSection(
                             OrderItemsComponentLeftSection(
                                 runningOrder = it,
                                 onItemRemoveClick = {
+                                    onOrderUiEvent(OrderUiEvent.RemoveItemFromOrder(it))
                                 },
                                 onItemChange = {
+                                    onOrderUiEvent(OrderUiEvent.UpdateOrderItem(it))
                                 }
                             )
                         }
@@ -66,6 +71,7 @@ fun RunningOrderLeftSection(
                         CustomerDetailsFormLeftSection(
                             customer = orderUiState.currentOrder?.order?.customer,
                             onCustomerChange = {
+                                onOrderUiEvent(OrderUiEvent.UpdateCustomer(it))
                             }
                         )
                     }

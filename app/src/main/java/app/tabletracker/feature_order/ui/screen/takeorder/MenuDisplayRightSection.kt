@@ -1,4 +1,4 @@
-package app.tabletracker.feature_order.ui.section.right
+package app.tabletracker.feature_order.ui.screen.takeorder
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box

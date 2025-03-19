@@ -1,6 +1,7 @@
-package app.tabletracker.feature_order.ui.screen
+package app.tabletracker.feature_order.ui.screen.takeorder
 
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,9 +12,6 @@ import app.tabletracker.core.ui.SplitRatio
 import app.tabletracker.core.ui.SplitScreen
 import app.tabletracker.feature_order.ui.state.OrderUiEvent
 import app.tabletracker.feature_order.ui.state.OrderViewModel
-import app.tabletracker.feature_order.ui.section.left.CompleteOrderDrawer
-import app.tabletracker.feature_order.ui.section.right.MenuDisplayRightSection
-import app.tabletracker.feature_order.ui.section.left.TakeOrderScreenLeftSection
 import kotlinx.coroutines.launch
 
 @Composable
@@ -45,12 +43,14 @@ fun TakeOrderScreen(
             )
         },
         rightContent = {
-            MenuDisplayRightSection(
-                menus = uiState.menus,
-                onMenuItemClicked = {
-                    orderViewModel.onEvent(OrderUiEvent.AddMenuItemToOrder(it))
-                }
-            )
+            Surface {
+                MenuDisplayRightSection(
+                    menus = uiState.menus,
+                    onMenuItemClicked = {
+                        orderViewModel.onEvent(OrderUiEvent.AddMenuItemToOrder(it))
+                    }
+                )
+            }
         },
         drawerState = drawerState,
         drawerContent = {

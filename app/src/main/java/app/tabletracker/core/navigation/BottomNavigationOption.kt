@@ -22,7 +22,7 @@ sealed class BottomNavigationOption(val navOption: NavigationOption) {
     data object RunningOrder: BottomNavigationOption(
         NavigationOption(
             id = 1,
-            title = "Running Order",
+            title = "Orders",
             icon = R.drawable.outline_deployed_code_history_24,
             route = Screen.RunningOrderScreen
         )

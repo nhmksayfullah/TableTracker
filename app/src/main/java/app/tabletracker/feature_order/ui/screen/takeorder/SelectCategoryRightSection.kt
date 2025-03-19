@@ -1,4 +1,4 @@
-package app.tabletracker.feature_order.ui.section.right
+package app.tabletracker.feature_order.ui.screen.takeorder
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,7 +30,6 @@ fun SelectCategoryRightSection(
             FoodBlockComponent(
                 text = item.category.name,
                 modifier = Modifier.padding(4.dp),
-                containerColor = MaterialTheme.colorScheme.inversePrimary
             ) {
                 onCategoryClicked(item.category)
             }

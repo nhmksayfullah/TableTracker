@@ -1,4 +1,4 @@
-package app.tabletracker.feature_order.ui.section.right
+package app.tabletracker.feature_order.ui.screen.runningorder
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues

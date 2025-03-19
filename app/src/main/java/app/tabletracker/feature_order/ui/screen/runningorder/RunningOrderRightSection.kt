@@ -1,4 +1,4 @@
-package app.tabletracker.feature_order.ui.section.right
+package app.tabletracker.feature_order.ui.screen.runningorder
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -32,32 +32,28 @@ fun RunningOrderRightSection(
     TabbedScreen(
         modifier = modifier,
         titles = orderStatusList,
-        onClick = {  }
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         when (OrderStatus.valueOf(orderStatusList[it])) {
             OrderStatus.Created -> {}
             OrderStatus.Running -> {
                 Column {
-//                    orderUiState.restaurantExtra?.let {
-//
-//                    }
+
                     RunningOrderTableView(
                         totalTable = orderUiState.restaurantExtra?.totalTable ?: 0,
                         runningOrders = orderUiState.runningOrders,
                         onOrderItemClick = onOrderItemClick
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
                     ShowOrderColumnNamesOnRightSection()
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Spacer(
                         modifier = Modifier
                             .height(1.dp)
-                            .padding(end = 16.dp)
+                            .padding(horizontal = 16.dp)
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.primary)
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     ShowOrderListRightSection(
                         orders = orderUiState.runningOrders.filter { it.order.tableNumber == null },
                         onOrderItemClick = onOrderItemClick
@@ -67,15 +63,15 @@ fun RunningOrderRightSection(
             }
             OrderStatus.Completed -> {
                 ShowOrderColumnNamesOnRightSection()
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 Spacer(
                     modifier = Modifier
                         .height(1.dp)
-                        .padding(end = 16.dp)
+                        .padding(horizontal = 16.dp)
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.primary)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 ShowOrderListRightSection(
                     orders = orderUiState.completedOrders,
                     onOrderItemClick = onOrderItemClick
@@ -83,15 +79,15 @@ fun RunningOrderRightSection(
             }
             OrderStatus.Cancelled -> {
                 ShowOrderColumnNamesOnRightSection()
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 Spacer(
                     modifier = Modifier
                         .height(1.dp)
-                        .padding(end = 16.dp)
+                        .padding(horizontal = 16.dp)
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.primary)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 ShowOrderListRightSection(
                     orders = orderUiState.cancelledOrders,
                     onOrderItemClick = onOrderItemClick

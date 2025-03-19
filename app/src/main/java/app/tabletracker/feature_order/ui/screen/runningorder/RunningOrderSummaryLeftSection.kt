@@ -1,5 +1,6 @@
-package app.tabletracker.feature_order.ui.section.left
+package app.tabletracker.feature_order.ui.screen.runningorder
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,7 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -31,17 +35,22 @@ fun RunningOrderSummaryLeftSection(
     onPrintKitchenCopy: () -> Unit
 ) {
 
-    Column(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.secondaryContainer)
-            .padding(4.dp)
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceDim
+        ),
+        shape = RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 0.dp, topStart = 8.dp, topEnd = 8.dp),
     ) {
-        Column {
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Sub Total::")
+                Text(text = "Sub Total:")
                 Spacer(modifier = Modifier.weight(1f))
                 Text("£%.2f".format(order.totalPrice))
             }
@@ -68,44 +77,55 @@ fun RunningOrderSummaryLeftSection(
                     Text("£%.2f".format(order.totalPrice - discount))
                 }
             }
-        }
-        Spacer(modifier = Modifier
-            .height(16.dp))
-        Button(
-            onClick = onCustomizeOrder,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            Text("Customize Order")
-        }
-        Row {
 
+            Spacer(modifier = Modifier
+                .height(8.dp))
             Button(
-                onClick = onPrintReceipt,
+                onClick = onCustomizeOrder,
                 modifier = Modifier
-                    .weight(1f)
+                    .fillMaxWidth()
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.baseline_print_24),
-                    contentDescription = "Print Receipt"
+                Text(
+                    text = "Customize Order",
+                    style = MaterialTheme.typography.labelMedium
                 )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text("Receipt")
             }
-            Spacer(modifier = Modifier.width(2.dp))
+            Row {
 
-            OutlinedButton(
-                onClick = onPrintKitchenCopy,
-                modifier = Modifier
-                    .weight(1f)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.baseline_print_24),
-                    contentDescription = "Print Receipt"
-                )
+                Button(
+                    onClick = onPrintReceipt,
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_print_24),
+                        contentDescription = "Print Receipt"
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Receipt",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
                 Spacer(modifier = Modifier.width(4.dp))
-                Text("Kitchen Copy")
+
+                OutlinedButton(
+                    onClick = onPrintKitchenCopy,
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.baseline_print_24),
+                        contentDescription = "Print Receipt"
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "Kitchen",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
             }
         }
+
     }
 }

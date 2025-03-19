@@ -1,7 +1,8 @@
-package app.tabletracker.feature_order.ui.screen
+package app.tabletracker.feature_order.ui.screen.runningorder
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,12 +13,10 @@ import app.tabletracker.core.ui.SplitRatio
 import app.tabletracker.core.ui.SplitScreen
 import app.tabletracker.feature_order.ui.state.OrderUiEvent
 import app.tabletracker.feature_order.ui.state.OrderViewModel
-import app.tabletracker.feature_order.ui.section.right.RunningOrderRightSection
-import app.tabletracker.feature_order.ui.section.left.RunningOrderLeftSection
 
 
 @Composable
-fun RunningOrderScreen3(
+fun RunningOrderScreen(
     orderViewModel: OrderViewModel,
     modifier: Modifier = Modifier,
     onCustomizeCurrentOrder: () -> Unit
@@ -45,12 +44,14 @@ fun RunningOrderScreen3(
             }
         },
         rightContent = {
-            RunningOrderRightSection(
-                orderUiState = uiState,
-                onOrderItemClick = {
-                    orderViewModel.onEvent(OrderUiEvent.SetCurrentOrderWithOrderItems(it))
-                }
-            )
+            Surface {
+                RunningOrderRightSection(
+                    orderUiState = uiState,
+                    onOrderItemClick = {
+                        orderViewModel.onEvent(OrderUiEvent.SetCurrentOrderWithOrderItems(it))
+                    }
+                )
+            }
         }
     )
 

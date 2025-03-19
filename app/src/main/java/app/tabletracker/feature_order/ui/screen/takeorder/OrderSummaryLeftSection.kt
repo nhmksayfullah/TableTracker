@@ -1,7 +1,5 @@
-package app.tabletracker.feature_order.ui.section.left
+package app.tabletracker.feature_order.ui.screen.takeorder
 
-
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,12 +8,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
@@ -50,89 +51,97 @@ fun OrderSummaryLeftSection(
     var cancelOrderDialogState by rememberSaveable {
         mutableStateOf(false)
     }
-
-    Column(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.secondaryContainer)
-            .padding(4.dp)
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceDim
+        ),
+        shape = RoundedCornerShape(bottomStart = 0.dp, bottomEnd = 0.dp, topStart = 8.dp, topEnd = 8.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .padding(8.dp)
         ) {
-            Text("Sub Total:")
-            Spacer(modifier = Modifier.weight(1f))
-            Text("£%.2f".format(order.totalPrice))
-        }
-        if (order.discount != null) {
-            val discount = order.discount.value.let {
-                try {
-                    it.toFloat() * order.totalPrice / 100
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    0.0f
-
-                }
-            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "Discount:")
+                Text("Sub Total:")
                 Spacer(modifier = Modifier.weight(1f))
+                Text("£%.2f".format(order.totalPrice))
+            }
 
-                Text(
-                    text = "Edit",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .clickable {
+            if (order.discount != null) {
+                val discount = order.discount.value.let {
+                    try {
+                        it.toFloat() * order.totalPrice / 100
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        0.0f
+
+                    }
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Discount:")
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Text(
+                        text = "Edit",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier
+                            .clickable {
+                                addDiscountDialogState = true
+                            }
+                            .padding(horizontal = 16.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text("-£%.2f".format(discount))
+                }
+                Row {
+                    Text(text = "Total:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text("£%.2f".format(order.totalPrice - discount))
+                }
+            } else {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.CenterEnd
+                ) {
+                    TextButton(
+                        onClick = {
                             addDiscountDialogState = true
-                        }
-                        .padding(horizontal = 16.dp),
-                    color = MaterialTheme.colorScheme.error
-                )
-                Text("-£%.2f".format(discount))
-            }
-            Row {
-                Text(text = "Total:")
-                Spacer(modifier = Modifier.weight(1f))
-                Text("£%.2f".format(order.totalPrice - discount))
-            }
-        } else {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.CenterEnd
-            ) {
-                TextButton(
-                    onClick = {
-                        addDiscountDialogState = true
-                    }) {
-                    Text(text = "Add Discount")
+                        }) {
+                        Text(text = "Add Discount")
+                    }
                 }
             }
-        }
-        Spacer(modifier = Modifier.padding(8.dp))
-        Row {
-            Button(
-                onClick = onPlaceOrder,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text("Place Order")
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-            Button(
-                onClick = {
-                    cancelOrderDialogState = true
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
-                ),
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Cancel Order"
-                )
+
+            Spacer(modifier = Modifier.padding(4.dp))
+            Row {
+                Button(
+                    onClick = onPlaceOrder,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Place Order")
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(
+                    onClick = {
+                        cancelOrderDialogState = true
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError
+                    ),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Cancel Order"
+                    )
+                }
             }
         }
     }
@@ -145,8 +154,8 @@ fun OrderSummaryLeftSection(
             confirmButton = {
                 Button(
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError
                     ),
                     onClick = {
                         onCancelOrder()
@@ -162,9 +171,14 @@ fun OrderSummaryLeftSection(
                 Text(text = "Are you sure you want to cancel this order?")
             },
             dismissButton = {
-                TextButton(onClick = {
-                    cancelOrderDialogState = false
-                }) {
+                TextButton(
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
+                    onClick = {
+                        cancelOrderDialogState = false
+                    }
+                ) {
                     Text(text = "Dismiss")
                 }
             }
