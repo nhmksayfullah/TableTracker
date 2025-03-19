@@ -113,45 +113,46 @@ class OrderViewModel(
 
 
     private fun addOrUpdateOrderItem(menuItem: MenuItem) {
-        val currentOrder = uiState.value.currentOrder ?: return
-        val orderId = currentOrder.order.id
+        uiState.value.currentOrder?.let {
+            viewModelScope.launch {
+                // Lock the current order temporarily to prevent changes during this operation
+                val orderId = it.order.id
+                try {
+                    // Check if item already exists in order
+                    val existingItem = it.orderItems.find {
+                        it.menuItem == menuItem && it.orderItemStatus == OrderItemStatus.Added
+                    }
 
-        viewModelScope.launch {
-            // Lock the current order temporarily to prevent changes during this operation
-
-            try {
-                // Check if item already exists in order
-                val existingItem = currentOrder.orderItems.find {
-                    it.menuItem == menuItem && it.orderItemStatus == OrderItemStatus.Added
-                }
-
-                if (existingItem != null) {
-                    // Update quantity
-                    withContext(Dispatchers.IO) {
-                        // Double-check that current order hasn't changed
-                        if (uiState.value.currentOrder?.order?.id == orderId) {
-                            orderRepo.writeOrderItem(existingItem.copy(quantity = existingItem.quantity + 1))
+                    if (existingItem != null) {
+                        // Update quantity
+                        withContext(Dispatchers.IO) {
+                            // Double-check that current order hasn't changed
+                            if (uiState.value.currentOrder?.order?.id == orderId) {
+                                orderRepo.writeOrderItem(existingItem.copy(quantity = existingItem.quantity + 1))
+                            }
+                        }
+                    } else {
+                        // Add new item
+                        withContext(Dispatchers.IO) {
+                            // Double-check that current order hasn't changed
+                            if (uiState.value.currentOrder?.order?.id == orderId) {
+                                orderRepo.writeOrderItem(menuItem.toOrderItem(orderId = orderId))
+                            }
                         }
                     }
-                } else {
-                    // Add new item
-                    withContext(Dispatchers.IO) {
-                        // Double-check that current order hasn't changed
-                        if (uiState.value.currentOrder?.order?.id == orderId) {
-                            orderRepo.writeOrderItem(menuItem.toOrderItem(orderId = orderId))
-                        }
-                    }
+                } finally {
+                    // Unlock the current order
                 }
-            } finally {
-                // Unlock the current order
             }
         }
+
+
+
     }
 
     private fun removeItemFromOrder(orderItem: OrderItem) {
         viewModelScope.launch(Dispatchers.IO) {
             orderRepo.deleteOrderItem(orderItem)
-
 
         }
     }
@@ -242,26 +243,35 @@ class OrderViewModel(
     }
 
     private fun setCurrentOrder(orderWithOrderItems: OrderWithOrderItems?) {
-        val orderId = orderWithOrderItems?.order?.id
-        orderId?.let {
-            viewModelScope.launch(Dispatchers.IO) {
-                calculateTotalPriceJob?.cancel()
-                currentOrderJob?.cancel()
-                currentOrderJob = orderRepo.readOrderWithOrderItems(it).onEach {
-                    _uiState.update { state ->
-                        state.copy(
-                            currentOrder = it
-                        )
-                    }
-                }.launchIn(viewModelScope)
+        if (orderWithOrderItems == null) {
+            _uiState.update {
+                it.copy(
+                    currentOrder = null
+                )
+            }
+        } else {
+            val orderId = orderWithOrderItems.order.id
+            orderId.let {
+                viewModelScope.launch(Dispatchers.IO) {
+                    calculateTotalPriceJob?.cancel()
+                    currentOrderJob?.cancel()
+                    currentOrderJob = orderRepo.readOrderWithOrderItems(it).onEach {
+                        _uiState.update { state ->
+                            state.copy(
+                                currentOrder = it
+                            )
+                        }
+                    }.launchIn(viewModelScope)
 
-                calculateTotalPriceJob = viewModelScope.launch(Dispatchers.IO) {
-                    uiState.collectLatest {
-                        calculateTotalPrice(it)
+                    calculateTotalPriceJob = viewModelScope.launch(Dispatchers.IO) {
+                        uiState.collectLatest {
+                            calculateTotalPrice(it)
+                        }
                     }
                 }
             }
         }
+
     }
 
 }

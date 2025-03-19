@@ -25,11 +25,12 @@ fun NavGraphBuilder.orderManagementNavGraph(
     navigation<OrderManagementApp>(
         startDestination = Screen.StartOrderScreen
     ) {
+
         composable<Screen.StartOrderScreen>(
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
-                        delayMillis = 400,
+                        delayMillis = 250,
                         durationMillis = 1000
                     )
                 )
@@ -72,7 +73,7 @@ fun NavGraphBuilder.orderManagementNavGraph(
             TakeOrderScreen(
                 orderViewModel = orderViewModel,
                 onOrderDismiss = {
-                    orderViewModel.onEvent(OrderUiEvent.SetCurrentOrderWithOrderItems(null))
+
                     navController.navigateUp()
                 }
             )
@@ -82,7 +83,7 @@ fun NavGraphBuilder.orderManagementNavGraph(
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
-                        delayMillis = 400,
+                        delayMillis = 250,
                         durationMillis = 1000
                     )
                 )

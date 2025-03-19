@@ -14,6 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.component.FoodBlockComponent
+import app.tabletracker.core.ui.component.MenuItemComponent
 import app.tabletracker.feature_menu.data.entity.MenuItem
 
 @Composable
@@ -31,35 +32,22 @@ fun SelectMenuItemRightSection(
     LazyVerticalGrid(
         columns = GridCells.Adaptive(120.dp),
         contentPadding = PaddingValues(8.dp),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .padding(8.dp)
-            .then(modifier)
     ) {
         items(menus) { item ->
-            FoodBlockComponent(
-                text = item.name,
-                modifier = Modifier.padding(4.dp)
-            ) {
-                if (item.isMeal && item.mealCourses.isNotEmpty()) {
-                    selectedMealItemId = item.id
-                    dialogState = true
-                } else {
-                    onMenuItemClicked(item)
+            MenuItemComponent(
+                title = item.name,
+                onClick = {
+                    if (item.isMeal && item.mealCourses.isNotEmpty()) {
+                        selectedMealItemId = item.id
+                        dialogState = true
+                    } else {
+                        onMenuItemClicked(item)
+                    }
                 }
-            }
+            )
         }
-    }
-
-    if (dialogState) {
-//        menus.find { it.id == selectedMealItemId }?.let {
-//            AddEditMealMenuDialogSection(
-//                menuItem = it,
-//                onMenuItemClicked = onMenuItemClicked,
-//                onDialogDismiss = { dialogState = false }
-//            )
-//        }
-
     }
 
 }

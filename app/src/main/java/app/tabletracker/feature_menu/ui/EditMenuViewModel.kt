@@ -20,21 +20,19 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
     private var job: Job? = null
 
     init {
-//        populateCategory()
         populateCategoriesWithMenuItems()
     }
 
     fun onEvent(event: EditMenuUiEvent) {
         when (event) {
-            is EditMenuUiEvent.ChangeCategory -> {
+            is EditMenuUiEvent.SetSelectedCategory -> {
                 uiState.update {
                     it.copy(
                         selectedCategory = event.category
                     )
                 }
             }
-
-            is EditMenuUiEvent.ChangeDetailsOfMenuItem -> {
+            is EditMenuUiEvent.SetSelectedMenuItem -> {
                 uiState.update {
                     it.copy(
                         selectedMenuItem = event.menuItem
@@ -42,44 +40,18 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
                 }
             }
 
-            is EditMenuUiEvent.ChangePricesOfMenuItem -> {
-                updateMenuItemPrice(event.pair.first, event.pair.second)
-            }
-
-            EditMenuUiEvent.AddNewCategory -> {
-                uiState.update {
-                    it.copy(
-                        selectedCategory = Category(name = "")
-                    )
-                }
-            }
-
-            EditMenuUiEvent.AddNewMenuItem -> {
-                uiState.update {
-                    it.copy(
-                        selectedMenuItem = MenuItem(
-                            name = "",
-                            abbreviation = "",
-                            description = "",
-                            prices = mapOf(),
-                            isKitchenCategory = uiState.value.selectedCategory.isKitchenCategory,
-                            categoryId = uiState.value.selectedCategory.id
-                        )
-                    )
-                }
-            }
 
             is EditMenuUiEvent.UpsertCategory -> {
                 viewModelScope.launch {
-                    repository.writeCategory(uiState.value.selectedCategory)
-                    updateKitchenCopyStatusOfMenuItemsOnCategory(uiState.value.selectedCategory)
+                    repository.writeCategory(event.category)
+                    updateKitchenCopyStatusOfMenuItemsOnCategory(event.category)
                 }
 
             }
 
             is EditMenuUiEvent.UpsertMenuItem -> {
                 viewModelScope.launch {
-                    repository.writeMenuItem(uiState.value.selectedMenuItem)
+                    repository.writeMenuItem(event.menuItem)
 
                 }
             }
@@ -96,12 +68,6 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
                 }
             }
 
-            is EditMenuUiEvent.UpsertCategories -> {
-                viewModelScope.launch {
-                    repository.updateCategories(event.categories)
-                }
-            }
-
             is EditMenuUiEvent.ReorderCategories -> {
                 updateCategoryIndex()
                 event.categories.forEachIndexed { index, category ->
@@ -114,6 +80,8 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
                     updateMenuItemIndex(menuItem.id, index)
                 }
             }
+
+
         }
     }
 
@@ -172,18 +140,18 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun updateMenuItemPrice(orderType: OrderType, newPrice: Float) {
-        var menuItem = uiState.value.selectedMenuItem
-        val updatedPrices = menuItem.prices.toMutableMap()
-        updatedPrices[orderType] = newPrice
-        uiState.update {
-            it.copy(
-                selectedMenuItem = it.selectedMenuItem.copy(
-                    prices = updatedPrices
-                )
-            )
-        }
-    }
+//    private fun updateMenuItemPrice(orderType: OrderType, newPrice: Float) {
+//        var menuItem = uiState.value.selectedMenuItem
+//        val updatedPrices = menuItem.prices.toMutableMap()
+//        updatedPrices[orderType] = newPrice
+//        uiState.update {
+//            it.copy(
+//                selectedMenuItem = it.selectedMenuItem.copy(
+//                    prices = updatedPrices
+//                )
+//            )
+//        }
+//    }
 
     private fun updateCategoryIndex() {
         if (uiState.value.categories.any { it.index == -1 }) {

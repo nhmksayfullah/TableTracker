@@ -12,6 +12,7 @@ import app.tabletracker.core.ui.SplitRatio
 import app.tabletracker.core.ui.SplitScreen
 import app.tabletracker.feature_order.ui.state.OrderUiEvent
 import app.tabletracker.feature_order.ui.state.OrderViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -32,8 +33,12 @@ fun TakeOrderScreen(
                 orderUiState = uiState,
                 onOrderUiEvent = orderViewModel::onEvent,
                 onCancelOrder = {
-                    orderViewModel.onEvent(it)
-                    onOrderDismiss()
+                    scope.launch {
+                        orderViewModel.onEvent(it)
+                        delay(100)
+                        orderViewModel.onEvent(OrderUiEvent.SetCurrentOrderWithOrderItems(null))
+                        onOrderDismiss()
+                    }
                 },
                 onPlaceOrder = {
                     scope.launch {
@@ -60,6 +65,11 @@ fun TakeOrderScreen(
                     if (it != null) orderViewModel.onEvent(it)
                     scope.launch {
                         drawerState.close()
+                        orderViewModel.onEvent(
+                            OrderUiEvent.SetCurrentOrderWithOrderItems(null)
+                        )
+                        delay(100)
+
                         onOrderDismiss()
                     }
                 },

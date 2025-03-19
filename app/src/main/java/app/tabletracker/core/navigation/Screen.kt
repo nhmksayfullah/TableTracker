@@ -29,5 +29,9 @@ sealed class Screen() {
 
     @Serializable
     data object InventoryScreen : Screen()
+    @Serializable
+    data object CategoryScreen : Screen()
+    @Serializable
+    data object MenuItemScreen : Screen()
 }
 

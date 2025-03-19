@@ -2,7 +2,6 @@ package app.tabletracker.core.ui.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,15 +22,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import app.tabletracker.theme.MaterialColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FoodBlockComponent(
+fun CategoryComponent(
     text: String,
     modifier: Modifier = Modifier,
     textModifier: Modifier = Modifier,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
-    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    containerColor: Int? = null,
     contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     verticalLineColor: Color? = null,
     onClick: () -> Unit = {},
@@ -43,7 +43,10 @@ fun FoodBlockComponent(
             .then(modifier),
         colors = CardDefaults
             .cardColors(
-                containerColor = containerColor,
+                containerColor = if (containerColor == null || containerColor == -1)
+                    MaterialTheme.colorScheme.primaryContainer else MaterialColor.fromArgb(
+                    containerColor
+                )?.color ?: MaterialTheme.colorScheme.primaryContainer,
                 contentColor = contentColor
             ),
     ) {
@@ -76,4 +79,3 @@ fun FoodBlockComponent(
         }
     }
 }
-

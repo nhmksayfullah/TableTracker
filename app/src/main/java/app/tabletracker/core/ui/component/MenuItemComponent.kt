@@ -1,9 +1,7 @@
 package app.tabletracker.core.ui.component
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -21,59 +19,45 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FoodBlockComponent(
-    text: String,
+fun MenuItemComponent(
+    title: String,
     modifier: Modifier = Modifier,
-    textModifier: Modifier = Modifier,
-    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
-    containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
-    contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
-    verticalLineColor: Color? = null,
-    onClick: () -> Unit = {},
-    onDoubleClick: () -> Unit = {}
+    indicatorColor: Color = MaterialTheme.colorScheme.primary,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier
+        modifier = modifier
             .wrapContentSize()
-            .then(modifier),
+            .padding(2.dp),
         colors = CardDefaults
             .cardColors(
-                containerColor = containerColor,
-                contentColor = contentColor
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             ),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
-                .combinedClickable(
-                    onClick = onClick,
-                    onDoubleClick = onDoubleClick
-                )
+                .clickable{
+                    onClick()
+                }
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            verticalLineColor?.let {
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(4.dp)
-                        .background(it, RoundedCornerShape(8.dp))
-                )
-            }
-
+            Spacer(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(4.dp)
+                    .background(indicatorColor, RoundedCornerShape(8.dp))
+            )
+            Spacer(Modifier.width(8.dp))
             Text(
-                text = text,
-                modifier = textModifier.padding(8.dp),
+                text = title,
                 maxLines = 2,
-                style = textStyle,
             )
         }
     }
 }
-

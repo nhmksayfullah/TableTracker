@@ -1,7 +1,5 @@
-package app.tabletracker.feature_menu.ui.section
+package app.tabletracker.feature_menu.ui.screen.category
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +16,7 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,13 +30,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import app.tabletracker.R
+import app.tabletracker.core.ui.component.CategoryComponent
 import app.tabletracker.core.ui.component.FoodBlockComponent
+import app.tabletracker.core.ui.component.MenuItemComponent
 import app.tabletracker.feature_menu.data.entity.Category
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ShowCategoriesRightSection(
     categories: List<Category>,
@@ -66,6 +66,7 @@ fun ShowCategoriesRightSection(
     }
 
     Scaffold(
+        modifier = modifier,
         floatingActionButton = {
             Row {
                 FloatingActionButton(
@@ -76,7 +77,9 @@ fun ShowCategoriesRightSection(
                         } else {
                             canDrag = true
                         }
-                    }
+                    },
+                    contentColor = MaterialTheme.colorScheme.primary,
+                    containerColor = MaterialTheme.colorScheme.onPrimary
                 ) {
                     if (canDrag) {
                         Icon(
@@ -92,7 +95,9 @@ fun ShowCategoriesRightSection(
                 }
                 Spacer(modifier = Modifier.width(4.dp))
                 ExtendedFloatingActionButton(
-                    onClick = onAddNewCategory
+                    onClick = onAddNewCategory,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
                     Text("New Category")
                 }
@@ -110,20 +115,20 @@ fun ShowCategoriesRightSection(
             items(updatedCategories, key = { it.id }) { category ->
                 ReorderableItem(
                     reorderableLazyGridState,
-                    key = category.id
+                    key = category.id,
+                    modifier = Modifier
+                        .padding(2.dp)
                 ) {
-                    FoodBlockComponent(
+                    CategoryComponent(
                         text = category.name,
-                        modifier = modifier
-                            .padding(4.dp)
-                            .combinedClickable(
-                                onClick = {
-                                    onCategoryClicked(category)
-                                },
-                                onDoubleClick = {
-                                    onCategoryDoubleClicked(category)
-                                }
-                            )
+                        onClick = {
+                            onCategoryClicked(category)
+                        },
+                        onDoubleClick = {
+                            onCategoryDoubleClicked(category)
+                        },
+                        containerColor = category.color
+
                     )
                     if (canDrag) {
                         IconButton(
@@ -171,6 +176,7 @@ fun ShowMenuItemsRightSection(
     }
 
     Scaffold(
+        modifier = modifier,
         floatingActionButton = {
             Row {
                 FloatingActionButton(
@@ -218,10 +224,10 @@ fun ShowMenuItemsRightSection(
                     reorderableLazyGridState,
                     key = menuItem.id
                 ) {
-                    FoodBlockComponent(
-                        text = menuItem.name,
-                        modifier = modifier
-                            .padding(4.dp)
+                    MenuItemComponent(
+                        title = menuItem.name,
+                        modifier = Modifier
+                            .padding(2.dp)
                     ) {
                         onMenuItemClicked(menuItem)
                     }
