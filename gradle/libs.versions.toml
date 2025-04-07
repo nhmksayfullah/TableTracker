@@ -1,5 +1,5 @@
 [versions]
-agp = "8.9.0"
+agp = "8.9.1"
 coreSplashscreen = "1.0.1"
 escposThermalprinterAndroid = "3.3.0"
 kotlin = "2.1.10"
@@ -14,6 +14,7 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2025.03.00"
 navigationCompose = "2.8.9"
+qrKit = "3.0.6"
 serialization = "1.7.3"
 reorderable = "2.4.2"
 roomRuntime = "2.6.1"
@@ -45,6 +46,7 @@ androidx-material3-window-size = { group = "androidx.compose.material3", name = 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 moshi-kotlin-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshiKotlinCodegen" }
+qr-kit = { module = "network.chaintech:qr-kit", version.ref = "qrKit" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 

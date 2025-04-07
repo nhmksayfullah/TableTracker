@@ -27,7 +27,7 @@ fun BrandingSection(
                 .size(70.dp)
         )
         Text(
-            text = "TableTracker",
+            text = "Doddle POS",
             style = MaterialTheme.typography.headlineMedium
         )
     }

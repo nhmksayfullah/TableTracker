@@ -23,21 +23,21 @@ fun OverViewSection(
             .fillMaxWidth()
     ) {
         OverViewComponent(
-            title = "Total Orders",
+            title = "Total orders",
             value = "45",
             icon = R.drawable.outline_shopping_bag_24,
             iconTint = MaterialColor.Amber.color
         )
         OverViewComponent(
-            title = "Pending Orders",
+            title = "Pending orders",
             value = "8",
-            icon = R.drawable.outline_schedule_24,
+            icon = R.drawable.round_pending_actions_24,
             iconTint = MaterialColor.Blue.color
         )
         OverViewComponent(
-            title = "Total Transactions",
-            value = "£$totalTransaction",
-            icon = R.drawable.outline_wallet_24,
+            title = "Avg prep time",
+            value = "~23 mins",
+            icon = R.drawable.outline_schedule_24,
             iconTint = MaterialColor.Green.color
         )
     }

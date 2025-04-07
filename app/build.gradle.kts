@@ -18,11 +18,9 @@ android {
         minSdk = 24
         targetSdk = 34
 
-        
-//        versionCode = 18
-//        versionName = "1.1.7"
-        versionCode = 21
-        versionName = "1.2.0"
+
+        versionCode = 22
+        versionName = "1.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -104,5 +102,7 @@ dependencies {
     implementation(libs.reorderable)
 
     implementation(libs.kotlinx.datetime)
+
+    implementation(libs.qr.kit)
 
 }
