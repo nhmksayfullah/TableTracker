@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.TableTracker.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#FBFCFF</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>

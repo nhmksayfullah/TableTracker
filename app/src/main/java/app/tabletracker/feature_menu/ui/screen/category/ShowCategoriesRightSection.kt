@@ -31,10 +31,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import app.tabletracker.R
 import app.tabletracker.core.ui.component.CategoryComponent
-import app.tabletracker.core.ui.component.FoodBlockComponent
-import app.tabletracker.core.ui.component.MenuItemComponent
 import app.tabletracker.feature_menu.data.entity.Category
-import app.tabletracker.feature_menu.data.entity.MenuItem
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 

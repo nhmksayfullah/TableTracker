@@ -105,14 +105,16 @@ fun CategoryScreen(
                         scope.launch {
                             drawerState.close()
                             editMenuViewModel.onEvent(EditMenuUiEvent.SetSelectedCategory(it))
-                            editMenuViewModel.onEvent(EditMenuUiEvent.SetSelectedMenuItem(
-                                MenuItem(
-                                    name = "",
-                                    abbreviation = "",
-                                    categoryId = it.id,
-                                    prices = mapOf(),
+                            editMenuViewModel.onEvent(
+                                EditMenuUiEvent.SetSelectedMenuItem(
+                                    MenuItem(
+                                        name = "",
+                                        abbreviation = "",
+                                        categoryId = it.id,
+                                        prices = mapOf(),
+                                    )
                                 )
-                            ))
+                            )
                             onNavigateToMenuItems()
                         }
                     }

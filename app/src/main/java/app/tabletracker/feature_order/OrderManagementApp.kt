@@ -11,7 +11,6 @@ import app.tabletracker.core.navigation.Screen
 import app.tabletracker.feature_order.ui.screen.runningorder.RunningOrderScreen
 import app.tabletracker.feature_order.ui.screen.startorder.StartOrderScreen
 import app.tabletracker.feature_order.ui.screen.takeorder.TakeOrderScreen
-import app.tabletracker.feature_order.ui.state.OrderUiEvent
 import app.tabletracker.feature_order.ui.state.OrderViewModel
 import app.tabletracker.util.accessSharedViewModel
 import kotlinx.serialization.Serializable
@@ -46,6 +45,7 @@ fun NavGraphBuilder.orderManagementNavGraph(
             val orderViewModel = it.accessSharedViewModel<OrderViewModel>(navController)
             StartOrderScreen(
                 orderViewModel = orderViewModel,
+                onConnectWithCompanion = {}
             ) {
                 navController.navigate(Screen.TakeOrderScreen)
             }

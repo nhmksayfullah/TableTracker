@@ -41,7 +41,7 @@ fun MenuItemComponent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
-                .clickable{
+                .clickable {
                     onClick()
                 }
                 .padding(8.dp),

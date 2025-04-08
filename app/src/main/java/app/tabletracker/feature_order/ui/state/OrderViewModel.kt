@@ -147,7 +147,6 @@ class OrderViewModel(
         }
 
 
-
     }
 
     private fun removeItemFromOrder(orderItem: OrderItem) {

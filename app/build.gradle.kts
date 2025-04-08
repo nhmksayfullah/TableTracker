@@ -96,7 +96,7 @@ dependencies {
     implementation(libs.moshi)
     ksp(libs.moshi.kotlin.codegen)
 
-    
+
     implementation(libs.escpos.thermalprinter.android)
 
     implementation(libs.reorderable)

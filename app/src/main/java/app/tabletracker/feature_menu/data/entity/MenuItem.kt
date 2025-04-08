@@ -1,6 +1,5 @@
 package app.tabletracker.feature_menu.data.entity
 
-import android.view.Menu
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -44,7 +43,6 @@ data class MenuItem(
         }
     }
 }
-
 
 
 fun MenuItem.withUpdatedPrice(orderType: OrderType, newPrice: Float): MenuItem {

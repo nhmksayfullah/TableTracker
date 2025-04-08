@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Objects
 
 class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel() {
     var uiState = MutableStateFlow(EditMenuUiState())
@@ -33,6 +32,7 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
                     )
                 }
             }
+
             is EditMenuUiEvent.SetSelectedMenuItem -> {
                 uiState.update {
                     it.copy(

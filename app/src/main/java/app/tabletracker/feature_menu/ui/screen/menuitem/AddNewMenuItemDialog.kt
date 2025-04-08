@@ -15,15 +15,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_menu.util.DatabaseOperation
 import app.tabletracker.feature_order.data.entity.OrderType
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun AddNewMenuItemDialog(
@@ -36,11 +33,13 @@ fun AddNewMenuItemDialog(
     onUpdatedClick: (newPrices: Map<OrderType, Float>) -> Unit,
 ) {
     var priceMap by remember {
-        mutableStateOf(mapOf<OrderType,String>(
-            OrderType.DineIn to "",
-            OrderType.TakeOut to "",
-            OrderType.Delivery to ""
-        ))
+        mutableStateOf(
+            mapOf<OrderType, String>(
+                OrderType.DineIn to "",
+                OrderType.TakeOut to "",
+                OrderType.Delivery to ""
+            )
+        )
     }
 
     LaunchedEffect(menuItem.prices) {
@@ -55,7 +54,7 @@ fun AddNewMenuItemDialog(
         modifier = modifier,
         bottomBar = {
             Column {
-                when(databaseOperation) {
+                when (databaseOperation) {
                     DatabaseOperation.Add -> {
                         Button(
                             modifier = Modifier
@@ -78,6 +77,7 @@ fun AddNewMenuItemDialog(
                             Text(text = "Create")
                         }
                     }
+
                     DatabaseOperation.Edit -> {
                         Row {
                             Button(
@@ -119,10 +119,10 @@ fun AddNewMenuItemDialog(
                             }
                         }
                     }
+
                     DatabaseOperation.Delete -> {}
                     DatabaseOperation.Read -> {}
                 }
-
 
 
             }
@@ -164,7 +164,7 @@ fun AddNewMenuItemDialog(
                         }
                     },
                     label = {
-                        Text(text = "${orderType.label } price")
+                        Text(text = "${orderType.label} price")
                     },
                     modifier = Modifier
                         .fillMaxWidth()

@@ -1,6 +1,5 @@
 package app.tabletracker.feature_menu.ui.screen.menuitem
 
-import android.util.Log
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -18,7 +17,6 @@ import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_menu.ui.EditMenuUiEvent
 import app.tabletracker.feature_menu.ui.EditMenuViewModel
 import app.tabletracker.feature_menu.util.DatabaseOperation
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -61,9 +59,11 @@ fun MenuItemScreen(
                 onAddNewMenuItem = {
                     uiState.selectedCategory?.let {
                         databaseOperation = DatabaseOperation.Add
-                        editMenuViewModel.onEvent(EditMenuUiEvent.SetSelectedMenuItem(
-                            MenuItem.empty(categoryId = it.id)
-                        ))
+                        editMenuViewModel.onEvent(
+                            EditMenuUiEvent.SetSelectedMenuItem(
+                                MenuItem.empty(categoryId = it.id)
+                            )
+                        )
                         scope.launch {
                             drawerState.open()
                         }
@@ -86,7 +86,12 @@ fun MenuItemScreen(
                             editMenuViewModel.onEvent(EditMenuUiEvent.UpdateSelectedMenuItem(it))
                         },
                         onCreateClick = { newPrices ->
-                            editMenuViewModel.onEvent(EditMenuUiEvent.UpsertMenuItem(menuItem, newPrices))
+                            editMenuViewModel.onEvent(
+                                EditMenuUiEvent.UpsertMenuItem(
+                                    menuItem,
+                                    newPrices
+                                )
+                            )
                             scope.launch {
                                 drawerState.close()
                             }
@@ -100,7 +105,12 @@ fun MenuItemScreen(
                             databaseOperation = DatabaseOperation.Read
                         },
                         onUpdatedClick = { newPrices ->
-                            editMenuViewModel.onEvent(EditMenuUiEvent.UpsertMenuItem(menuItem, newPrices))
+                            editMenuViewModel.onEvent(
+                                EditMenuUiEvent.UpsertMenuItem(
+                                    menuItem,
+                                    newPrices
+                                )
+                            )
                             scope.launch {
                                 drawerState.close()
                             }

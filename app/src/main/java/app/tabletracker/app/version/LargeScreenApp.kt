@@ -25,6 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import app.tabletracker.app.ui.AppUiState
+import app.tabletracker.auth.AuthenticationApp
 import app.tabletracker.auth.authenticationNavGraph
 import app.tabletracker.core.navigation.Screen
 import app.tabletracker.core.navigation.SetupBottomNavigationBar
@@ -40,7 +41,7 @@ fun LargeScreenApp(
 ) {
 
     val navController = rememberNavController()
-    var showBottomBar by remember { mutableStateOf(true) }
+    var showBottomBar by remember { mutableStateOf(false) }
 
     Scaffold(
         bottomBar = {
@@ -48,6 +49,7 @@ fun LargeScreenApp(
             navBackStackEntry?.destination?.let {
                 showBottomBar = !it.hasRoute(Screen.TakeOrderScreen::class)
             }
+            showBottomBar = appUiState.hasInventory
             AnimatedVisibility(
                 visible = showBottomBar,
                 enter = slideInVertically(
@@ -133,7 +135,11 @@ fun LargeScreenApp(
                                     }
                                 }
                             } else {
-
+                                navController.navigate(AuthenticationApp) {
+                                    popUpTo(Screen.LoadingScreen) {
+                                        inclusive = true
+                                    }
+                                }
                             }
                         }
                     }

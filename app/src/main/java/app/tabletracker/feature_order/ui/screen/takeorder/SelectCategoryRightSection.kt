@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.component.CategoryComponent
-import app.tabletracker.core.ui.component.FoodBlockComponent
 import app.tabletracker.feature_menu.data.entity.Category
 import app.tabletracker.feature_menu.data.entity.CategoryWithMenuItems
 
