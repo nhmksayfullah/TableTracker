@@ -1,4 +1,4 @@
-package app.tabletracker.feature_companion.connection
+package app.tabletracker.feature_companion.model
 
 /**
  * Represents the current state of a server.
