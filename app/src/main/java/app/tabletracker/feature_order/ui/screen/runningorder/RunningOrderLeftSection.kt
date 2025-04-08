@@ -29,13 +29,13 @@ fun RunningOrderLeftSection(
                     order = it,
                     onCustomizeOrder = onCustomizeCurrentOrder,
                     onPrintReceipt = {
-                        val printerManager = PrinterManager(context as Activity)
+                        val printerManager = PrinterManager(context)
                         val receiptGenerator =
                             ReceiptGenerator(orderUiState.restaurantInfo, orderUiState.currentOrder)
                         printerManager.print(receiptGenerator.generateReceipt())
                     },
                     onPrintKitchenCopy = {
-                        val printerManager = PrinterManager(context as Activity)
+                        val printerManager = PrinterManager(context)
                         val receiptGenerator =
                             ReceiptGenerator(orderUiState.restaurantInfo, orderUiState.currentOrder)
                         printerManager.print(

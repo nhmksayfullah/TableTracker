@@ -72,7 +72,7 @@ fun CompleteOrderDrawer(
                                         it.orderItemStatus == OrderItemStatus.Added &&
                                                 it.menuItem.isKitchenCategory
                                     } != null) {
-                                    val printerManager = PrinterManager(context as Activity)
+                                    val printerManager = PrinterManager(context)
                                     val receiptGenerator =
                                         ReceiptGenerator(
                                             orderUiState.restaurantInfo,
@@ -98,7 +98,7 @@ fun CompleteOrderDrawer(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
                             if (orderUiState.currentOrder != null) {
-                                val printerManager = PrinterManager(context as Activity)
+                                val printerManager = PrinterManager(context)
                                 val receiptGenerator =
                                     ReceiptGenerator(
                                         orderUiState.restaurantInfo,

@@ -1,25 +1,37 @@
 package app.tabletracker.util
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.viewmodel.CreationExtras
 import app.tabletracker.app.config.TableTrackerContainer
 import app.tabletracker.app.config.TableTrackerDataContainer
 import app.tabletracker.app.data.local.TableTrackerDatabase
+import app.tabletracker.feature_companion.server.SocketServerService
 
 class TableTracker : Application() {
 
 
     lateinit var container: TableTrackerContainer
-    lateinit var appViewModelStore: ViewModelStore
 
     override fun onCreate() {
         super.onCreate()
-        appViewModelStore = ViewModelStore()
 
         val database: TableTrackerDatabase by lazy { TableTrackerDatabase.createDatabase(this) }
         container = TableTrackerDataContainer(database)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                SocketServerService.NOTIFICATION_CHANNEL,
+                "Server Running",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
 
     }
 

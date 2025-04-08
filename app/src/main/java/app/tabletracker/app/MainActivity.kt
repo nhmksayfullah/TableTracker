@@ -2,10 +2,12 @@ package app.tabletracker.app
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.app.ActivityCompat
 import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.theme.TableTrackerTheme
 
@@ -35,6 +37,14 @@ class MainActivity : ComponentActivity() {
             )
         }
         actionBar?.hide()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                0
+            )
+        }
         setContent {
             TableTrackerTheme {
                 LaunchTableTracker(this)

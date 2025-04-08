@@ -1,7 +1,6 @@
 package app.tabletracker.feature_printing.domain
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -17,7 +16,7 @@ import com.dantsu.escposprinter.connection.usb.UsbConnection
 import com.dantsu.escposprinter.connection.usb.UsbPrintersConnections
 
 
-class PrinterManager(private val activity: Activity) {
+class PrinterManager(private val context: Context) {
     companion object {
         private const val ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION"
     }
@@ -37,7 +36,7 @@ class PrinterManager(private val activity: Activity) {
                 if (ACTION_USB_PERMISSION == action) {
                     synchronized(this) {
                         val usbManager: UsbManager? =
-                            activity.getSystemService(Context.USB_SERVICE) as UsbManager?
+                            context.getSystemService(Context.USB_SERVICE) as UsbManager?
 
                         @Suppress("DEPRECATION")
                         val usbDevice: UsbDevice? =
@@ -58,7 +57,7 @@ class PrinterManager(private val activity: Activity) {
 
                                 clearAbortBroadcast()
                                 abortBroadcast()
-                                activity.unregisterReceiver(this)
+                                context.unregisterReceiver(this)
                             }
                         }
                     }
@@ -70,17 +69,17 @@ class PrinterManager(private val activity: Activity) {
 
     @SuppressLint("NewApi")
     private fun printUsb(usbReceiver: BroadcastReceiver) {
-        val usbConnection: UsbConnection? = UsbPrintersConnections.selectFirstConnected(activity)
-        val usbManager: UsbManager? = activity.getSystemService(Context.USB_SERVICE) as UsbManager?
+        val usbConnection: UsbConnection? = UsbPrintersConnections.selectFirstConnected(context)
+        val usbManager: UsbManager? = context.getSystemService(Context.USB_SERVICE) as UsbManager?
         if (usbConnection != null && usbManager != null) {
             val permissionIntent = PendingIntent.getBroadcast(
-                activity,
+                context,
                 0,
                 Intent(ACTION_USB_PERMISSION),
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0
             )
             val filter = IntentFilter(ACTION_USB_PERMISSION)
-            activity.registerReceiver(usbReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            context.registerReceiver(usbReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
             usbManager.requestPermission(usbConnection.device, permissionIntent)
         }
     }
