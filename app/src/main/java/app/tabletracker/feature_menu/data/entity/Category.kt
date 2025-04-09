@@ -4,7 +4,9 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import app.tabletracker.util.generateInstantTime
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity
 data class Category(
     @PrimaryKey(autoGenerate = true)

@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import app.tabletracker.app.config.TableTrackerContainer
 import app.tabletracker.app.config.TableTrackerDataContainer
 import app.tabletracker.app.data.local.TableTrackerDatabase
+import app.tabletracker.feature_companion.client.SocketClientService
 import app.tabletracker.feature_companion.server.SocketServerService
 
 class TableTracker : Application() {
@@ -34,19 +35,26 @@ class TableTracker : Application() {
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
+            val serverChannel = NotificationChannel(
                 SocketServerService.NOTIFICATION_CHANNEL,
                 "Server Running",
                 NotificationManager.IMPORTANCE_HIGH
             )
+            val clientChannel = NotificationChannel(
+                SocketClientService.NOTIFICATION_CHANNEL,
+                "Client Running",
+                NotificationManager.IMPORTANCE_HIGH
+            )
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+            notificationManager.createNotificationChannel(serverChannel)
+            notificationManager.createNotificationChannel(clientChannel)
         }
 
     }
 
 
 }
+
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     name = TableTracker.DEVICE_TYPE_PREFERENCE_NAME
 )

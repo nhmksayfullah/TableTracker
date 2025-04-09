@@ -36,15 +36,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import app.tabletracker.R
-import app.tabletracker.feature_companion.model.ServerAction
-import app.tabletracker.feature_companion.server.ACTION_CLIENT_CONNECTED
-import app.tabletracker.feature_companion.server.ACTION_REQUEST_SERVER_ADDRESS
-import app.tabletracker.feature_companion.server.ACTION_SERVER_ADDRESS_AVAILABLE
-import app.tabletracker.feature_companion.server.EXTRA_SERVER_ADDRESS
+import app.tabletracker.feature_companion.model.ACTION_CLIENT_CONNECTED
+import app.tabletracker.feature_companion.model.ACTION_REQUEST_SERVER_ADDRESS
+import app.tabletracker.feature_companion.model.ACTION_SERVER_ADDRESS_AVAILABLE
+import app.tabletracker.feature_companion.model.EXTRA_SERVER_ADDRESS
+import app.tabletracker.feature_companion.server.ServerAction
 import app.tabletracker.feature_companion.server.SocketServerService
 import app.tabletracker.theme.MaterialColor
 import qrgenerator.qrkitpainter.rememberQrKitPainter
-import qrgenerator.qrkitpainter.text
 
 @Composable
 fun CompanionSection(modifier: Modifier = Modifier) {
@@ -52,8 +51,6 @@ fun CompanionSection(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     var qrCodeDialogVisible by remember { mutableStateOf(false) }
-
-
     var serverAddress by remember { mutableStateOf("") }
 
     val receiver = remember {

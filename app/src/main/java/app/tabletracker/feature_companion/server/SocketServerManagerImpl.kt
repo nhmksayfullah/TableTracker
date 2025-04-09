@@ -1,8 +1,6 @@
 package app.tabletracker.feature_companion.server
 
 import android.content.Context
-import android.content.Intent
-import android.util.Log
 import app.tabletracker.feature_companion.model.ClientRequest
 import app.tabletracker.util.getLocalIpAddress
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +16,7 @@ import java.net.Socket
 class SocketServerManagerImpl(
     private val context: Context,
     private val onRequestReceived: (request: ClientRequest) -> Unit,
-): SocketServerManager {
+) : SocketServerManager {
 
     private var serverSocket: ServerSocket? = null
     private val clients = mutableMapOf<String, Socket>()
@@ -45,18 +43,21 @@ class SocketServerManagerImpl(
             while (serverState.value.isRunning) {
                 val clientSocket = try {
                     serverSocket?.accept()
-                } catch (e: Exception) {null}
+                } catch (e: Exception) {
+                    null
+                }
                 clientSocket?.let { socket ->
                     CoroutineScope(Dispatchers.IO).launch {
                         handleClient(socket)
                     }
                 }
             }
-        } catch (e: Exception) {}
-        finally {
+        } catch (e: Exception) {
+        } finally {
             stopServer()
         }
     }
+
     private fun handleClient(socket: Socket) {
         val clientId = "${socket.inetAddress.hostAddress}:${socket.port}"
         clients[clientId] = socket
@@ -72,13 +73,15 @@ class SocketServerManagerImpl(
             while (serverState.value.isRunning) {
                 val data = try {
                     reader.readLine()
-                } catch (e: Exception) {null}
+                } catch (e: Exception) {
+                    null
+                }
                 if (data == null) break
                 val request = Json.decodeFromString(ClientRequest.serializer(), data)
                 onRequestReceived(request)
             }
-        } catch (e: Exception) {}
-        finally {
+        } catch (e: Exception) {
+        } finally {
             disconnectClient(clientId)
         }
     }
@@ -98,7 +101,8 @@ class SocketServerManagerImpl(
                     connectedClients = emptyList()
                 )
             }
-        } catch (e: Exception) {}
+        } catch (e: Exception) {
+        }
     }
 
     override suspend fun transmitDataToClient(clientId: String, data: String) {
@@ -108,7 +112,8 @@ class SocketServerManagerImpl(
                 val writer = it.outputStream.bufferedWriter()
                 writer.write(data + "\n")
                 writer.flush()
-            } catch (e: Exception) {}
+            } catch (e: Exception) {
+            }
         }
     }
 

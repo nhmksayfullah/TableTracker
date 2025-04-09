@@ -13,13 +13,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.auth.ui.AuthViewModel
 
 @Composable
@@ -28,6 +33,33 @@ fun RegisterRestaurantScreen(
     onRegisterClick: () -> Unit
 ) {
     val authUiState by authViewModel.uiState.collectAsState()
+
+    var name by remember {
+        mutableStateOf("")
+    }
+    var address by remember {
+        mutableStateOf("")
+    }
+    var contactNumber by remember {
+        mutableStateOf("")
+    }
+    var vatNumber by remember {
+        mutableStateOf("")
+    }
+    var website by remember {
+        mutableStateOf("")
+    }
+    LaunchedEffect(authUiState.restaurant) {
+        if (authUiState.restaurant != null) {
+            name = authUiState.restaurant?.name ?: ""
+            address = authUiState.restaurant?.address ?: ""
+            contactNumber = authUiState.restaurant?.contactNumber ?: ""
+            vatNumber = authUiState.restaurant?.vatNumber ?: ""
+            website = authUiState.restaurant?.website ?: ""
+        }
+    }
+
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -41,9 +73,9 @@ fun RegisterRestaurantScreen(
         ) {
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = authUiState.restaurant.name,
+                value = name,
                 onValueChange = {
-                    authViewModel.updateUiState(authUiState.restaurant.copy(name = it))
+                    name = it
                 },
                 label = {
                     Text(text = "Restaurant Name")
@@ -60,9 +92,9 @@ fun RegisterRestaurantScreen(
             Spacer(modifier = Modifier.height(16.dp))
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = authUiState.restaurant.address,
+                value = address,
                 onValueChange = {
-                    authViewModel.updateUiState(authUiState.restaurant.copy(address = it))
+                    address = it
                 },
                 label = {
                     Text(text = "Address")
@@ -79,9 +111,9 @@ fun RegisterRestaurantScreen(
             Spacer(modifier = Modifier.height(16.dp))
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = authUiState.restaurant.contactNumber,
+                value = contactNumber,
                 onValueChange = {
-                    authViewModel.updateUiState(authUiState.restaurant.copy(contactNumber = it))
+                    contactNumber = it
                 },
                 label = {
                     Text(text = "Contact Number")
@@ -96,33 +128,31 @@ fun RegisterRestaurantScreen(
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))
-            authUiState.restaurant.website?.let {
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = it,
-                    onValueChange = {
-                        authViewModel.updateUiState(authUiState.restaurant.copy(website = it))
-                    },
-                    label = {
-                        Text(text = "Website")
-                    },
-                    placeholder = {
-                        Text(text = "www.madras-spice.uk")
-                    },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Next,
-                        keyboardType = KeyboardType.Text
-                    )
+            TextField(
+                modifier = Modifier.fillMaxWidth(),
+                value = website,
+                onValueChange = {
+                    website = it
+                },
+                label = {
+                    Text(text = "Website")
+                },
+                placeholder = {
+                    Text(text = "www.madras-spice.uk")
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Text
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
 
             TextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = authUiState.restaurant.vatNumber,
+                value = vatNumber,
                 onValueChange = {
-                    authViewModel.updateUiState(authUiState.restaurant.copy(vatNumber = it))
+                    vatNumber = it
                 },
                 label = {
                     Text(text = "VAT Number")
@@ -140,6 +170,16 @@ fun RegisterRestaurantScreen(
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
+                    authViewModel.updateUiState(
+                        restaurant = Restaurant(
+                            name = name,
+                            address = address,
+                            contactNumber = contactNumber,
+                            vatNumber = vatNumber,
+                            website = website,
+                            licence = ""
+                        )
+                    )
                     onRegisterClick()
                 }
             ) {

@@ -7,6 +7,4 @@ interface SocketClientManager {
     fun disconnectFromServer()
     suspend fun transmitDataToServer(data: String)
     fun observeClientState(): StateFlow<ClientState>
-
-
 }

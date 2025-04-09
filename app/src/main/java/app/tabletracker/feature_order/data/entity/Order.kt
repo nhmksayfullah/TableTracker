@@ -6,9 +6,11 @@ import androidx.room.PrimaryKey
 import app.tabletracker.feature_customer.data.model.Customer
 import app.tabletracker.util.generateInstantTime
 import app.tabletracker.util.generateUniqueId
+import kotlinx.serialization.Serializable
 
 
 // The receipt order is: Condiment, Starters, Main course, side dishes, Extras
+@Serializable
 @Entity
 data class Order(
     @PrimaryKey(autoGenerate = false)

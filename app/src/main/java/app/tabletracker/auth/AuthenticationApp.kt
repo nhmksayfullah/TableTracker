@@ -52,8 +52,9 @@ fun NavGraphBuilder.authenticationNavGraph(
         }
         composable<Screen.ScanQrCodeScreen> {
             ScanQrCodeScreen(
+                authViewModel = it.accessSharedViewModel<AuthViewModel>(navController),
                 onScanQrCode = {
-                    val (_, _) = it.split(":")
+                    navController.navigate(Screen.SyncRestaurantInfoScreen)
                 }
             )
         }
@@ -61,6 +62,7 @@ fun NavGraphBuilder.authenticationNavGraph(
 
             SyncRestaurantInfoScreen(
                 authViewModel = it.accessSharedViewModel<AuthViewModel>(navController),
+                onGetStarted = onRegistrationSuccessful
             )
         }
     }

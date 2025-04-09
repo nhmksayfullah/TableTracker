@@ -1,6 +1,5 @@
 package app.tabletracker.feature_order.ui.screen.runningorder
 
-import android.app.Activity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding

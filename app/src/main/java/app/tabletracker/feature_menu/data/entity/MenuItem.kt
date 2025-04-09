@@ -8,7 +8,9 @@ import app.tabletracker.feature_order.data.entity.OrderType
 import app.tabletracker.util.generateInstantTime
 import app.tabletracker.util.generateUniqueId
 import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
+@Serializable
 @JsonClass(generateAdapter = true)
 @Entity
 data class MenuItem(

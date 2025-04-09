@@ -7,10 +7,16 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import app.tabletracker.R
+import app.tabletracker.feature_companion.model.ACTION_CLIENT_CONNECTED
+import app.tabletracker.feature_companion.model.ACTION_REQUEST_SERVER_ADDRESS
+import app.tabletracker.feature_companion.model.ACTION_SERVER_ADDRESS_AVAILABLE
 import app.tabletracker.feature_companion.model.ClientRequest
-import app.tabletracker.feature_companion.model.ServerAction
+import app.tabletracker.feature_companion.model.EXTRA_SERVER_ADDRESS
+import app.tabletracker.feature_companion.model.ServerResponse
+import app.tabletracker.feature_companion.server.ServerAction
 import app.tabletracker.feature_order.domain.repository.OrderRepository
 import app.tabletracker.feature_printing.domain.PrinterManager
 import app.tabletracker.util.TableTracker
@@ -24,7 +30,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class SocketServerService: Service() {
+class SocketServerService : Service() {
 
     private lateinit var socketServerManager: SocketServerManager
     private lateinit var orderRepository: OrderRepository
@@ -53,10 +59,11 @@ class SocketServerService: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        when(intent?.action) {
+        when (intent?.action) {
             ServerAction.Start.toString() -> {
                 startService()
             }
+
             ServerAction.Stop.toString() -> {
                 CoroutineScope(Dispatchers.IO).launch {
                     socketServerManager.stopServer()
@@ -66,6 +73,7 @@ class SocketServerService: Service() {
         }
         return START_STICKY
     }
+
     private fun startService() {
         CoroutineScope(Dispatchers.IO).launch {
             socketServerManager.startServer()
@@ -92,6 +100,7 @@ class SocketServerService: Service() {
                 putExtra(EXTRA_SERVER_ADDRESS, "${state.ipAddress}:${state.port}")
             }
             sendBroadcast(intent)
+            Log.d("SocketServerService", "Auto sendBroadcast: ${state.ipAddress}:${state.port}")
         }
         if (state.connectedClients.size > serverState.value.connectedClients.size) {
             val intent = Intent(ACTION_CLIENT_CONNECTED)
@@ -118,21 +127,38 @@ class SocketServerService: Service() {
     }
 
     private fun handleClientRequest(request: ClientRequest) {
-        when(request) {
+        Log.d("SocketServerService", "handleClientRequest: $request")
+        when (request) {
             ClientRequest.SetupRestaurant -> {
-                orderRepository.readRestaurantInfo().onEach {restaurantInfo ->
-                    val responseJson = Json.encodeToString(restaurantInfo)
-                    TODO("Send response to client")
+                orderRepository.readRestaurantInfo().onEach { restaurantInfo ->
+                    orderRepository.readRestaurantExtra(restaurantInfo.id).onEach { restaurantExtra ->
+                        val response = ServerResponse.RestaurantInfo(restaurantInfo, restaurantExtra)
+                        val responseJson = Json.encodeToString(ServerResponse.serializer(), response)
+                        socketServerManager.transmitDataToClient(
+                            serverState.value.connectedClients.first(),
+                            responseJson
+                        )
+                    }.launchIn(CoroutineScope(Dispatchers.IO))
                 }.launchIn(CoroutineScope(Dispatchers.IO))
             }
+
             ClientRequest.SyncMenu -> {
                 orderRepository.readAllCategoriesWithMenuItems().onEach { menu ->
-                    val responseJson = Json.encodeToString(menu)
-                    TODO("Send response to client")
+                    val response = ServerResponse.Menu(menu)
+                    val responseJson = Json.encodeToString(ServerResponse.serializer(), response)
+                    socketServerManager.transmitDataToClient(
+                        serverState.value.connectedClients.first(),
+                        responseJson
+                    )
                 }.launchIn(CoroutineScope(Dispatchers.IO))
             }
-            is ClientRequest.IncomingOrder -> TODO()
-            is ClientRequest.SyncOrder -> TODO()
+
+            is ClientRequest.IncomingOrder -> {
+
+            }
+            is ClientRequest.SyncOrder -> {
+
+            }
         }
     }
 
@@ -145,6 +171,7 @@ class SocketServerService: Service() {
                     putExtra(EXTRA_SERVER_ADDRESS, address)
                 }
                 sendBroadcast(reply)
+                Log.d("SocketServerService", "Upon request: onReceive: $address")
             }
         }
     }
