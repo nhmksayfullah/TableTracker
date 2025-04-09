@@ -1,5 +1,6 @@
 package app.tabletracker.feature_order.ui.state
 
+import app.tabletracker.auth.data.model.DeviceType
 import app.tabletracker.auth.data.model.Restaurant
 import app.tabletracker.common.data.RestaurantExtra
 import app.tabletracker.feature_menu.data.entity.CategoryWithMenuItems

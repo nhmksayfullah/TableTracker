@@ -1,9 +1,12 @@
 package app.tabletracker.app.config
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import app.tabletracker.app.data.local.TableTrackerDatabase
 import app.tabletracker.app.data.repository.ApplicationRoomRepository
 import app.tabletracker.app.domain.repository.ApplicationRepository
 import app.tabletracker.auth.data.repository.AuthRoomRepository
+import app.tabletracker.auth.data.repository.DevicePreferencesRepository
 import app.tabletracker.auth.domain.repository.AuthRepository
 import app.tabletracker.feature_customer.data.repository.CustomerRoomRepository
 import app.tabletracker.feature_customer.domain.repository.CustomerRepository
@@ -21,9 +24,13 @@ interface TableTrackerContainer {
     val authRepository: AuthRepository
     val settingsRepository: SettingsRepository
     val customerRepository: CustomerRepository
+    val deviceTypeRepository: DevicePreferencesRepository
 }
 
-class TableTrackerDataContainer(database: TableTrackerDatabase) : TableTrackerContainer {
+class TableTrackerDataContainer(
+    private val database: TableTrackerDatabase,
+    private val dataStore: DataStore<Preferences>
+) : TableTrackerContainer {
     override val applicationRepository: ApplicationRepository by lazy {
         ApplicationRoomRepository(database.appDao)
     }
@@ -41,5 +48,8 @@ class TableTrackerDataContainer(database: TableTrackerDatabase) : TableTrackerCo
     }
     override val customerRepository: CustomerRepository by lazy {
         CustomerRoomRepository(database.customerDao)
+    }
+    override val deviceTypeRepository: DevicePreferencesRepository by lazy {
+        DevicePreferencesRepository(dataStore)
     }
 }

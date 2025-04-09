@@ -2,6 +2,8 @@ package app.tabletracker.feature_order.ui.state
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.tabletracker.auth.data.model.DeviceType
+import app.tabletracker.auth.data.repository.DevicePreferencesRepository
 import app.tabletracker.feature_customer.data.model.Customer
 import app.tabletracker.feature_menu.data.entity.MenuItem
 import app.tabletracker.feature_order.data.entity.Order
@@ -17,20 +19,34 @@ import app.tabletracker.util.getStartOfDay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class OrderViewModel(
-    private val orderRepo: OrderRepository
+    private val orderRepo: OrderRepository,
+    private val deviceTypeRepo: DevicePreferencesRepository
 ) : ViewModel() {
 
+    val deviceType: StateFlow<DeviceType> = deviceTypeRepo.deviceType.map {
+        it
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = DeviceType.Companion
+    )
+
     // The UI collects from this StateFlow to get its state updates
-    private var _uiState = MutableStateFlow(OrderUiState())
+    private var _uiState: MutableStateFlow<OrderUiState> = MutableStateFlow(OrderUiState())
     val uiState = _uiState.asStateFlow()
     var currentOrderJob: Job? = null
     var calculateTotalPriceJob: Job? = null

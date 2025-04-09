@@ -40,7 +40,7 @@ import app.tabletracker.settings.data.local.SettingsDao
         Customer::class,
         Discount::class
     ],
-    version = 12,
+    version = 13,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
@@ -51,7 +51,8 @@ import app.tabletracker.settings.data.local.SettingsDao
         AutoMigration(from = 8, to = 9),
         AutoMigration(from = 9, to = 10),
         AutoMigration(from = 10, to = 11),
-        AutoMigration(from = 11, to = 12)
+        AutoMigration(from = 11, to = 12),
+        AutoMigration(from = 12, to = 13),
     ]
 )
 @TypeConverters(

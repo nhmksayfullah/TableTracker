@@ -24,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -40,6 +41,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.tabletracker.R
 import app.tabletracker.core.ui.component.TextBoxComponent
 import app.tabletracker.feature_companion.model.ServerAction
@@ -55,6 +57,7 @@ import app.tabletracker.feature_order.ui.state.OrderUiEvent
 import app.tabletracker.feature_order.ui.state.OrderViewModel
 import app.tabletracker.theme.MaterialColor
 import qrgenerator.qrkitpainter.rememberQrKitPainter
+import qrgenerator.qrkitpainter.text
 
 @Composable
 fun StartOrderScreen(
@@ -66,15 +69,36 @@ fun StartOrderScreen(
 
 
     BackHandler(true) {}
-    val orderUiState by orderViewModel.uiState.collectAsState()
+    val orderUiState by orderViewModel.uiState.collectAsStateWithLifecycle()
+    val deviceType by orderViewModel.deviceType.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        BrandingSection()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom
+        ) {
+            BrandingSection()
+            Spacer(Modifier.weight(1f))
+            Button(
+                onClick = {},
+                colors = ButtonDefaults
+                    .buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+            ) {
+                Text(
+                    text = "${deviceType.name} Deive"
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(16.dp))
+
 
         val totalTransaction = calculateTotalTransaction(orderUiState.todayOrders)
         OverViewSection(

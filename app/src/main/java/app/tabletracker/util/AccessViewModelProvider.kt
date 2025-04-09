@@ -19,11 +19,15 @@ object AccessViewModelProvider {
         }
         initializer {
             OrderViewModel(
-                orderRepo = accessTableTrackerApplication().container.orderRepository
+                orderRepo = accessTableTrackerApplication().container.orderRepository,
+                deviceTypeRepo = accessTableTrackerApplication().container.deviceTypeRepository
             )
         }
         initializer {
-            AuthViewModel(repository = accessTableTrackerApplication().container.authRepository)
+            AuthViewModel(
+                authRepo = accessTableTrackerApplication().container.authRepository,
+                deviceTypeRepo = accessTableTrackerApplication().container.deviceTypeRepository
+            )
         }
         initializer {
             SettingsViewModel(repository = accessTableTrackerApplication().container.settingsRepository)

@@ -24,5 +24,7 @@ data class Order(
     @ColumnInfo(name = "discount", defaultValue = "null")
     val discount: Discount? = null,
     @ColumnInfo(name = "totalPerson", defaultValue = "null")
-    val totalPerson: Int? = null
+    val totalPerson: Int? = null,
+    @ColumnInfo(defaultValue = "'Main'")
+    val orderSource: OrderSource = OrderSource.Main
 )
