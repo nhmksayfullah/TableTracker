@@ -40,11 +40,7 @@ class SocketServerManagerImpl(
                     port = assignedPort
                 )
             }
-            val address = "$ipAddress:$assignedPort"
-            val intent = Intent(ACTION_SERVER_ADDRESS_AVAILABLE).apply {
-                putExtra(EXTRA_SERVER_ADDRESS, address)
-            }
-            context.sendBroadcast(intent)
+
 
             while (serverState.value.isRunning) {
                 val clientSocket = try {

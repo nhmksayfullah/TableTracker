@@ -43,6 +43,7 @@ import androidx.core.content.ContextCompat
 import app.tabletracker.R
 import app.tabletracker.core.ui.component.TextBoxComponent
 import app.tabletracker.feature_companion.model.ServerAction
+import app.tabletracker.feature_companion.server.ACTION_CLIENT_CONNECTED
 import app.tabletracker.feature_companion.server.ACTION_REQUEST_SERVER_ADDRESS
 import app.tabletracker.feature_companion.server.ACTION_SERVER_ADDRESS_AVAILABLE
 import app.tabletracker.feature_companion.server.EXTRA_SERVER_ADDRESS
@@ -62,49 +63,10 @@ fun StartOrderScreen(
     onConnectWithCompanion: () -> Unit,
     onCreateNewOrder: () -> Unit,
 ) {
-    val context = LocalContext.current
+
 
     BackHandler(true) {}
     val orderUiState by orderViewModel.uiState.collectAsState()
-
-    var qrCodeDialogVisible by remember { mutableStateOf(false) }
-
-
-    var serverAddress by remember { mutableStateOf("") }
-
-    val receiver = remember {
-        object : BroadcastReceiver() {
-            override fun onReceive(ctx: Context?, intent: Intent?) {
-                val address = intent?.getStringExtra(EXTRA_SERVER_ADDRESS)
-                address?.let {
-                    serverAddress = it
-                }
-            }
-        }
-    }
-    LaunchedEffect(Unit) {
-        val requestIntent = Intent(ACTION_REQUEST_SERVER_ADDRESS)
-        context.sendBroadcast(requestIntent)
-    }
-
-    DisposableEffect(Unit) {
-        val filter = IntentFilter(ACTION_SERVER_ADDRESS_AVAILABLE)
-        ContextCompat.registerReceiver(
-            context,
-            receiver,
-            filter,
-            ContextCompat.RECEIVER_NOT_EXPORTED
-        )
-        Intent(ACTION_SERVER_ADDRESS_AVAILABLE).also {
-            it.setPackage(context.packageName)
-            context.sendBroadcast(it)
-        }
-
-        onDispose {
-            context.unregisterReceiver(receiver)
-        }
-    }
-
 
     Column(
         modifier = modifier
@@ -168,77 +130,10 @@ fun StartOrderScreen(
                 .wrapContentHeight(),
             horizontalArrangement = Arrangement.End
         ) {
-            if (serverAddress.isNotEmpty()) {
-                IconButton(
-                    onClick = {
-                        qrCodeDialogVisible = true
-                    }
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_qr_code_24),
-                        contentDescription = "Show QR Code"
-                    )
-                }
-            }
-            Button(
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (serverAddress.isNotEmpty())
-                        MaterialColor.Red.color
-                    else MaterialColor.Blue.color
-                ),
-                onClick = {
-                    if (serverAddress.isNotEmpty()) {
-                        Intent(context.applicationContext, SocketServerService::class.java).also {
-                            it.action = ServerAction.Stop.toString()
-                            context.applicationContext.startService(it)
-                        }
-                        serverAddress = ""
-                        qrCodeDialogVisible = false
-                    } else {
-                        Intent(context.applicationContext, SocketServerService::class.java).also {
-                            it.action = ServerAction.Start.toString()
-                            context.applicationContext.startService(it)
-                        }
-                        qrCodeDialogVisible = true
-                    }
-                }
-            ) {
-                Text("Connect a Companion Device")
-            }
+            CompanionSection()
         }
     }
-    if (qrCodeDialogVisible) {
-        Dialog(
-            onDismissRequest = { qrCodeDialogVisible = false },
-        ) {
-            val painter = rememberQrKitPainter(data = serverAddress)
-            Surface(
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(32.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Scan from a Companion Device"
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(100.dp),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(serverAddress)
-                }
-            }
-        }
-    }
+
 
 }
 

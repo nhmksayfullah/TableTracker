@@ -50,13 +50,6 @@ class SocketServerService: Service() {
         )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(addressRequestReceiver)
-        CoroutineScope(Dispatchers.IO).launch {
-            socketServerManager.stopServer()
-        }
-    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
@@ -78,6 +71,10 @@ class SocketServerService: Service() {
             socketServerManager.startServer()
         }
         socketServerManager.observeServerState().onEach { newServerState ->
+
+            sendBroadcast(newServerState)
+            createNotification(newServerState)
+
             serverState.update {
                 it.copy(
                     isRunning = newServerState.isRunning,
@@ -86,22 +83,38 @@ class SocketServerService: Service() {
                     connectedClients = newServerState.connectedClients
                 )
             }
-            if (newServerState.isRunning) {
-                val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL)
-                    .setSmallIcon(R.drawable.logo)
-                    .setContentTitle("Connection at ${newServerState.ipAddress}:${newServerState.port}")
-                    .setContentText("Listening for new orders")
-                    .build()
-                startForeground(1, notification)
-            } else {
-                val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL)
-                    .setSmallIcon(R.drawable.logo)
-                    .setContentTitle("Connecting to Companion Device")
-                    .setContentText("Please wait...")
-                    .build()
-                startForeground(1, notification)
-            }
         }.launchIn(CoroutineScope(Dispatchers.IO))
+    }
+
+    private fun sendBroadcast(state: ServerState) {
+        if (state.ipAddress != null) {
+            val intent = Intent(ACTION_SERVER_ADDRESS_AVAILABLE).apply {
+                putExtra(EXTRA_SERVER_ADDRESS, "${state.ipAddress}:${state.port}")
+            }
+            sendBroadcast(intent)
+        }
+        if (state.connectedClients.size > serverState.value.connectedClients.size) {
+            val intent = Intent(ACTION_CLIENT_CONNECTED)
+            sendBroadcast(intent)
+        }
+    }
+
+    private fun createNotification(state: ServerState) {
+        if (state.isRunning) {
+            val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL)
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("Connection at ${state.ipAddress}:${state.port}")
+                .setContentText("Listening for new orders")
+                .build()
+            startForeground(1, notification)
+        } else {
+            val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL)
+                .setSmallIcon(R.drawable.logo)
+                .setContentTitle("Connecting to Companion Device")
+                .setContentText("Please wait...")
+                .build()
+            startForeground(1, notification)
+        }
     }
 
     private fun handleClientRequest(request: ClientRequest) {
@@ -123,6 +136,7 @@ class SocketServerService: Service() {
         }
     }
 
+
     private val addressRequestReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == ACTION_REQUEST_SERVER_ADDRESS) {
@@ -135,6 +149,13 @@ class SocketServerService: Service() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(addressRequestReceiver)
+        CoroutineScope(Dispatchers.IO).launch {
+            socketServerManager.stopServer()
+        }
+    }
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
