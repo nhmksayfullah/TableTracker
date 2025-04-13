@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -119,11 +122,13 @@ fun CompanionSection(modifier: Modifier = Modifier) {
             )
         }
     }
-    Button(
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (serverAddress.isNotEmpty())
+    FilterChip(
+        selected = true,
+        colors = FilterChipDefaults.filterChipColors(
+            selectedContainerColor = if (serverAddress.isNotEmpty())
                 MaterialColor.Red.color
-            else MaterialColor.Blue.color
+            else MaterialColor.Blue.color,
+            selectedLabelColor = Color.White
         ),
         onClick = {
             if (serverAddress.isNotEmpty()) {
@@ -140,12 +145,13 @@ fun CompanionSection(modifier: Modifier = Modifier) {
                 }
                 qrCodeDialogVisible = true
             }
+        },
+        label = {
+            Text(
+                text = if (serverAddress.isNotEmpty()) "Disconnect" else "Connect with Companion"
+            )
         }
-    ) {
-        Text(
-            text = if (serverAddress.isNotEmpty()) "Disconnect" else "Connect with Companion"
-        )
-    }
+    )
 
     if (qrCodeDialogVisible) {
         Dialog(

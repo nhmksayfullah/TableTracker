@@ -56,7 +56,7 @@ fun RunningOrderTableView(
                 modifier = Modifier
                     .size(16.dp),
                 colors = CardDefaults.cardColors().copy(
-                    containerColor = MaterialColor.Green.color
+                    containerColor = MaterialColor.Teal.color
                 )
             ) { }
             Spacer(Modifier.width(8.dp))
@@ -119,7 +119,7 @@ fun TableBoxComponent(
 ) {
     Card(
         colors = CardDefaults.cardColors().copy(
-            containerColor = if (booked) MaterialColor.PureRed.color else MaterialColor.Green.color,
+            containerColor = if (booked) MaterialColor.PureRed.color else MaterialColor.Teal.color,
             contentColor = Color.White
         ),
         modifier = Modifier

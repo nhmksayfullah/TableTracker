@@ -2,6 +2,7 @@ package app.tabletracker.core.ui.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -70,7 +71,9 @@ fun CategoryComponent(
 
             Text(
                 text = text,
-                modifier = textModifier.padding(8.dp),
+                modifier = textModifier
+                    .padding(8.dp)
+                    .basicMarquee(),
                 maxLines = 2,
                 style = textStyle,
             )

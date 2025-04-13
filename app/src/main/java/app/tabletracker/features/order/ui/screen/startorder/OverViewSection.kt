@@ -13,8 +13,9 @@ import app.tabletracker.theme.MaterialColor
 
 @Composable
 fun OverViewSection(
-    totalTransaction: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    totalOrder: Int = 0,
+    pendingOrder: Int = 0,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -24,13 +25,13 @@ fun OverViewSection(
     ) {
         OverViewComponent(
             title = "Total orders",
-            value = "45",
+            value = "$totalOrder",
             icon = R.drawable.outline_shopping_bag_24,
             iconTint = MaterialColor.Amber.color
         )
         OverViewComponent(
             title = "Pending orders",
-            value = "8",
+            value = "$pendingOrder",
             icon = R.drawable.round_pending_actions_24,
             iconTint = MaterialColor.Blue.color
         )

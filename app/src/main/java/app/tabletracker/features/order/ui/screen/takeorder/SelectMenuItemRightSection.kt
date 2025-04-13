@@ -29,7 +29,6 @@ fun SelectMenuItemRightSection(
     }
     LazyVerticalGrid(
         columns = GridCells.Adaptive(120.dp),
-        contentPadding = PaddingValues(8.dp),
         modifier = modifier
             .fillMaxSize()
     ) {

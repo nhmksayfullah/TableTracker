@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +28,7 @@ import app.tabletracker.features.order.data.entity.OrderType
 import app.tabletracker.features.order.data.entity.OrderWithOrderItems
 import app.tabletracker.features.order.ui.state.OrderUiEvent
 import app.tabletracker.features.order.ui.state.OrderViewModel
+import app.tabletracker.theme.MaterialColor
 
 @Composable
 fun StartOrderScreen(
@@ -52,25 +55,26 @@ fun StartOrderScreen(
         ) {
             BrandingSection()
             Spacer(Modifier.weight(1f))
-            Button(
+            FilterChip(
+                selected = false,
                 onClick = {},
-                colors = ButtonDefaults
-                    .buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                label = {
+                    Text(
+                        text = "${deviceType.name} Device"
                     )
-            ) {
-                Text(
-                    text = "${deviceType.name} Device"
-                )
-            }
+                }
+            )
         }
+
         Spacer(modifier = Modifier.height(16.dp))
 
-
-        val totalTransaction = calculateTotalTransaction(orderUiState.todayOrders)
         OverViewSection(
-            totalTransaction = totalTransaction
+            totalOrder = orderUiState.todayOrders.filter {
+                it.order.orderStatus == OrderStatus.Completed
+            }.size,
+            pendingOrder = orderUiState.todayOrders.filter {
+                it.order.orderStatus == OrderStatus.Running
+            }.size
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -127,17 +131,4 @@ fun StartOrderScreen(
     }
 
 
-}
-
-fun calculateTotalTransaction(orders: List<OrderWithOrderItems>): Float {
-    val completedOrders = orders.filter {
-        it.order.orderStatus == OrderStatus.Completed
-    }
-    var total = 0f
-    completedOrders.forEach {
-        total += it.order.discount?.value?.toFloatOrNull()
-            ?.let { it1 -> it.order.totalPrice - (it.order.totalPrice * it1 / 100) }
-            ?: 0f
-    }
-    return total
 }

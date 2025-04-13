@@ -47,9 +47,7 @@ fun TakeOrderScreenLeftSection(
                 .padding(paddingValues)
                 .fillMaxSize()
         ) {
-            Text(
-                text = orderUiState.currentOrder?.order?.orderNumber.toString()
-            )
+
             TabbedScreen(
                 titles = listOf("Order Details", "Customer Details")
             ) {
