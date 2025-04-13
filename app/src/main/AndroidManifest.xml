@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
-        android:name=".util.TableTracker"
+        android:name=".app.TableTrackerApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -43,10 +43,10 @@
         </activity>
 
         <service
-            android:name=".feature_companion.server.SocketServerService"
+            android:name=".features.companion.server.SocketServerService"
             android:foregroundServiceType="dataSync" />
         <service
-            android:name=".feature_companion.client.SocketClientService"
+            android:name=".features.companion.client.SocketClientService"
             android:foregroundServiceType="dataSync" />
 
     </application>

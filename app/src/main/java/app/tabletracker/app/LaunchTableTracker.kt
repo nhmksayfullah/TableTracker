@@ -20,7 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import app.tabletracker.app.ui.AppViewModel
 import app.tabletracker.app.version.LargeScreenApp
 import app.tabletracker.theme.TableTrackerTheme
-import app.tabletracker.util.AccessViewModelProvider
+import app.tabletracker.di.AccessViewModelProvider
 
 // this is the uppermost function that will launch different table tracker apps based on the window size.
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)

@@ -25,15 +25,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import app.tabletracker.app.ui.AppUiState
-import app.tabletracker.auth.AuthenticationApp
-import app.tabletracker.auth.authenticationNavGraph
-import app.tabletracker.core.navigation.Screen
-import app.tabletracker.core.navigation.SetupBottomNavigationBar
-import app.tabletracker.feature_menu.InventoryApp
-import app.tabletracker.feature_menu.inventoryNavGraph
-import app.tabletracker.feature_order.OrderManagementApp
-import app.tabletracker.feature_order.orderManagementNavGraph
-import app.tabletracker.settings.settingsNavGraph
+import app.tabletracker.features.auth.AuthenticationApp
+import app.tabletracker.features.auth.authenticationNavGraph
+import app.tabletracker.navigation.Screen
+import app.tabletracker.navigation.SetupBottomNavigationBar
+import app.tabletracker.features.inventory.InventoryApp
+import app.tabletracker.features.inventory.inventoryNavGraph
+import app.tabletracker.features.order.OrderManagementApp
+import app.tabletracker.features.order.orderManagementNavGraph
+import app.tabletracker.features.settings.settingsNavGraph
 
 @Composable
 fun LargeScreenApp(

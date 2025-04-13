@@ -2,7 +2,7 @@ package app.tabletracker.app.data.local
 
 import androidx.room.Dao
 import androidx.room.Query
-import app.tabletracker.feature_menu.data.entity.Category
+import app.tabletracker.features.inventory.data.entity.Category
 import kotlinx.coroutines.flow.Flow
 
 @Dao

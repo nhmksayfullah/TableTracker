@@ -8,7 +8,7 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
-import app.tabletracker.auth.data.model.Restaurant
+import app.tabletracker.features.auth.data.model.Restaurant
 import app.tabletracker.theme.TableTrackerTheme
 
 val MADRAS_SPICE_RESTAURANT = Restaurant(
