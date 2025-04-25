@@ -18,6 +18,7 @@ import app.tabletracker.features.companion.model.EXTRA_SERVER_ADDRESS
 import app.tabletracker.features.companion.model.EXTRA_SERVER_CONNECTION
 import app.tabletracker.features.companion.model.ServerResponse
 import app.tabletracker.features.inventory.domain.repository.EditMenuRepository
+import app.tabletracker.features.order.domain.repository.OrderRepository
 import app.tabletracker.app.TableTrackerApplication
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +34,7 @@ class SocketClientService: Service() {
     private lateinit var socketClientManager: SocketClientManager
     private lateinit var authRepository: AuthRepository
     private lateinit var editMenuRepository: EditMenuRepository
+    private lateinit var orderRepository: OrderRepository
     private val clientState = MutableStateFlow(ClientState())
 
     override fun onCreate() {
@@ -48,6 +50,7 @@ class SocketClientService: Service() {
         val app = applicationContext as TableTrackerApplication
         authRepository = app.container.authRepository
         editMenuRepository = app.container.editMenuRepository
+        orderRepository = app.container.orderRepository
         socketClientManager = SocketClientManagerImpl(
             onResponseReceived = ::handleServerResponse
         )
@@ -89,9 +92,30 @@ class SocketClientService: Service() {
                 }
             }
             ClientAction.RequestOrderInfo.toString() -> {
+                val orderId = intent.getStringExtra("orderId")
+                if (orderId != null) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        socketClientManager.transmitDataToServer(
+                            Json.encodeToString(ClientRequest.serializer(),
+                                ClientRequest.SyncOrder(orderId)
+                            )
+                        )
+                    }
+                }
             }
             ClientAction.SendOrderInfo.toString() -> {
-
+                val orderId = intent.getStringExtra("orderId")
+                if (orderId != null) {
+                    orderRepository.readOrderWithOrderItems(orderId).onEach { orderWithItems ->
+                        CoroutineScope(Dispatchers.IO).launch {
+                            socketClientManager.transmitDataToServer(
+                                Json.encodeToString(ClientRequest.serializer(),
+                                    ClientRequest.IncomingOrder(orderWithItems.order)
+                                )
+                            )
+                        }
+                    }.launchIn(CoroutineScope(Dispatchers.IO))
+                }
             }
         }
         return START_STICKY

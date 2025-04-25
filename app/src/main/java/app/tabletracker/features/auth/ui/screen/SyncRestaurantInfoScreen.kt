@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import app.tabletracker.theme.MaterialColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -34,11 +37,21 @@ fun SyncRestaurantInfoScreen(
         modifier = modifier,
         topBar = {
             Row {
-                Button(
-                    onClick = {}
-                ) {
-                    Text(text = "${deviceType.name} Device")
-                }
+                FilterChip(
+                    selected = true,
+                    onClick = {},
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = if (deviceType.name == "Main") 
+                            MaterialColor.Blue.color 
+                        else MaterialColor.Red.color,
+                        selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                    ),
+                    label = {
+                        Text(
+                            text = "${deviceType.name} Device"
+                        )
+                    }
+                )
             }
         }
     ) {

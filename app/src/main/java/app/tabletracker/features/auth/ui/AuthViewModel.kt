@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.catch
 
 class AuthViewModel(
     private val authRepo: AuthRepository,
@@ -71,24 +72,37 @@ class AuthViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun readRestaurantInfo() {
+private fun readRestaurantInfo() {
+    viewModelScope.launch {
         try {
             authRepo.readRestaurantInfo().onEach { restaurant ->
-                if(restaurant != null) {
-                    authRepo.readRestaurantExtra(restaurant.id).onEach { restaurantExtra ->
-                        _uiState.update { currentState ->
-                            currentState.copy(
-                                restaurant = restaurant,
-                                restaurantExtra = restaurantExtra
-                            )
-                        }
-                    }.launchIn(viewModelScope)
+                authRepo.readRestaurantExtra(restaurant.id).onEach { restaurantExtra ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            restaurant = restaurant,
+                            restaurantExtra = restaurantExtra
+                        )
+                    }
+                }.launchIn(viewModelScope)
+            }.catch { e ->
+                // Handle the case when no restaurant exists
+                if (e is IllegalStateException && e.message?.contains("query result was empty") == true) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            restaurant = null,
+                            restaurantExtra = null
+                        )
+                    }
+                } else {
+                    // Handle other errors if needed
+                    e.printStackTrace()
                 }
-
             }.launchIn(viewModelScope)
         } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
+}
 
     fun updateDeviceType(deviceType: DeviceType) {
         viewModelScope.launch {

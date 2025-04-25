@@ -127,6 +127,12 @@ fun ScanQrCodeScreen(
                     imagePickerHandler = {},
                     onCompletion = {
                         serverAddress = it
+                        // Automatically connect when QR code is scanned
+                        Intent(context.applicationContext, SocketClientService::class.java).also { intent ->
+                            intent.action = ClientAction.Connect.toString()
+                            intent.putExtra(EXTRA_SERVER_ADDRESS, it)
+                            context.applicationContext.startService(intent)
+                        }
                     },
                     onFailure = {
                         onScanQrCode(it)

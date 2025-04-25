@@ -16,6 +16,8 @@ import app.tabletracker.features.companion.model.ACTION_SERVER_ADDRESS_AVAILABLE
 import app.tabletracker.features.companion.model.ClientRequest
 import app.tabletracker.features.companion.model.EXTRA_SERVER_ADDRESS
 import app.tabletracker.features.companion.model.ServerResponse
+import app.tabletracker.features.order.data.entity.Order
+import app.tabletracker.features.order.data.entity.OrderStatus
 import app.tabletracker.features.order.domain.repository.OrderRepository
 import app.tabletracker.features.printing.domain.PrinterManager
 import app.tabletracker.app.TableTrackerApplication
@@ -152,10 +154,29 @@ class SocketServerService : Service() {
             }
 
             is ClientRequest.IncomingOrder -> {
+                val order = request.order
+                CoroutineScope(Dispatchers.IO).launch {
+                    // Save the incoming order to the database
+                    orderRepository.writeOrder(order)
 
+                    // If the order is completed, print it
+                    if (order.orderStatus == OrderStatus.Completed) {
+                        // Format the order as text for printing
+                        val formattedText = formatOrderForPrinting(order)
+                        printerManager.print(formattedText)
+                    }
+                }
             }
             is ClientRequest.SyncOrder -> {
-
+                val orderId = request.orderId
+                orderRepository.readOrderWithOrderItems(orderId).onEach { orderWithItems ->
+                    val response = ServerResponse.OrderInfo(orderWithItems.order)
+                    val responseJson = Json.encodeToString(ServerResponse.serializer(), response)
+                    socketServerManager.transmitDataToClient(
+                        serverState.value.connectedClients.first(),
+                        responseJson
+                    )
+                }.launchIn(CoroutineScope(Dispatchers.IO))
             }
         }
     }
@@ -180,6 +201,18 @@ class SocketServerService : Service() {
         CoroutineScope(Dispatchers.IO).launch {
             socketServerManager.stopServer()
         }
+    }
+
+    private fun formatOrderForPrinting(order: Order): String {
+        // Simple formatting for the order
+        val sb = StringBuilder()
+        sb.append("[C]<b>ORDER #${order.orderNumber}</b>\n")
+        sb.append("[C]<b>Type: ${order.orderType}</b>\n")
+        sb.append("[C]--------------------------------\n")
+        sb.append("[L]<b>Total:</b>[R]$${order.totalPrice}\n")
+        sb.append("[C]--------------------------------\n")
+        sb.append("[C]Thank you for your order!\n")
+        return sb.toString()
     }
 
     override fun onBind(p0: Intent?): IBinder? {

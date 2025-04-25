@@ -19,6 +19,7 @@ val MADRAS_SPICE_RESTAURANT = Restaurant(
     website = "www.madras-spice.uk",
     vatNumber = "303043464"
 )
+// IP address: 192.168.1.249:
 
 
 class MainActivity : ComponentActivity() {

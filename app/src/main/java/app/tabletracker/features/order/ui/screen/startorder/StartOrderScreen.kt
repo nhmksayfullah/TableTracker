@@ -56,8 +56,14 @@ fun StartOrderScreen(
             BrandingSection()
             Spacer(Modifier.weight(1f))
             FilterChip(
-                selected = false,
+                selected = true,
                 onClick = {},
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = if (deviceType.name == "Main") 
+                        MaterialColor.Blue.color 
+                    else MaterialColor.Red.color,
+                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary
+                ),
                 label = {
                     Text(
                         text = "${deviceType.name} Device"
@@ -126,7 +132,10 @@ fun StartOrderScreen(
                 .wrapContentHeight(),
             horizontalArrangement = Arrangement.End
         ) {
-            CompanionSection()
+            // Only show CompanionSection on Main devices
+            if (deviceType.name == "Main") {
+                CompanionSection()
+            }
         }
     }
 
