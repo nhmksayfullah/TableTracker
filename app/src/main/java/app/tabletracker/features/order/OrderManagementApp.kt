@@ -45,7 +45,15 @@ fun NavGraphBuilder.orderManagementNavGraph(
             val orderViewModel = it.accessSharedViewModel<OrderViewModel>(navController)
             StartOrderScreen(
                 orderViewModel = orderViewModel,
-                onConnectWithCompanion = {}
+                onConnectWithCompanion = {
+                    // Navigate to ScanQrCodeScreen in the authentication graph
+                    navController.navigate(Screen.ScanQrCodeScreen) {
+                        // After scanning, we want to return to StartOrderScreen
+                        popUpTo(Screen.StartOrderScreen) {
+                            saveState = true
+                        }
+                    }
+                }
             ) {
                 navController.navigate(Screen.TakeOrderScreen)
             }

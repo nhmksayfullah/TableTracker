@@ -1,5 +1,6 @@
 package app.tabletracker.features.order.ui.screen.takeorder
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,6 +34,9 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import app.tabletracker.features.auth.data.model.DeviceType
+import app.tabletracker.features.companion.client.ClientAction
+import app.tabletracker.features.companion.client.SocketClientService
 import app.tabletracker.features.order.data.entity.OrderItemStatus
 import app.tabletracker.features.order.data.entity.OrderStatus
 import app.tabletracker.features.order.data.entity.OrderType
@@ -49,7 +53,8 @@ fun CompleteOrderDrawer(
     orderUiState: OrderUiState,
     orderUiEvent: (OrderUiEvent) -> Unit,
     printKitchenCopy: Boolean = true,
-    onOrderDismiss: (OrderUiEvent?) -> Unit
+    onOrderDismiss: (OrderUiEvent?) -> Unit,
+    deviceType: DeviceType = DeviceType.Main
 ) {
     val orderTypes = TableTrackerDefault.availableOrderTypes
     val paymentMethods = TableTrackerDefault.availablePaymentMethods
@@ -88,6 +93,16 @@ fun CompleteOrderDrawer(
                                         )
                                     )
                                 )
+
+                                // If this is a companion device, send the order to the main device
+                                if (deviceType == DeviceType.Companion) {
+                                    val intent = Intent(context, SocketClientService::class.java).apply {
+                                        action = ClientAction.SendOrderInfo.toString()
+                                        putExtra("orderId", orderUiState.currentOrder.order.id)
+                                    }
+                                    context.startService(intent)
+                                }
+
                                 onOrderDismiss(null)
                             }
                         }
@@ -119,6 +134,16 @@ fun CompleteOrderDrawer(
                                         )
                                     )
                                 )
+
+                                // If this is a companion device, send the order to the main device
+                                if (deviceType == DeviceType.Companion) {
+                                    val intent = Intent(context, SocketClientService::class.java).apply {
+                                        action = ClientAction.SendOrderInfo.toString()
+                                        putExtra("orderId", orderUiState.currentOrder.order.id)
+                                    }
+                                    context.startService(intent)
+                                }
+
                                 onOrderDismiss(null)
                             }
                         }
@@ -322,4 +347,3 @@ fun CompleteOrderDrawer(
 
 
 }
-

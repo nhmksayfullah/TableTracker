@@ -132,9 +132,13 @@ fun StartOrderScreen(
                 .wrapContentHeight(),
             horizontalArrangement = Arrangement.End
         ) {
-            // Only show CompanionSection on Main devices
+            // Show CompanionSection on Main devices and ConnectSection on Companion devices
             if (deviceType.name == "Main") {
                 CompanionSection()
+            } else if (deviceType.name == "Companion") {
+                ConnectSection(
+                    onConnectClick = onConnectWithCompanion
+                )
             }
         }
     }

@@ -16,10 +16,9 @@ import app.tabletracker.features.companion.model.ACTION_SERVER_ADDRESS_AVAILABLE
 import app.tabletracker.features.companion.model.ClientRequest
 import app.tabletracker.features.companion.model.EXTRA_SERVER_ADDRESS
 import app.tabletracker.features.companion.model.ServerResponse
-import app.tabletracker.features.order.data.entity.Order
-import app.tabletracker.features.order.data.entity.OrderStatus
 import app.tabletracker.features.order.domain.repository.OrderRepository
 import app.tabletracker.features.printing.domain.PrinterManager
+import app.tabletracker.features.receipt.domain.ReceiptGenerator
 import app.tabletracker.app.TableTrackerApplication
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -154,16 +153,29 @@ class SocketServerService : Service() {
             }
 
             is ClientRequest.IncomingOrder -> {
-                val order = request.order
+                val orderWithOrderItems = request.orderWithOrderItems
                 CoroutineScope(Dispatchers.IO).launch {
                     // Save the incoming order to the database
-                    orderRepository.writeOrder(order)
+                    orderRepository.writeOrder(orderWithOrderItems.order)
+                    orderWithOrderItems.orderItems.forEach { orderItem ->
+                        orderRepository.writeOrderItem(orderItem)
+                    }
 
-                    // If the order is completed, print it
-                    if (order.orderStatus == OrderStatus.Completed) {
-                        // Format the order as text for printing
-                        val formattedText = formatOrderForPrinting(order)
-                        printerManager.print(formattedText)
+                    // Get restaurant info for receipt generation
+                    orderRepository.readRestaurantInfo().collect { restaurantInfo ->
+                        // Get the order with its items
+                        orderRepository.readOrderWithOrderItems(orderWithOrderItems.order.id).collect { orderWithItems ->
+                            // Generate and print receipt
+                            val receiptGenerator = ReceiptGenerator(restaurantInfo, orderWithItems)
+
+                            // Print kitchen copy
+                            val kitchenCopy = receiptGenerator.generateKitchenCopy()
+                            printerManager.print(kitchenCopy)
+
+                            // Print customer receipt
+                            val receipt = receiptGenerator.generateReceipt()
+                            printerManager.print(receipt)
+                        }
                     }
                 }
             }
@@ -203,17 +215,6 @@ class SocketServerService : Service() {
         }
     }
 
-    private fun formatOrderForPrinting(order: Order): String {
-        // Simple formatting for the order
-        val sb = StringBuilder()
-        sb.append("[C]<b>ORDER #${order.orderNumber}</b>\n")
-        sb.append("[C]<b>Type: ${order.orderType}</b>\n")
-        sb.append("[C]--------------------------------\n")
-        sb.append("[L]<b>Total:</b>[R]$${order.totalPrice}\n")
-        sb.append("[C]--------------------------------\n")
-        sb.append("[C]Thank you for your order!\n")
-        return sb.toString()
-    }
 
     override fun onBind(p0: Intent?): IBinder? {
         return null

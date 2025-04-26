@@ -47,7 +47,8 @@ import qrscanner.QrScanner
 fun ScanQrCodeScreen(
     authViewModel: AuthViewModel,
     modifier: Modifier = Modifier,
-    onScanQrCode: (data: String) -> Unit
+    onScanQrCode: (data: String) -> Unit,
+    isFromStartOrderScreen: Boolean = false
 ) {
 
     val context = LocalContext.current
@@ -64,7 +65,16 @@ fun ScanQrCodeScreen(
                 isConnected = intent?.getBooleanExtra(EXTRA_SERVER_CONNECTION, false)
                 if (isConnected == true) {
                     authViewModel.updateDeviceType(DeviceType.Companion)
-                    onScanQrCode(serverAddress)
+
+                    // If we're coming from StartOrderScreen, we want to go back there directly
+                    // Otherwise, continue with the normal flow (to SyncRestaurantInfoScreen)
+                    if (isFromStartOrderScreen) {
+                        // Just navigate back, the popUpTo in OrderManagementApp will handle returning to StartOrderScreen
+                        onScanQrCode("")
+                    } else {
+                        // Normal flow - go to SyncRestaurantInfoScreen
+                        onScanQrCode(serverAddress)
+                    }
                 }
             }
         }

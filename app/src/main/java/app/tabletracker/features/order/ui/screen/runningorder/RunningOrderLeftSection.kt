@@ -53,7 +53,7 @@ fun RunningOrderLeftSection(
                 .fillMaxSize()
         ) {
             TabbedScreen(
-                titles = listOf("Order Details", "Customer Details")
+                titles = listOf("Items", "Customer", "Details"),
             ) {
                 when (it) {
                     0 -> {
@@ -74,6 +74,10 @@ fun RunningOrderLeftSection(
                             onCustomerChange = {
                             }
                         )
+                    }
+
+                    2 -> {
+
                     }
                 }
             }

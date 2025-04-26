@@ -51,11 +51,21 @@ fun NavGraphBuilder.authenticationNavGraph(
             )
         }
         composable<Screen.ScanQrCodeScreen> {
+            // Check if we're coming from StartOrderScreen by looking at the previous backstack entry
+            val isFromStartOrderScreen = navController.previousBackStackEntry?.destination?.route?.contains("StartOrderScreen") == true
+
             ScanQrCodeScreen(
                 authViewModel = it.accessSharedViewModel<AuthViewModel>(navController),
-                onScanQrCode = {
-                    navController.navigate(Screen.SyncRestaurantInfoScreen)
-                }
+                onScanQrCode = { data ->
+                    if (isFromStartOrderScreen) {
+                        // If we're coming from StartOrderScreen, just pop back to it
+                        navController.popBackStack()
+                    } else {
+                        // Normal flow - go to SyncRestaurantInfoScreen
+                        navController.navigate(Screen.SyncRestaurantInfoScreen)
+                    }
+                },
+                isFromStartOrderScreen = isFromStartOrderScreen
             )
         }
         composable<Screen.SyncRestaurantInfoScreen> {

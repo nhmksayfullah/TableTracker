@@ -3,7 +3,9 @@ package app.tabletracker.features.order.data.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import app.tabletracker.features.inventory.data.entity.MenuItem
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity
 data class OrderItem(
     @PrimaryKey(autoGenerate = true)

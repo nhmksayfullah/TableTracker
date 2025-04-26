@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.tabletracker.core.ui.SplitRatio
 import app.tabletracker.core.ui.SplitScreen
+import app.tabletracker.features.auth.data.model.DeviceType
 import app.tabletracker.features.order.ui.state.OrderUiEvent
 import app.tabletracker.features.order.ui.state.OrderViewModel
 import kotlinx.coroutines.delay
@@ -22,6 +23,7 @@ fun TakeOrderScreen(
     onOrderDismiss: () -> Unit
 ) {
     val uiState by orderViewModel.uiState.collectAsStateWithLifecycle()
+    val deviceType by orderViewModel.deviceType.collectAsStateWithLifecycle()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -75,7 +77,8 @@ fun TakeOrderScreen(
                 },
                 orderUiEvent = {
                     orderViewModel.onEvent(it)
-                }
+                },
+                deviceType = deviceType
             )
         }
 

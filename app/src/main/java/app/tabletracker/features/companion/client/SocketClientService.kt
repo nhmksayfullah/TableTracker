@@ -149,7 +149,7 @@ class SocketClientService: Service() {
                         CoroutineScope(Dispatchers.IO).launch {
                             socketClientManager.transmitDataToServer(
                                 Json.encodeToString(ClientRequest.serializer(),
-                                    ClientRequest.IncomingOrder(orderWithItems.order)
+                                    ClientRequest.IncomingOrder(orderWithItems)
                                 )
                             )
                         }
