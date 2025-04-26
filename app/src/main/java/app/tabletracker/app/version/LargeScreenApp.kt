@@ -46,10 +46,24 @@ fun LargeScreenApp(
     Scaffold(
         bottomBar = {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
-            navBackStackEntry?.destination?.let {
-                showBottomBar = !it.hasRoute(Screen.TakeOrderScreen::class)
+            LaunchedEffect(navBackStackEntry?.destination) {
+                when {
+                    navBackStackEntry?.destination?.hasRoute(Screen.TakeOrderScreen::class) == true -> {
+                        showBottomBar = false
+                    }
+                    navBackStackEntry?.destination?.hasRoute(AuthenticationApp::class) == true -> {
+                        showBottomBar = false
+                    }
+                    else -> {
+                        if (appUiState.hasInventory) {
+                            showBottomBar = true
+                        } else {
+                            showBottomBar = false
+                        }
+                    }
+
+                }
             }
-            showBottomBar = appUiState.hasInventory
             AnimatedVisibility(
                 visible = showBottomBar,
                 enter = slideInVertically(

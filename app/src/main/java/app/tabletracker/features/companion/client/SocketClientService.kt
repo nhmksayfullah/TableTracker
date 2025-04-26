@@ -13,10 +13,17 @@ import app.tabletracker.R
 import app.tabletracker.features.auth.domain.repository.AuthRepository
 import app.tabletracker.features.companion.model.ACTION_REQUEST_SERVER_CONNECTION
 import app.tabletracker.features.companion.model.ACTION_SERVER_CONNECTION_AVAILABLE
+import app.tabletracker.features.companion.model.ACTION_SYNC_RESTAURANT_INFO_STATUS
+import app.tabletracker.features.companion.model.ACTION_SYNC_MENU_STATUS
 import app.tabletracker.features.companion.model.ClientRequest
 import app.tabletracker.features.companion.model.EXTRA_SERVER_ADDRESS
 import app.tabletracker.features.companion.model.EXTRA_SERVER_CONNECTION
+import app.tabletracker.features.companion.model.EXTRA_SYNC_STATUS
+import app.tabletracker.features.companion.model.EXTRA_SYNC_MESSAGE
 import app.tabletracker.features.companion.model.ServerResponse
+import app.tabletracker.features.companion.model.SYNC_STATUS_COMPLETED
+import app.tabletracker.features.companion.model.SYNC_STATUS_FAILED
+import app.tabletracker.features.companion.model.SYNC_STATUS_IN_PROGRESS
 import app.tabletracker.features.inventory.domain.repository.EditMenuRepository
 import app.tabletracker.features.order.domain.repository.OrderRepository
 import app.tabletracker.app.TableTrackerApplication
@@ -75,20 +82,52 @@ class SocketClientService: Service() {
                 }
             }
             ClientAction.RequestRestaurantInfo.toString() -> {
+                // Broadcast sync in progress status
+                val syncInProgressIntent = Intent(ACTION_SYNC_RESTAURANT_INFO_STATUS).apply {
+                    putExtra(EXTRA_SYNC_STATUS, SYNC_STATUS_IN_PROGRESS)
+                    putExtra(EXTRA_SYNC_MESSAGE, "Requesting restaurant information...")
+                }
+                sendBroadcast(syncInProgressIntent)
+
                 CoroutineScope(Dispatchers.IO).launch {
-                    socketClientManager.transmitDataToServer(
-                        Json.encodeToString(ClientRequest.serializer(),
-                            ClientRequest.SetupRestaurant
+                    try {
+                        socketClientManager.transmitDataToServer(
+                            Json.encodeToString(ClientRequest.serializer(),
+                                ClientRequest.SetupRestaurant
+                            )
                         )
-                    )
+                    } catch (e: Exception) {
+                        // Broadcast sync failed status
+                        val syncFailedIntent = Intent(ACTION_SYNC_RESTAURANT_INFO_STATUS).apply {
+                            putExtra(EXTRA_SYNC_STATUS, SYNC_STATUS_FAILED)
+                            putExtra(EXTRA_SYNC_MESSAGE, "Failed to request restaurant information: ${e.message}")
+                        }
+                        sendBroadcast(syncFailedIntent)
+                    }
                 }
             }
             ClientAction.RequestMenu.toString() -> {
+                // Broadcast sync in progress status
+                val syncInProgressIntent = Intent(ACTION_SYNC_MENU_STATUS).apply {
+                    putExtra(EXTRA_SYNC_STATUS, SYNC_STATUS_IN_PROGRESS)
+                    putExtra(EXTRA_SYNC_MESSAGE, "Requesting menu information...")
+                }
+                sendBroadcast(syncInProgressIntent)
+
                 CoroutineScope(Dispatchers.IO).launch {
-                    socketClientManager.transmitDataToServer(
-                        Json.encodeToString(ClientRequest.serializer(),
-                            ClientRequest.SyncMenu)
-                    )
+                    try {
+                        socketClientManager.transmitDataToServer(
+                            Json.encodeToString(ClientRequest.serializer(),
+                                ClientRequest.SyncMenu)
+                        )
+                    } catch (e: Exception) {
+                        // Broadcast sync failed status
+                        val syncFailedIntent = Intent(ACTION_SYNC_MENU_STATUS).apply {
+                            putExtra(EXTRA_SYNC_STATUS, SYNC_STATUS_FAILED)
+                            putExtra(EXTRA_SYNC_MESSAGE, "Failed to request menu information: ${e.message}")
+                        }
+                        sendBroadcast(syncFailedIntent)
+                    }
                 }
             }
             ClientAction.RequestOrderInfo.toString() -> {
@@ -172,21 +211,53 @@ class SocketClientService: Service() {
         when(response) {
             is ServerResponse.Menu -> {
                 CoroutineScope(Dispatchers.IO).launch {
-                    response.menu.forEach { categoryWithMenuItems ->
-                        editMenuRepository.writeCategory(categoryWithMenuItems.category)
-                        categoryWithMenuItems.menuItems.forEach { menuItem ->
-                            editMenuRepository.writeMenuItem(menuItem)
+                    try {
+                        response.menu.forEach { categoryWithMenuItems ->
+                            editMenuRepository.writeCategory(categoryWithMenuItems.category)
+                            categoryWithMenuItems.menuItems.forEach { menuItem ->
+                                editMenuRepository.writeMenuItem(menuItem)
+                            }
                         }
+
+                        // Broadcast sync completed status
+                        val syncCompletedIntent = Intent(ACTION_SYNC_MENU_STATUS).apply {
+                            putExtra(EXTRA_SYNC_STATUS, SYNC_STATUS_COMPLETED)
+                            putExtra(EXTRA_SYNC_MESSAGE, "Menu information synced successfully")
+                        }
+                        sendBroadcast(syncCompletedIntent)
+                    } catch (e: Exception) {
+                        // Broadcast sync failed status
+                        val syncFailedIntent = Intent(ACTION_SYNC_MENU_STATUS).apply {
+                            putExtra(EXTRA_SYNC_STATUS, SYNC_STATUS_FAILED)
+                            putExtra(EXTRA_SYNC_MESSAGE, "Failed to save menu information: ${e.message}")
+                        }
+                        sendBroadcast(syncFailedIntent)
                     }
                 }
             }
             is ServerResponse.OrderInfo -> {}
             is ServerResponse.RestaurantInfo -> {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val restaurant = response.restaurant
-                    val restaurantExtra = response.restaurantExtra
-                    authRepository.registerRestaurant(restaurant)
-                    authRepository.upsertRestaurantExtra(restaurantExtra)
+                    try {
+                        val restaurant = response.restaurant
+                        val restaurantExtra = response.restaurantExtra
+                        authRepository.registerRestaurant(restaurant)
+                        authRepository.upsertRestaurantExtra(restaurantExtra)
+
+                        // Broadcast sync completed status
+                        val syncCompletedIntent = Intent(ACTION_SYNC_RESTAURANT_INFO_STATUS).apply {
+                            putExtra(EXTRA_SYNC_STATUS, SYNC_STATUS_COMPLETED)
+                            putExtra(EXTRA_SYNC_MESSAGE, "Restaurant information synced successfully")
+                        }
+                        sendBroadcast(syncCompletedIntent)
+                    } catch (e: Exception) {
+                        // Broadcast sync failed status
+                        val syncFailedIntent = Intent(ACTION_SYNC_RESTAURANT_INFO_STATUS).apply {
+                            putExtra(EXTRA_SYNC_STATUS, SYNC_STATUS_FAILED)
+                            putExtra(EXTRA_SYNC_MESSAGE, "Failed to save restaurant information: ${e.message}")
+                        }
+                        sendBroadcast(syncFailedIntent)
+                    }
                 }
             }
         }

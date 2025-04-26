@@ -1,5 +1,6 @@
 package app.tabletracker.features.auth.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.tabletracker.app.MADRAS_SPICE_RESTAURANT
@@ -37,6 +38,7 @@ class AuthViewModel(
     )
 
     init {
+        Log.d("AuthViewModel", "init: ")
         readRestaurantInfo()
         hasInventory()
     }
@@ -72,35 +74,33 @@ class AuthViewModel(
         }.launchIn(viewModelScope)
     }
 
-private fun readRestaurantInfo() {
-    viewModelScope.launch {
-        try {
-            authRepo.readRestaurantInfo().onEach { restaurant ->
-                authRepo.readRestaurantExtra(restaurant.id).onEach { restaurantExtra ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            restaurant = restaurant,
-                            restaurantExtra = restaurantExtra
-                        )
-                    }
-                }.launchIn(viewModelScope)
-            }.catch { e ->
-                // Handle the case when no restaurant exists
-                if (e is IllegalStateException && e.message?.contains("query result was empty") == true) {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            restaurant = null,
-                            restaurantExtra = null
-                        )
-                    }
-                } else {
-                    // Handle other errors if needed
-                    e.printStackTrace()
+fun readRestaurantInfo() {
+    try {
+        authRepo.readRestaurantInfo().onEach { restaurant ->
+            authRepo.readRestaurantExtra(restaurant.id).onEach { restaurantExtra ->
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        restaurant = restaurant,
+                        restaurantExtra = restaurantExtra
+                    )
                 }
             }.launchIn(viewModelScope)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        }.catch { e ->
+            // Handle the case when no restaurant exists
+            if (e is IllegalStateException && e.message?.contains("query result was empty") == true) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        restaurant = null,
+                        restaurantExtra = null
+                    )
+                }
+            } else {
+                // Handle other errors if needed
+                e.printStackTrace()
+            }
+        }.launchIn(viewModelScope)
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
 }
 
