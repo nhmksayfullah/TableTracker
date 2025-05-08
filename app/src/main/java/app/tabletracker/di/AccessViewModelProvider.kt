@@ -27,7 +27,8 @@ object AccessViewModelProvider {
         initializer {
             AuthViewModel(
                 authRepo = accessTableTrackerApplication().container.authRepository,
-                deviceTypeRepo = accessTableTrackerApplication().container.deviceTypeRepository
+                deviceTypeRepo = accessTableTrackerApplication().container.deviceTypeRepository,
+                editMenuRepository = accessTableTrackerApplication().container.editMenuRepository
             )
         }
         initializer {

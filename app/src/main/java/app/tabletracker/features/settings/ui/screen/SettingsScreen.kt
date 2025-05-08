@@ -1,11 +1,13 @@
 package app.tabletracker.features.settings.ui.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,7 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.TabbedScreen
 import app.tabletracker.core.ui.component.FoodBlockComponent
+import app.tabletracker.features.order.ui.screen.startorder.CompanionSection
 import app.tabletracker.features.settings.ui.SettingsViewModel
+import app.tabletracker.features.settings.ui.section.CompanionSettings
 import app.tabletracker.features.settings.ui.section.GeneralSettingsSection
 import app.tabletracker.theme.MaterialColor
 
@@ -39,7 +43,7 @@ fun SettingsScreen(
     val settingsUiState by settingsViewModel.uiState.collectAsState()
 
 
-    val settingsTitle = listOf("General", "Printer", "Receipt", "Discounts")
+    val settingsTitle = listOf("General", "Companion", "Receipt", "Discounts")
     TabbedScreen(titles = settingsTitle) {
         when (it) {
             0 -> {
@@ -47,6 +51,14 @@ fun SettingsScreen(
                     settingsUiState = settingsUiState
                 ) {
                     settingsViewModel.onEvent(it)
+                }
+            }
+            1 -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CompanionSection()
                 }
             }
 

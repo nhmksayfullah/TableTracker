@@ -121,26 +121,26 @@ fun StartOrderScreen(
                 onCreateNewOrder()
             }
         }
-        Spacer(
-            modifier = Modifier
-                .weight(1f)
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(),
-            horizontalArrangement = Arrangement.End
-        ) {
-            // Show CompanionSection on Main devices and ConnectSection on Companion devices
-            if (deviceType.name == "Main") {
-                CompanionSection()
-            } else if (deviceType.name == "Companion") {
-                ConnectSection(
-                    onConnectClick = onConnectWithCompanion
-                )
-            }
-        }
+//        Spacer(
+//            modifier = Modifier
+//                .weight(1f)
+//        )
+//
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .wrapContentHeight(),
+//            horizontalArrangement = Arrangement.End
+//        ) {
+//            // Show CompanionSection on Main devices and ConnectSection on Companion devices
+//            if (deviceType.name == "Main") {
+//                CompanionSection()
+//            } else if (deviceType.name == "Companion") {
+//                ConnectSection(
+//                    onConnectClick = onConnectWithCompanion
+//                )
+//            }
+//        }
     }
 
 

@@ -106,9 +106,8 @@ fun FoodItem(
                 onClick = onRemoveClick
             ) {
                 Icon(
-                    imageVector = Icons.Default.Clear,
+                    imageVector = ImageVector.vectorResource(R.drawable.baseline_drag_indicator_24),
                     contentDescription = "Remove item from the order",
-                    tint = MaterialTheme.colorScheme.error
                 )
             }
 
@@ -181,6 +180,15 @@ fun FoodItem(
                             contentDescription = "Customize the item"
                         )
                     }
+                }
+                IconButton(
+                    onClick = onRemoveClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "Remove item from the order",
+                        tint = MaterialTheme.colorScheme.error
+                    )
                 }
             }
         }

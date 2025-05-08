@@ -131,30 +131,30 @@ class SocketClientService: Service() {
                 }
             }
             ClientAction.RequestOrderInfo.toString() -> {
-                val orderId = intent.getStringExtra("orderId")
-                if (orderId != null) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        socketClientManager.transmitDataToServer(
-                            Json.encodeToString(ClientRequest.serializer(),
-                                ClientRequest.SyncOrder(orderId)
-                            )
-                        )
-                    }
-                }
+//                val orderId = intent.getStringExtra("orderId")
+//                if (orderId != null) {
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        socketClientManager.transmitDataToServer(
+//                            Json.encodeToString(ClientRequest.serializer(),
+//                                ClientRequest.SyncOrder(orderId)
+//                            )
+//                        )
+//                    }
+//                }
             }
             ClientAction.SendOrderInfo.toString() -> {
-                val orderId = intent.getStringExtra("orderId")
-                if (orderId != null) {
-                    orderRepository.readOrderWithOrderItems(orderId).onEach { orderWithItems ->
-                        CoroutineScope(Dispatchers.IO).launch {
-                            socketClientManager.transmitDataToServer(
-                                Json.encodeToString(ClientRequest.serializer(),
-                                    ClientRequest.IncomingOrder(orderWithItems)
-                                )
-                            )
-                        }
-                    }.launchIn(CoroutineScope(Dispatchers.IO))
-                }
+//                val orderId = intent.getStringExtra("orderId")
+//                if (orderId != null) {
+//                    orderRepository.readOrderWithOrderItems(orderId).onEach { orderWithItems ->
+//                        CoroutineScope(Dispatchers.IO).launch {
+//                            socketClientManager.transmitDataToServer(
+//                                Json.encodeToString(ClientRequest.serializer(),
+//                                    ClientRequest.IncomingOrder(orderWithItems)
+//                                )
+//                            )
+//                        }
+//                    }.launchIn(CoroutineScope(Dispatchers.IO))
+//                }
             }
         }
         return START_STICKY

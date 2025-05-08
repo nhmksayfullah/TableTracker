@@ -38,11 +38,15 @@ class MainActivity : ComponentActivity() {
             )
         }
         actionBar?.hide()
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                arrayOf(
+                    android.Manifest.permission.BLUETOOTH_SCAN,
+                    android.Manifest.permission.BLUETOOTH_CONNECT,
+                    android.Manifest.permission.BLUETOOTH_ADMIN,
+                    android.Manifest.permission.POST_NOTIFICATIONS
+                ),
                 0
             )
         }

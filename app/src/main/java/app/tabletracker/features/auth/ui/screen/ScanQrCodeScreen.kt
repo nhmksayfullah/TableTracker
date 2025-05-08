@@ -48,7 +48,7 @@ fun ScanQrCodeScreen(
     authViewModel: AuthViewModel,
     modifier: Modifier = Modifier,
     onScanQrCode: (data: String) -> Unit,
-    isFromStartOrderScreen: Boolean = false
+//    isFromStartOrderScreen: Boolean = false
 ) {
 
     val context = LocalContext.current
@@ -59,47 +59,41 @@ fun ScanQrCodeScreen(
         mutableStateOf(false)
     }
 
-    val serverConnectedReceiver = remember {
-        object : BroadcastReceiver() {
-            override fun onReceive(ctx: Context?, intent: Intent?) {
-                isConnected = intent?.getBooleanExtra(EXTRA_SERVER_CONNECTION, false)
-                if (isConnected == true) {
-                    authViewModel.updateDeviceType(DeviceType.Companion)
+//    val serverConnectedReceiver = remember {
+//        object : BroadcastReceiver() {
+//            override fun onReceive(ctx: Context?, intent: Intent?) {
+//                isConnected = intent?.getBooleanExtra(EXTRA_SERVER_CONNECTION, false)
+//                if (isConnected == true) {
+//                    authViewModel.updateDeviceType(DeviceType.Companion)
+//
+//                    // If we're coming from StartOrderScreen, we want to go back there directly
+//                    // Otherwise, continue with the normal flow (to SyncRestaurantInfoScreen)
+//                    onScanQrCode(serverAddress)
+//                }
+//            }
+//        }
+//    }
 
-                    // If we're coming from StartOrderScreen, we want to go back there directly
-                    // Otherwise, continue with the normal flow (to SyncRestaurantInfoScreen)
-                    if (isFromStartOrderScreen) {
-                        // Just navigate back, the popUpTo in OrderManagementApp will handle returning to StartOrderScreen
-                        onScanQrCode("")
-                    } else {
-                        // Normal flow - go to SyncRestaurantInfoScreen
-                        onScanQrCode(serverAddress)
-                    }
-                }
-            }
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        val requestIntent = Intent(ACTION_REQUEST_SERVER_CONNECTION)
-        context.sendBroadcast(requestIntent)
-    }
-    DisposableEffect(Unit) {
-        val filter = IntentFilter(ACTION_SERVER_CONNECTION_AVAILABLE)
-        ContextCompat.registerReceiver(
-            context,
-            serverConnectedReceiver,
-            filter,
-            ContextCompat.RECEIVER_NOT_EXPORTED
-        )
-        Intent(ACTION_SERVER_CONNECTION_AVAILABLE).also {
-            it.setPackage(context.packageName)
-            context.sendBroadcast(it)
-        }
-        onDispose {
-            context.unregisterReceiver(serverConnectedReceiver)
-        }
-    }
+//    LaunchedEffect(Unit) {
+//        val requestIntent = Intent(ACTION_REQUEST_SERVER_CONNECTION)
+//        context.sendBroadcast(requestIntent)
+//    }
+//    DisposableEffect(Unit) {
+//        val filter = IntentFilter(ACTION_SERVER_CONNECTION_AVAILABLE)
+//        ContextCompat.registerReceiver(
+//            context,
+//            serverConnectedReceiver,
+//            filter,
+//            ContextCompat.RECEIVER_NOT_EXPORTED
+//        )
+//        Intent(ACTION_SERVER_CONNECTION_AVAILABLE).also {
+//            it.setPackage(context.packageName)
+//            context.sendBroadcast(it)
+//        }
+//        onDispose {
+//            context.unregisterReceiver(serverConnectedReceiver)
+//        }
+//    }
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -138,14 +132,15 @@ fun ScanQrCodeScreen(
                     onCompletion = {
                         serverAddress = it
                         // Automatically connect when QR code is scanned
-                        Intent(context.applicationContext, SocketClientService::class.java).also { intent ->
-                            intent.action = ClientAction.Connect.toString()
-                            intent.putExtra(EXTRA_SERVER_ADDRESS, it)
-                            context.applicationContext.startService(intent)
-                        }
+//                        Intent(context.applicationContext, SocketClientService::class.java).also { intent ->
+//                            intent.action = ClientAction.Connect.toString()
+//                            intent.putExtra(EXTRA_SERVER_ADDRESS, it)
+//                            context.applicationContext.startService(intent)
+//                        }
+//                        onScanQrCode(it)
                     },
                     onFailure = {
-                        onScanQrCode(it)
+//                        onScanQrCode(it)
                     },
                     customOverlay = {}
                 )
@@ -178,11 +173,13 @@ fun ScanQrCodeScreen(
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
                         onClick = {
-                            Intent(context.applicationContext, SocketClientService::class.java).also {
-                                it.action = ClientAction.Connect.toString()
-                                it.putExtra(EXTRA_SERVER_ADDRESS, serverAddress)
-                                context.applicationContext.startService(it)
-                            }
+//                            Intent(context.applicationContext, SocketClientService::class.java).also {
+//                                it.action = ClientAction.Connect.toString()
+//                                it.putExtra(EXTRA_SERVER_ADDRESS, serverAddress)
+//                                context.applicationContext.startService(it)
+//                                onScanQrCode(serverAddress)
+//                            }
+                            onScanQrCode(serverAddress)
                         }
                     ) {
                         Text("Connect")

@@ -4,6 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import app.tabletracker.features.auth.ui.AuthViewModel
 import app.tabletracker.features.auth.ui.screen.GetStartedScreen
 import app.tabletracker.features.auth.ui.screen.RegisterLicenceScreen
@@ -12,6 +13,7 @@ import app.tabletracker.features.auth.ui.screen.ScanQrCodeScreen
 import app.tabletracker.features.auth.ui.screen.SyncRestaurantInfoScreen
 import app.tabletracker.navigation.Screen
 import app.tabletracker.di.accessSharedViewModel
+import app.tabletracker.features.auth.data.model.DeviceType
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -51,28 +53,28 @@ fun NavGraphBuilder.authenticationNavGraph(
             )
         }
         composable<Screen.ScanQrCodeScreen> {
-            // Check if we're coming from StartOrderScreen by looking at the previous backstack entry
-            val isFromStartOrderScreen = navController.previousBackStackEntry?.destination?.route?.contains("StartOrderScreen") == true
 
+            val authViewModel = it.accessSharedViewModel<AuthViewModel>(navController)
             ScanQrCodeScreen(
-                authViewModel = it.accessSharedViewModel<AuthViewModel>(navController),
+                authViewModel = authViewModel,
                 onScanQrCode = { data ->
-                    if (isFromStartOrderScreen) {
-                        // If we're coming from StartOrderScreen, just pop back to it
-                        navController.popBackStack()
-                    } else {
-                        // Normal flow - go to SyncRestaurantInfoScreen
-                        navController.navigate(Screen.SyncRestaurantInfoScreen)
-                    }
+                    navController.navigate(Screen.SyncRestaurantInfoScreen(data))
                 },
-                isFromStartOrderScreen = isFromStartOrderScreen
+//                isFromStartOrderScreen = false
             )
         }
         composable<Screen.SyncRestaurantInfoScreen> {
-
+            val authViewModel = it.accessSharedViewModel<AuthViewModel>(navController)
+            val serverAddress = it.toRoute<Screen.SyncRestaurantInfoScreen>().serverAddress
+            val ipAddress = serverAddress.split(":")[0]
+            val port = serverAddress.split(":")[1].toInt()
+            authViewModel.connectToServer(ipAddress, port)
             SyncRestaurantInfoScreen(
-                authViewModel = it.accessSharedViewModel<AuthViewModel>(navController),
-                onGetStarted = onRegistrationSuccessful
+                authViewModel = authViewModel,
+                onGetStarted = {
+                    authViewModel.updateDeviceType(DeviceType.Companion)
+                    onRegistrationSuccessful()
+                }
             )
         }
     }

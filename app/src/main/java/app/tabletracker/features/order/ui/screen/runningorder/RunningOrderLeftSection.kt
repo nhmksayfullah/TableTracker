@@ -9,9 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import app.tabletracker.core.ui.TabbedScreen
 import app.tabletracker.features.order.ui.screen.takeorder.CustomerDetailsFormLeftSection
-import app.tabletracker.features.order.ui.screen.takeorder.OrderItemsComponentLeftSection
 import app.tabletracker.features.order.ui.state.OrderUiState
 import app.tabletracker.features.printing.domain.PrinterManager
+import app.tabletracker.features.printing.domain.UsbPrinterManager
 import app.tabletracker.features.receipt.domain.ReceiptGenerator
 
 @Composable
@@ -58,12 +58,8 @@ fun RunningOrderLeftSection(
                 when (it) {
                     0 -> {
                         orderUiState.currentOrder?.let {
-                            OrderItemsComponentLeftSection(
-                                runningOrder = it,
-                                onItemRemoveClick = {
-                                },
-                                onItemChange = {
-                                }
+                            OrderDetailsPreviewLeftSection(
+                                runningOrder = it
                             )
                         }
                     }

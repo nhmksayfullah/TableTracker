@@ -22,7 +22,7 @@ sealed class Screen() {
     data object ScanQrCodeScreen : Screen()
 
     @Serializable
-    data object SyncRestaurantInfoScreen : Screen()
+    data class SyncRestaurantInfoScreen(val serverAddress: String) : Screen()
 
     @Serializable
     data object StartOrderScreen : Screen()

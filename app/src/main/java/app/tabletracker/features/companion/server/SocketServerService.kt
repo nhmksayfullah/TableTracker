@@ -17,7 +17,7 @@ import app.tabletracker.features.companion.model.ClientRequest
 import app.tabletracker.features.companion.model.EXTRA_SERVER_ADDRESS
 import app.tabletracker.features.companion.model.ServerResponse
 import app.tabletracker.features.order.domain.repository.OrderRepository
-import app.tabletracker.features.printing.domain.PrinterManager
+import app.tabletracker.features.printing.domain.UsbPrinterManager
 import app.tabletracker.features.receipt.domain.ReceiptGenerator
 import app.tabletracker.app.TableTrackerApplication
 import kotlinx.coroutines.CoroutineScope
@@ -33,7 +33,7 @@ class SocketServerService : Service() {
 
     private lateinit var socketServerManager: SocketServerManager
     private lateinit var orderRepository: OrderRepository
-    private lateinit var printerManager: PrinterManager
+    private lateinit var printerManager: UsbPrinterManager
     private val serverState = MutableStateFlow(ServerState())
 
     override fun onCreate() {
@@ -48,7 +48,7 @@ class SocketServerService : Service() {
 
         val app = applicationContext as TableTrackerApplication
         orderRepository = app.container.orderRepository
-        printerManager = PrinterManager(this)
+        printerManager = UsbPrinterManager(this)
         socketServerManager = SocketServerManagerImpl(
             context = this,
             onRequestReceived = ::handleClientRequest

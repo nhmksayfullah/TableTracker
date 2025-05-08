@@ -1,6 +1,5 @@
 package app.tabletracker.features.order.ui.screen.takeorder
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -35,15 +35,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import app.tabletracker.features.auth.data.model.DeviceType
-import app.tabletracker.features.companion.client.ClientAction
-import app.tabletracker.features.companion.client.SocketClientService
 import app.tabletracker.features.order.data.entity.OrderItemStatus
 import app.tabletracker.features.order.data.entity.OrderStatus
 import app.tabletracker.features.order.data.entity.OrderType
 import app.tabletracker.features.order.data.entity.PaymentMethod
 import app.tabletracker.features.order.ui.state.OrderUiEvent
 import app.tabletracker.features.order.ui.state.OrderUiState
+import app.tabletracker.features.printing.domain.BluetoothPrinterManager
 import app.tabletracker.features.printing.domain.PrinterManager
+import app.tabletracker.features.printing.domain.UsbPrinterManager
 import app.tabletracker.features.receipt.domain.ReceiptGenerator
 import app.tabletracker.util.TableTrackerDefault
 
@@ -60,6 +60,7 @@ fun CompleteOrderDrawer(
     val paymentMethods = TableTrackerDefault.availablePaymentMethods
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -77,12 +78,12 @@ fun CompleteOrderDrawer(
                                         it.orderItemStatus == OrderItemStatus.Added &&
                                                 it.menuItem.isKitchenCategory
                                     } != null) {
-                                    val printerManager = PrinterManager(context)
                                     val receiptGenerator =
                                         ReceiptGenerator(
                                             orderUiState.restaurantInfo,
                                             orderUiState.currentOrder
                                         )
+                                    val printerManager = PrinterManager(context)
                                     printerManager.print(receiptGenerator.generateKitchenCopy())
                                 }
 
@@ -93,16 +94,18 @@ fun CompleteOrderDrawer(
                                         )
                                     )
                                 )
-
-                                // If this is a companion device, send the order to the main device
-                                if (deviceType == DeviceType.Companion) {
-                                    val intent = Intent(context, SocketClientService::class.java).apply {
-                                        action = ClientAction.SendOrderInfo.toString()
-                                        putExtra("orderId", orderUiState.currentOrder.order.id)
+                                orderUiState.currentOrder.orderItems
+                                    .filter { it.orderItemStatus == OrderItemStatus.Added }
+                                    .forEach { orderItem ->
+                                        val updatedOrderItem = orderItem.copy(
+                                            orderItemStatus = OrderItemStatus.Served
+                                        )
+                                        orderUiEvent(
+                                            OrderUiEvent.UpdateOrderItem(
+                                                updatedOrderItem
+                                            )
+                                        )
                                     }
-                                    context.startService(intent)
-                                }
-
                                 onOrderDismiss(null)
                             }
                         }
@@ -113,12 +116,13 @@ fun CompleteOrderDrawer(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
                             if (orderUiState.currentOrder != null) {
-                                val printerManager = PrinterManager(context)
+
                                 val receiptGenerator =
                                     ReceiptGenerator(
                                         orderUiState.restaurantInfo,
                                         orderUiState.currentOrder
                                     )
+                                val printerManager = PrinterManager(context)
                                 if (orderUiState.currentOrder.orderItems.find {
                                         it.orderItemStatus == OrderItemStatus.Added &&
                                                 it.menuItem.isKitchenCategory
@@ -126,6 +130,7 @@ fun CompleteOrderDrawer(
                                     printerManager.print(receiptGenerator.generateKitchenCopy())
                                 }
                                 printerManager.print(receiptGenerator.generateReceipt())
+
 
                                 orderUiEvent(
                                     OrderUiEvent.UpdateCurrentOrder(
@@ -135,14 +140,6 @@ fun CompleteOrderDrawer(
                                     )
                                 )
 
-                                // If this is a companion device, send the order to the main device
-                                if (deviceType == DeviceType.Companion) {
-                                    val intent = Intent(context, SocketClientService::class.java).apply {
-                                        action = ClientAction.SendOrderInfo.toString()
-                                        putExtra("orderId", orderUiState.currentOrder.order.id)
-                                    }
-                                    context.startService(intent)
-                                }
 
                                 onOrderDismiss(null)
                             }

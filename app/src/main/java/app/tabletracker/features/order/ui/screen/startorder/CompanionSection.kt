@@ -123,6 +123,7 @@ fun CompanionSection(modifier: Modifier = Modifier) {
         }
     }
     FilterChip(
+        modifier = modifier,
         selected = true,
         colors = FilterChipDefaults.filterChipColors(
             selectedContainerColor = if (serverAddress.isNotEmpty())
