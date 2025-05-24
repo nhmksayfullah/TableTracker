@@ -72,8 +72,7 @@ fun CategoryComponent(
             Text(
                 text = text,
                 modifier = textModifier
-                    .padding(8.dp)
-                    .basicMarquee(),
+                    .padding(8.dp),
                 maxLines = 2,
                 style = textStyle,
             )

@@ -59,7 +59,6 @@ fun MenuItemComponent(
                 text = title,
                 maxLines = 2,
                 modifier = Modifier
-                    .basicMarquee()
             )
         }
     }

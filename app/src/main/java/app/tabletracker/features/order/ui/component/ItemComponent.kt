@@ -94,7 +94,7 @@ fun FoodItem(
     }
     Column(
         modifier = modifier
-            .padding(vertical = 4.dp)
+            .padding(vertical = 4.dp, horizontal = 4.dp)
             .then(modifier)
     ) {
         Row(
@@ -102,14 +102,14 @@ fun FoodItem(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            IconButton(
-                onClick = onRemoveClick
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.baseline_drag_indicator_24),
-                    contentDescription = "Remove item from the order",
-                )
-            }
+//            IconButton(
+//                onClick = {}
+//            ) {
+//                Icon(
+//                    imageVector = ImageVector.vectorResource(R.drawable.baseline_drag_indicator_24),
+//                    contentDescription = "Drag to reorder",
+//                )
+//            }
 
             Column(
                 horizontalAlignment = Alignment.Start,
@@ -119,10 +119,9 @@ fun FoodItem(
             ) {
                 Text(
                     text = foodName,
-                    overflow = TextOverflow.Clip,
+                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .basicMarquee()
+                    maxLines = 1
                 )
                 Text(
                     text = "£$price",
