@@ -20,15 +20,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import app.tabletracker.theme.MaterialColor
 
 @Composable
 fun MenuItemComponent(
     title: String,
     modifier: Modifier = Modifier,
     indicatorColor: Color = MaterialTheme.colorScheme.primary,
+    containerColor: Int? = null,
     onClick: () -> Unit
 ) {
+    // Get the indicator color from containerColor if provided, otherwise use the default indicatorColor
+    val actualIndicatorColor = if (containerColor != null && containerColor != -1) {
+        MaterialColor.fromArgb(containerColor)?.color ?: indicatorColor
+    } else {
+        indicatorColor
+    }
+
     Card(
         modifier = modifier
             .wrapContentSize()
@@ -52,7 +62,7 @@ fun MenuItemComponent(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(4.dp)
-                    .background(indicatorColor, RoundedCornerShape(8.dp))
+                    .background(actualIndicatorColor, RoundedCornerShape(8.dp))
             )
             Spacer(Modifier.width(8.dp))
             Text(

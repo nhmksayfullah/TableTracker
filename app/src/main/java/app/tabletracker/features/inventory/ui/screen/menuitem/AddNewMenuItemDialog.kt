@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -18,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import app.tabletracker.features.inventory.ui.components.ColorSelector
 import app.tabletracker.features.inventory.util.DatabaseOperation
 import app.tabletracker.features.inventory.data.entity.MenuItem
 import app.tabletracker.features.order.data.entity.OrderType
@@ -170,6 +173,16 @@ fun AddNewMenuItemDialog(
                         .fillMaxWidth()
                 )
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            ColorSelector(
+                selectedColorArgb = menuItem.color,
+                onColorSelected = { colorArgb ->
+                    onValueChange(menuItem.copy(color = colorArgb))
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
 
         }
     }

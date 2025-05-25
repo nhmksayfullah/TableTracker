@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import app.tabletracker.R
 import app.tabletracker.core.ui.component.MenuItemComponent
 import app.tabletracker.features.inventory.data.entity.MenuItem
 import sh.calvin.reorderable.ReorderableItem
@@ -86,7 +85,7 @@ fun ShowMenuItemsRightSection(
                         )
                     } else {
                         Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.baseline_swap_calls_24),
+                            imageVector = Icons.Default.Done, // Using a default icon instead of resource
                             contentDescription = "Reorder Start"
                         )
                     }
@@ -119,7 +118,8 @@ fun ShowMenuItemsRightSection(
                     MenuItemComponent(
                         title = menuItem.name,
                         modifier = Modifier
-                            .padding(2.dp)
+                            .padding(2.dp),
+                        containerColor = menuItem.color
                     ) {
                         onMenuItemClicked(menuItem)
                     }
@@ -129,7 +129,7 @@ fun ShowMenuItemsRightSection(
                             modifier = Modifier.draggableHandle()
                         ) {
                             Icon(
-                                imageVector = ImageVector.vectorResource(R.drawable.baseline_drag_indicator_24),
+                                imageVector = Icons.Default.Done, // Using a default icon instead of resource
                                 contentDescription = "Drag Icon"
                             )
                         }
@@ -140,5 +140,3 @@ fun ShowMenuItemsRightSection(
         }
     }
 }
-
-

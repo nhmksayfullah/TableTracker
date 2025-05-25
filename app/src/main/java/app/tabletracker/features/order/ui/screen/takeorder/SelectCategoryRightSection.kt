@@ -35,7 +35,8 @@ fun SelectCategoryRightSection(
                     text = item.category.name,
                     onClick = {
                         onCategoryClicked(item.category)
-                    }
+                    },
+                    containerColor = item.category.color
                 )
             }
         }

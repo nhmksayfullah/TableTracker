@@ -35,6 +35,7 @@ fun SelectMenuItemRightSection(
         items(menus) { item ->
             MenuItemComponent(
                 title = item.name,
+                containerColor = item.color,
                 onClick = {
                     if (item.isMeal && item.mealCourses.isNotEmpty()) {
                         selectedMealItemId = item.id
