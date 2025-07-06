@@ -1,7 +1,9 @@
 package app.tabletracker.features.order.ui.screen.takeorder
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -15,6 +17,10 @@ import androidx.compose.ui.unit.dp
 import app.tabletracker.core.ui.component.MenuItemComponent
 import app.tabletracker.features.inventory.data.entity.MenuItem
 
+/**
+ * @deprecated Use [OrderExplorerScreen] instead for dynamic hierarchical navigation
+ */
+@Deprecated("Use OrderExplorerScreen instead for dynamic hierarchical navigation")
 @Composable
 fun SelectMenuItemRightSection(
     menus: List<MenuItem>,
@@ -29,22 +35,28 @@ fun SelectMenuItemRightSection(
     }
     LazyVerticalGrid(
         columns = GridCells.Adaptive(120.dp),
+        contentPadding = PaddingValues(8.dp),
         modifier = modifier
             .fillMaxSize()
     ) {
         items(menus) { item ->
-            MenuItemComponent(
-                title = item.name,
-                containerColor = item.color,
-                onClick = {
-                    if (item.isMeal && item.mealCourses.isNotEmpty()) {
-                        selectedMealItemId = item.id
-                        dialogState = true
-                    } else {
-                        onMenuItemClicked(item)
+            Box(
+                modifier = Modifier
+                    .padding(2.dp)
+            ) {
+                MenuItemComponent(
+                    title = item.name,
+                    containerColor = item.color,
+                    onClick = {
+                        if (item.isMeal && item.mealCourses.isNotEmpty()) {
+                            selectedMealItemId = item.id
+                            dialogState = true
+                        } else {
+                            onMenuItemClicked(item)
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 

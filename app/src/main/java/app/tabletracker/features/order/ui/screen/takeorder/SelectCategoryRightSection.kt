@@ -14,15 +14,19 @@ import app.tabletracker.core.ui.component.CategoryComponent
 import app.tabletracker.features.inventory.data.entity.Category
 import app.tabletracker.features.inventory.data.entity.CategoryWithMenuItems
 
+/**
+ * @deprecated Use [OrderExplorerScreen] instead for dynamic hierarchical navigation
+ */
+@Deprecated("Use OrderExplorerScreen instead for dynamic hierarchical navigation")
 @Composable
 fun SelectCategoryRightSection(
     menus: List<CategoryWithMenuItems>,
     onCategoryClicked: (Category) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     LazyVerticalGrid(
         columns = GridCells.Adaptive(120.dp),
+        contentPadding = PaddingValues(8.dp),
         modifier = modifier
             .fillMaxSize()
     ) {

@@ -51,8 +51,8 @@ fun TakeOrderScreen(
         },
         rightContent = {
             Surface {
-                MenuDisplayRightSection(
-                    menus = uiState.menus,
+                OrderExplorerScreen(
+                    viewModel = orderViewModel,
                     onMenuItemClicked = {
                         orderViewModel.onEvent(OrderUiEvent.AddMenuItemToOrder(it))
                     }
