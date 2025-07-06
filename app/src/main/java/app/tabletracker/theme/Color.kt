@@ -106,7 +106,7 @@ enum class MaterialColor(val color: Color) {
     Red(Color(0xFFE91E63)),
     Blue(Color(0xFF2196F3)),
     Green(Color(0xFF4CAF50)),
-    Yellow(Color(0xFFFFEB3B)),
+//    Yellow(Color(0xFFFFEB3B)),
     Purple(Color(0xFF9C27B0)),
     Teal(Color(0xFF009688)),
     Orange(Color(0xFFFF9800)),
@@ -117,10 +117,10 @@ enum class MaterialColor(val color: Color) {
     DeepPurple(Color(0xFF673AB7)),
     LightBlue(Color(0xFF03A9F4)),
     LightGreen(Color(0xFF8BC34A)),
-    Lime(Color(0xFFCDDC39)),
+//    Lime(Color(0xFFCDDC39)),
     DeepOrange(Color(0xFFFF5722)),
     Cyan(Color(0xFF00BCD4)),
-    Amber(Color(0xFFFFC107)),
+//    Amber(Color(0xFFFFC107)),
     BlueGrey(Color(0xFF607D8B));
 
     companion object {

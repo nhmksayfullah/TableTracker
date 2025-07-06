@@ -27,7 +27,7 @@ fun OverViewSection(
             title = "Total orders",
             value = "$totalOrder",
             icon = R.drawable.outline_shopping_bag_24,
-            iconTint = MaterialColor.Amber.color
+            iconTint = MaterialColor.Orange.color
         )
         OverViewComponent(
             title = "Pending orders",

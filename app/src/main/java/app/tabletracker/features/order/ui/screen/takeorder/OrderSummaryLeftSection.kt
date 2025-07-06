@@ -224,19 +224,19 @@ fun OrderSummaryLeftSection(
                     Row {
                         InputChip(
                             onClick = {
-                                discount = "5%"
+                                discount = "10%"
                                 onOrderChange(
                                     order.copy(
                                         discount = Discount(
                                             title = "",
-                                            value = "5"
+                                            value = "10"
                                         )
                                     )
                                 )
                                 addDiscountDialogState = false
                             },
                             label = {
-                                Text("5%")
+                                Text("10%")
                             },
                             selected = false
                         )
