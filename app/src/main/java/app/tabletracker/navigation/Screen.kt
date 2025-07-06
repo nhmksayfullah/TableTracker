@@ -47,5 +47,10 @@ sealed class Screen() {
 
     @Serializable
     data object MenuItemScreen : Screen()
-}
 
+    @Serializable
+    data object ExplorerScreen : Screen()
+
+    @Serializable
+    data class ChildExplorerScreen(val categoryId: Int) : Screen()
+}

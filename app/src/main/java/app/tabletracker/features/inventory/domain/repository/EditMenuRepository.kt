@@ -3,6 +3,7 @@ package app.tabletracker.features.inventory.domain.repository
 
 import app.tabletracker.features.inventory.data.entity.Category
 import app.tabletracker.features.inventory.data.entity.CategoryWithMenuItems
+import app.tabletracker.features.inventory.data.entity.CategoryWithSubcategoriesAndMenuItems
 import app.tabletracker.features.inventory.data.entity.MenuItem
 import kotlinx.coroutines.flow.Flow
 
@@ -20,5 +21,7 @@ interface EditMenuRepository {
     suspend fun deleteMenuItem(menuItem: MenuItem)
     suspend fun deleteCategory(category: Category)
     suspend fun updateCategories(categories: List<Category>)
+    fun readTopLevelCategoriesWithSubcategoriesAndMenuItems(): Flow<List<CategoryWithSubcategoriesAndMenuItems>>
+    fun readAllCategoriesWithSubcategoriesAndMenuItems(): Flow<List<CategoryWithSubcategoriesAndMenuItems>>
 
 }

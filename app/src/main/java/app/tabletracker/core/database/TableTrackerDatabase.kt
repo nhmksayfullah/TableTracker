@@ -41,7 +41,7 @@ import app.tabletracker.features.settings.data.local.SettingsDao
         Customer::class,
         Discount::class
     ],
-    version = 13,
+    version = 14,
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
@@ -54,6 +54,7 @@ import app.tabletracker.features.settings.data.local.SettingsDao
         AutoMigration(from = 10, to = 11),
         AutoMigration(from = 11, to = 12),
         AutoMigration(from = 12, to = 13),
+        AutoMigration(from = 13, to = 14, spec = Migration13To14::class),
     ],
     exportSchema = true
 )
@@ -94,6 +95,13 @@ abstract class TableTrackerDatabase : RoomDatabase() {
 
 @DeleteColumn(tableName = "MenuItem", columnName = "meal")
 class Migration4To5 : AutoMigrationSpec
+
+class Migration13To14 : AutoMigrationSpec {
+    override fun onPostMigrate(db: SupportSQLiteDatabase) {
+        // Create index for parentCategoryId
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_Category_parentCategoryId` ON `Category` (`parentCategoryId`)")
+    }
+}
 
 val migration6To7 = object : Migration(6, 7) {
     override fun migrate(db: SupportSQLiteDatabase) {

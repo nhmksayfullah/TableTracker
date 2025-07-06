@@ -19,6 +19,10 @@ import app.tabletracker.features.inventory.ui.EditMenuViewModel
 import app.tabletracker.features.inventory.util.DatabaseOperation
 import kotlinx.coroutines.launch
 
+/**
+ * @deprecated Use ChildInventoryExplorerScreen with drawer instead
+ */
+@Deprecated("Use ChildInventoryExplorerScreen with drawer instead")
 @Composable
 fun MenuItemScreen(
     editMenuViewModel: EditMenuViewModel,

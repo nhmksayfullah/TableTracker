@@ -1,5 +1,6 @@
 package app.tabletracker.features.inventory.ui.screen.category
 
+import android.util.Log
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -20,6 +21,10 @@ import app.tabletracker.features.inventory.ui.EditMenuViewModel
 import app.tabletracker.features.inventory.util.DatabaseOperation
 import kotlinx.coroutines.launch
 
+/**
+ * @deprecated Use InventoryExplorerScreen with drawer instead
+ */
+@Deprecated("Use InventoryExplorerScreen with drawer instead")
 @Composable
 fun CategoryScreen(
     editMenuViewModel: EditMenuViewModel,
@@ -27,6 +32,9 @@ fun CategoryScreen(
     onNavigateToMenuItems: () -> Unit,
 ) {
     val state by editMenuViewModel.uiState.collectAsStateWithLifecycle()
+    LaunchedEffect(state.explorer) {
+        Log.d("CategoryScreen", "LaunchedEffect: ${state.explorer}")
+    }
     var databaseOperation by remember {
         mutableStateOf(DatabaseOperation.Read)
     }

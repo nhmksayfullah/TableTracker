@@ -4,6 +4,7 @@ import app.tabletracker.features.inventory.data.local.MenuDao
 import app.tabletracker.features.inventory.domain.repository.EditMenuRepository
 import app.tabletracker.features.inventory.data.entity.Category
 import app.tabletracker.features.inventory.data.entity.CategoryWithMenuItems
+import app.tabletracker.features.inventory.data.entity.CategoryWithSubcategoriesAndMenuItems
 import app.tabletracker.features.inventory.data.entity.MenuItem
 import kotlinx.coroutines.flow.Flow
 
@@ -50,5 +51,14 @@ class EditMenuRoomRepository(private val menuDao: MenuDao) : EditMenuRepository 
 
     override suspend fun updateCategories(categories: List<Category>) {
         menuDao.updateCategories(categories)
+    }
+
+
+    override fun readTopLevelCategoriesWithSubcategoriesAndMenuItems(): Flow<List<CategoryWithSubcategoriesAndMenuItems>> {
+        return menuDao.readTopLevelCategoriesWithSubcategoriesAndMenuItems()
+    }
+
+    override fun readAllCategoriesWithSubcategoriesAndMenuItems(): Flow<List<CategoryWithSubcategoriesAndMenuItems>> {
+        return menuDao.readAllCategoriesWithSubcategoriesAndMenuItems()
     }
 }

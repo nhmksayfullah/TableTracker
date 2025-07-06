@@ -17,10 +17,15 @@ import kotlinx.coroutines.launch
 class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel() {
     var uiState = MutableStateFlow(EditMenuUiState())
         private set
-    private var job: Job? = null
+    private var menusJob: Job? = null
+    private var explorerJob: Job? = null
+    private var allCategoriesJob: Job? = null
+    private var categoriesJob: Job? = null
 
     init {
         populateCategoriesWithMenuItems()
+        populateTopLevelCategoriesWithSubCategoriesAndMenuItems()
+        populateAllCategoriesWithSubCategoriesAndMenuItems()
     }
 
     fun onEvent(event: EditMenuUiEvent) {
@@ -52,16 +57,13 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
 
             is EditMenuUiEvent.UpsertMenuItem -> {
                 viewModelScope.launch {
-                    val newMenuItem = updateMenuItemPrice(event.newPrices)
-                    newMenuItem?.let {
-                        repository.writeMenuItem(it)
-                        uiState.update { currentState ->
-                            currentState.copy(
-                                selectedMenuItem = MenuItem.empty(it.categoryId)
-                            )
-                        }
+                    val newMenuItem = updateMenuItemPrice(event.menuItem, event.newPrices)
+                    repository.writeMenuItem(newMenuItem)
+                    uiState.update { currentState ->
+                        currentState.copy(
+                            selectedMenuItem = MenuItem.empty(newMenuItem.categoryId)
+                        )
                     }
-
                 }
             }
 
@@ -135,8 +137,8 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
 
 
     private fun populateCategoriesWithMenuItems() {
-        job?.cancel()
-        job = repository.readAllCategoriesWithMenuItems().onEach {
+        menusJob?.cancel()
+        menusJob = repository.readAllCategoriesWithMenuItems().onEach {
             uiState.update { currentState ->
                 currentState.copy(
                     menus = it
@@ -145,9 +147,52 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
         }.launchIn(viewModelScope)
     }
 
+/* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
+    /**
+     * Populates the [EditMenuUiState.explorer] with top-level categories with their subcategories and menu items.
+     *
+     * The [EditMenuUiState.explorer] is a list of [CategoryWithSubcategoriesAndMenuItems] which represents top-level categories
+     * (categories with no parent category) with their subcategories and menu items. The [repository.readTopLevelCategoriesWithSubcategoriesAndMenuItems] is used to
+     * retrieve the data from the database and populate the [EditMenuUiState.explorer].
+     *
+     * The [explorerJob] is cancelled and relaunched every time this function is called to ensure that the data is always up to date.
+     * The [uiState] is updated with the new data when it is available.
+     */
+/* <<<<<<<<<<  4b88039d-23da-4c49-a883-09d01bb25660  >>>>>>>>>>> */
+    private fun populateTopLevelCategoriesWithSubCategoriesAndMenuItems() {
+        explorerJob?.cancel()
+        explorerJob = repository.readTopLevelCategoriesWithSubcategoriesAndMenuItems().onEach {
+            uiState.update { currentState ->
+                currentState.copy(
+                    explorer = it
+                )
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    /**
+     * Populates the [EditMenuUiState.allCategories] with all categories (including subcategories) with their subcategories and menu items.
+     *
+     * This is used by the ChildInventoryExplorerScreen to find categories by ID, including non-top-level categories.
+     * The [repository.readAllCategoriesWithSubcategoriesAndMenuItems] is used to retrieve the data from the database.
+     *
+     * The [allCategoriesJob] is cancelled and relaunched every time this function is called to ensure that the data is always up to date.
+     * The [uiState] is updated with the new data when it is available.
+     */
+    private fun populateAllCategoriesWithSubCategoriesAndMenuItems() {
+        allCategoriesJob?.cancel()
+        allCategoriesJob = repository.readAllCategoriesWithSubcategoriesAndMenuItems().onEach {
+            uiState.update { currentState ->
+                currentState.copy(
+                    allCategories = it
+                )
+            }
+        }.launchIn(viewModelScope)
+    }
+
     private fun populateCategory() {
-        job?.cancel()
-        job = repository.readAllCategory().onEach {
+        categoriesJob?.cancel()
+        categoriesJob = repository.readAllCategory().onEach {
             uiState.update { currentState ->
                 currentState.copy(
                     categories = it
@@ -156,18 +201,13 @@ class EditMenuViewModel(private val repository: EditMenuRepository) : ViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun updateMenuItemPrice(newPrices: Map<OrderType, Float>): MenuItem? {
-        var menuItem = uiState.value.selectedMenuItem
-        menuItem?.let {
+    private fun updateMenuItemPrice(menuItem: MenuItem, newPrices: Map<OrderType, Float>): MenuItem {
             uiState.update { currentState ->
                 currentState.copy(
-                    selectedMenuItem = it.copy(prices = newPrices)
+                    selectedMenuItem = menuItem.copy(prices = newPrices)
                 )
             }
-            val newMenuItem = it.copy(prices = newPrices)
-            return newMenuItem
-        }
-        return null
+            return menuItem.copy(prices = newPrices)
     }
 
     private fun updateCategoryIndex() {

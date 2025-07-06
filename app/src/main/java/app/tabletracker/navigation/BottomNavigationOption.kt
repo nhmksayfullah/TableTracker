@@ -43,7 +43,7 @@ sealed class BottomNavigationOption(val navOption: NavigationOption) {
             id = 3,
             title = "Inventory",
             icon = R.drawable.outline_inventory_2_24,
-            route = Screen.CategoryScreen
+            route = Screen.ExplorerScreen
         )
     )
 

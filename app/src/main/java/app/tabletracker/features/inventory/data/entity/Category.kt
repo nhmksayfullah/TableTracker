@@ -2,12 +2,24 @@ package app.tabletracker.features.inventory.data.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import app.tabletracker.util.generateInstantTime
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Category::class,
+            parentColumns = ["id"],
+            childColumns = ["parentCategoryId"],
+            onDelete = ForeignKey.SET_NULL
+        )
+    ],
+    indices = [Index("parentCategoryId")]
+)
 data class Category(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -18,5 +30,7 @@ data class Category(
     @ColumnInfo(name = "index", defaultValue = "-1")
     val index: Int = -1,
     @ColumnInfo(name = "color", defaultValue = "-1")
-    val color: Int = -1
+    val color: Int = -1,
+    @ColumnInfo(name = "parentCategoryId", defaultValue = "NULL")
+    val parentCategoryId: Int? = null
 )
