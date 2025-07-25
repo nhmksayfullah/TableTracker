@@ -202,7 +202,7 @@ fun OrderExplorerScreen(
                 contentPadding = PaddingValues(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(subcategories) { categoryWithItems ->
+                items(subcategories.sortedBy { it.category.index }) { categoryWithItems ->
                     Box(
                         modifier = Modifier.padding(2.dp)
                     ) {
@@ -228,7 +228,7 @@ fun OrderExplorerScreen(
                 contentPadding = PaddingValues(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(menuItems) { menuItem ->
+                items(menuItems.sortedBy { it.index }) { menuItem ->
                     Box(
                         modifier = Modifier.padding(2.dp)
                     ) {
